@@ -1,4 +1,4 @@
-import { Container, Content, InputWrapper, Main } from './styles';
+import { Container, Content, InputWrapper, Main } from '../../components/login/styles';
 import logoIMG from '../../assets/logoImg2.png';
 
 import { LoginButton } from '../../components/LoginButton';
