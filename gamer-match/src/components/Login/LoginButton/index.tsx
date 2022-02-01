@@ -1,17 +1,12 @@
 import { FaFacebook, FaTwitter, FaGoogle } from 'react-icons/fa';
 import { Button, Icon } from './styles';
-import { signIn, signOut, useSession } from 'next-auth/react';
 
 interface LoginButtonProps {
     buttonType: 'google' | 'facebook' | 'twitter';
 }
 
 export function LoginButton({ buttonType }: LoginButtonProps) {
-    const session = useSession();
-
-    function handleOnclick() {
-        signIn('google');
-    }
+    function handleOnclick() {}
 
     function renderSwitch(buttonType: string) {
         switch (buttonType) {
@@ -25,7 +20,7 @@ export function LoginButton({ buttonType }: LoginButtonProps) {
     }
     return (
         <>
-            <Button buttonType={buttonType} onClick={() => signIn(buttonType)}>
+            <Button buttonType={buttonType} onClick={handleOnclick}>
                 <Icon buttonType={buttonType}>{renderSwitch(buttonType)}</Icon>
                 Continue with {buttonType.charAt(0).toUpperCase() + buttonType.slice(1)}
             </Button>

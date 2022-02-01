@@ -1,3 +1,13 @@
+import { useContext, useEffect } from 'react';
+import { AuthContext } from '../../contexts/AuthContext';
+import { api } from '../services/api';
+
 export default function Landing() {
-    return <h1>HELLO</h1>;
+    const { user } = useContext(AuthContext);
+
+    useEffect(() => {
+        api.get('/me').then((response) => console.log(response));
+    }, []);
+
+    return <h1>Hello {user?.email}</h1>;
 }

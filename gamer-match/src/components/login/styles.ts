@@ -10,6 +10,7 @@ export const Container = styled.main`
 
     color: var(--color-text-in-primary);
     background: var(--color-primary);
+    background: linear-gradient(180deg, #14171e 12.88%, #14171e 45.17%, #08497f 100%);
 `;
 
 export const Content = styled.div`
@@ -30,7 +31,7 @@ export const Content = styled.div`
     }
 `;
 
-export const Main = styled.main`
+export const FormMain = styled.form`
     display: flex;
     flex-direction: column;
     align-items: center;
