@@ -3,10 +3,13 @@ import { Button, Icon } from './styles';
 
 interface LoginButtonProps {
     buttonType: 'google' | 'facebook' | 'twitter';
+    onClick?: () => void;
 }
 
-export function LoginButton({ buttonType }: LoginButtonProps) {
-    function handleOnclick() {}
+export function LoginButton({ buttonType, onClick }: LoginButtonProps) {
+    function handleOnclick() {
+        if (!onClick) onClick();
+    }
 
     function renderSwitch(buttonType: string) {
         switch (buttonType) {
