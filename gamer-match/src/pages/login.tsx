@@ -15,8 +15,6 @@ export default function Login() {
     const [password, setPassword] = useState('');
     const { signIn } = useContext(AuthContext);
 
-    console.log('oi:' + process.env.GOOGLE_CLIENT_ID);
-
     async function handleSubmit(event: FormEvent) {
         event.preventDefault();
 
@@ -56,7 +54,13 @@ export default function Login() {
                     <div className="divider">
                         <span>OR</span>
                     </div>
-                    <GoogleLogin clientId={process.env.GOOGLE_CLIENT_ID} buttonText="Login" onSuccess={responseGoogle} onFailure={responseGoogle} cookiePolicy={'single_host_origin'} />
+                    <GoogleLogin
+                        clientId="697984612228 - schghtpce19tci05idkko63u949bj4d3.apps.googleusercontent.com"
+                        buttonText="Login"
+                        onSuccess={responseGoogle}
+                        onFailure={responseGoogle}
+                        cookiePolicy={'single_host_origin'}
+                    />
                     <LoginButton buttonType={'facebook'} />
                     <LoginButton buttonType={'twitter'} />
                 </Main>

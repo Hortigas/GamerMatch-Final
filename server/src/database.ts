@@ -1,20 +1,21 @@
 import { RefreshTokensStore, UsersStore } from './types';
 import { v4 as uuid } from 'uuid';
 
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@prisma/client';
 import { getMaxListeners } from 'process';
-export const prisma = new PrismaClient()
+export const prisma = new PrismaClient();
 
 export const users: UsersStore = new Map();
 
 export const tokens: RefreshTokensStore = new Map();
 
-export async function getUser(req: string) { //consulta user pelo email
+export async function getUser(req: string) {
+    //consulta user pelo email
     try {
-        const user = await prisma.public_user.findMany({
+        const user = await prisma.public_user.findUnique({
             where: {
-                user_email: req
-            }
+                user_email: req,
+            },
         });
         return user;
     } catch (error) {
@@ -23,15 +24,16 @@ export async function getUser(req: string) { //consulta user pelo email
     }
 }
 
-export async function setUser(user_name: string, user_email: string, user_password: string) { //cria user no bd
+export async function setUser(user_name: string, user_email: string, user_password: string) {
+    //cria user no bd
     try {
         return prisma.public_user.create({
             data: {
                 user_name,
                 user_email,
-                user_password
-            }
-        })
+                user_password,
+            },
+        });
     } catch (error) {
         console.error(error);
         throw error;
