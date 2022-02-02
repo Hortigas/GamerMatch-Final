@@ -1,12 +1,13 @@
 import { Container, Content, InputWrapper, FormMain } from '../components/Login/styles';
 import logoIMG from '../assets/logoGamerMatchNTNL.png';
-
+import Image from 'next/image';
 import { LoginButton } from '../components/Login/LoginButton';
 import { MdOutlineEmail } from 'react-icons/md';
 import { RiLockPasswordLine } from 'react-icons/ri';
-import Image from 'next/image';
+
 import { useContext, useState, FormEvent } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
+import { withSSRGuest } from '../../utils/withSSRGuest';
 
 export default function Login() {
     const [email, setEmail] = useState('');
@@ -54,3 +55,7 @@ export default function Login() {
         </Container>
     );
 }
+
+export const getServerSideProps = withSSRGuest(async (ctx) => {
+    return { props: {} };
+});
