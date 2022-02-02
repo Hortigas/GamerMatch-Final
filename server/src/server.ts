@@ -88,13 +88,13 @@ app.post('/sessions', async (request, response) => {
     });
 });
 
-app.post('/refresh', addUserInformationToRequest, (request, response) => {
+app.post('/refresh', addUserInformationToRequest, async (request, response) => {
     const email = request.user;
     const { refreshToken } = request.body;
 
-    const user = users.get(email);
+    const { user_email } = await getUser(email);
 
-    if (!user) {
+    if (!user_email) {
         return response.status(401).json({
             error: true,
             message: 'User not found.',
@@ -113,32 +113,32 @@ app.post('/refresh', addUserInformationToRequest, (request, response) => {
 
     invalidateRefreshToken(email, refreshToken);
 
-    const { token, refreshToken: newRefreshToken } = generateJwtAndRefreshToken(email, {
+    const { token, refreshToken: newRefreshToken } = generateJwtAndRefreshToken(email)/*, {
         permissions: user.permissions,
         roles: user.roles,
-    });
+    });*/
 
     return response.json({
         token,
         refreshToken: newRefreshToken,
-        permissions: user.permissions,
-        roles: user.roles,
+        //permissions: user.permissions,
+        //roles: user.roles,
     });
 });
 
-app.get('/me', checkAuthMiddleware, (request, response) => {
+app.get('/me', checkAuthMiddleware, async (request, response) => {
     const email = request.user;
 
-    const user = users.get(email);
+    const { user_email } = await getUser(email);
 
-    if (!user) {
+    if (!user_email) {
         return response.status(400).json({ error: true, message: 'User not found.' });
     }
 
     return response.json({
         email,
-        permissions: user.permissions,
-        roles: user.roles,
+        //permissions: user.permissions,
+        //roles: user.roles,
     });
 });
 
