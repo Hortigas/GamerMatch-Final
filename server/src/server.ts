@@ -5,7 +5,7 @@ import decode from 'jwt-decode'
 import { generateJwtAndRefreshToken } from './auth';
 import { auth } from './config';
 
-import { checkRefreshTokenIsValid, users, seedUserStore, invalidateRefreshToken } from './database';
+import { checkRefreshTokenIsValid, users, seedUserStore, invalidateRefreshToken, getUser } from './database';
 import { CreateSessionDTO, DecodedToken } from './types';
 
 const app = express();
@@ -76,12 +76,13 @@ function addUserInformationToRequest(request: Request, response: Response, next:
   }
 }
 
-app.post('/sessions', (request, response) => {
+app.post('/sessions', async (request, response) => {
   const { email, password } = request.body as CreateSessionDTO;
 
-  const user = users.get(email);
-
-  if (!user || password !== user.password) {
+  const {user_email, user_password} as CreateSessionDTO = await getUser(email);
+  //console.log(typeof(user));
+  
+  if (!user_email || password !== user_password) {
     return response
       .status(401)
       .json({ 
@@ -90,16 +91,16 @@ app.post('/sessions', (request, response) => {
       });
   }
 
-  const { token, refreshToken } = generateJwtAndRefreshToken(email, {
+  const { token, refreshToken } = generateJwtAndRefreshToken(email);/*, {
     permissions: user.permissions,
     roles: user.roles,
-  })
+  })*/
 
   return response.json({
     token,
     refreshToken,
-    permissions: user.permissions,
-    roles: user.roles,
+    //permissions: user.permissions,
+    //roles: user.roles,
   });
 });
 
