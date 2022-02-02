@@ -15,7 +15,7 @@ type Decoded = {
 
 type SignIncredentials = {
     email: string;
-    password: string;
+    hash: string;
 };
 
 type AuthContextData = {
@@ -55,9 +55,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
         }
     }, []);
 
-    async function signIn({ email, password }: SignIncredentials) {
+    async function signIn({ email, hash }: SignIncredentials) {
         try {
-            const response = await api.post('sessions', { email, password });
+            const response = await api.post('sessions', { email, hash });
             const { token, refreshToken, permissions, roles } = response.data;
 
             setCookie(undefined, 'GamerMatch.token', token, {

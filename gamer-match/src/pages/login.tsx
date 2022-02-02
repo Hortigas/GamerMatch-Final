@@ -10,17 +10,18 @@ import { AuthContext } from '../../contexts/AuthContext';
 import { withSSRGuest } from '../../utils/withSSRGuest';
 import { GoogleLogin } from 'react-google-login';
 
+import sha256 from 'crypto-js/sha256';
+
 export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const { signIn } = useContext(AuthContext);
-
+    const hash:string = sha256(password).toString();
     async function handleSubmit(event: FormEvent) {
-        event.preventDefault();
-
+        event.preventDefault();     
         const data = {
             email,
-            password,
+            hash,
         };
         await signIn(data);
     }
