@@ -6,14 +6,8 @@ import { generateJwtAndRefreshToken } from './auth';
 import { auth } from './config';
 
 import { checkRefreshTokenIsValid, invalidateRefreshToken, getUser, setUser } from './database';
-import { CreateSessionDTO, DecodedToken } from './types';
+import { CreateSessionDTO, DecodedToken, CreateUser, GoogleProps } from './types';
 import { OAuth2Client } from 'google-auth-library';
-import sha256 from 'crypto-js/sha256';
-
-type GoogleProps = {
-    name: string;
-    email: string;
-};
 
 const client = new OAuth2Client(process.env.REACT_APP_GOOGLE_CLIENT_ID);
 
@@ -86,6 +80,19 @@ app.post('/sessions', async (request, response) => {
         token,
         refreshToken,
     });
+});
+
+app.post('/sessions/create', async (request, response) => {
+    const { username, email, hash } = request.body as CreateUser;
+    try {
+        await setUser(username, email, hash);
+        return response.json();
+    } catch (error) {
+        return response.status(409).json({
+            error: true,
+            message: 'This email address is already taken.',
+        });
+    }
 });
 
 app.post('/sessions/google', async (request, response) => {

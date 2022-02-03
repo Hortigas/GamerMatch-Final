@@ -10,22 +10,27 @@ import { AuthContext } from '../../contexts/AuthContext';
 import { withSSRGuest } from '../../utils/withSSRGuest';
 import Link from 'next/link';
 import sha256 from 'crypto-js/sha256';
+import { toast } from 'react-toastify';
 
 export default function Register() {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordConfirm, setPasswordConfirm] = useState('');
-    const {} = useContext(AuthContext);
+    const { signUp } = useContext(AuthContext);
 
     async function handleSubmit(event: FormEvent) {
         event.preventDefault();
+        if (passwordConfirm !== password) {
+            toast.error('senhas diferentes');
+        }
         const hash: string = sha256(password).toString();
         const data = {
+            username,
             email,
             hash,
         };
-        await signIn(data);
+        await signUp(data);
     }
 
     return (

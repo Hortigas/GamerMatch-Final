@@ -38,6 +38,7 @@ export const Main = styled.main`
     border-radius: 1rem;
     padding: 0rem 5rem 5rem;
     width: 500px;
+    height: 580px;
 
     form {
         width: 100%;

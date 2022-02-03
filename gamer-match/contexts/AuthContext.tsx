@@ -2,6 +2,7 @@ import { createContext, ReactNode, useEffect, useState } from 'react';
 import { api } from '../src/services/apiClient';
 import { destroyCookie, setCookie, parseCookies } from 'nookies';
 import Router from 'next/router';
+import { toast } from 'react-toastify';
 
 type User = {
     email: string;
@@ -18,12 +19,19 @@ type SignIncredentials = {
     hash: string;
 };
 
+type SignUpcredentials = {
+    username: string;
+    email: string;
+    hash: string;
+};
+
 type AuthContextData = {
     signIn(credentials: SignIncredentials): Promise<void>;
     signInWithGoogle(tokenId: string): Promise<void>;
     user: User;
     isAuthenticated: boolean;
     signOut(): Promise<void>;
+    signUp(credentials: SignUpcredentials): Promise<void>;
 };
 
 type AuthProviderProps = {
@@ -108,5 +116,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
         signOutFunc();
     }
 
-    return <AuthContext.Provider value={{ signIn, signInWithGoogle, signOut, isAuthenticated, user }}>{children}</AuthContext.Provider>;
+    async function signUp({ username, email, hash }: SignUpcredentials) {
+        const response = await api.post('sessions/create', { username, email, hash }).catch(function (error) {
+            if (error.response) {
+                toast.error(error.response.data.message);
+            } else if (error.request) {
+                toast.error('Error', error.message);
+            }
+        });
+        if (!response) return;
+        toast.success('Cadastro realizado com sucesso!');
+        Router.push('/login');
+    }
+
+    return <AuthContext.Provider value={{ signIn, signInWithGoogle, signOut, signUp, isAuthenticated, user }}>{children}</AuthContext.Provider>;
 }
