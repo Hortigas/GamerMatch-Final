@@ -8,10 +8,11 @@ datasource db {
 }
 
 model public_user {
-  id            Int    @id(map: "user_pk") @default(dbgenerated("nextval('\"public.user_id_seq\"'::regclass)"))
-  user_name     String @db.VarChar(50)
-  user_email    String @unique @db.VarChar(50)
-  user_password String @db.VarChar(50)
+  id            Int      @id(map: "user_pk") @default(dbgenerated("nextval('\"public.user_id_seq\"'::regclass)"))
+  user_name     String   @db.VarChar(50)
+  user_email    String   @unique @db.VarChar(50)
+  user_password String   @db.VarChar(64)
+  providerAuth  Boolean?
 
   @@map("public.user")
 }
