@@ -8,6 +8,8 @@ import { auth } from './config';
 import { checkRefreshTokenIsValid, users, seedUserStore, invalidateRefreshToken, getUser } from './database';
 import { CreateSessionDTO, DecodedToken } from './types';
 
+import sha256 from 'crypto-js/sha256';
+
 const app = express();
 
 app.use(express.json());
@@ -64,11 +66,10 @@ function addUserInformationToRequest(request: Request, response: Response, next:
 }
 
 app.post('/sessions', async (request, response) => {
-    const { email, password } = request.body as CreateSessionDTO;
-
+    const { email, hash } = request.body as CreateSessionDTO;
     const { user_email, user_password } = await getUser(email);
 
-    if (!user_email || password !== user_password) {
+    if (!user_email || hash !== user_password) {
         return response.status(401).json({
             error: true,
             message: 'E-mail or password incorrect.',
@@ -88,13 +89,13 @@ app.post('/sessions', async (request, response) => {
     });
 });
 
-app.post('/refresh', addUserInformationToRequest, (request, response) => {
+app.post('/refresh', addUserInformationToRequest, async (request, response) => {
     const email = request.user;
     const { refreshToken } = request.body;
 
-    const user = users.get(email);
+    const { user_email } = await getUser(email);
 
-    if (!user) {
+    if (!user_email) {
         return response.status(401).json({
             error: true,
             message: 'User not found.',
@@ -113,32 +114,32 @@ app.post('/refresh', addUserInformationToRequest, (request, response) => {
 
     invalidateRefreshToken(email, refreshToken);
 
-    const { token, refreshToken: newRefreshToken } = generateJwtAndRefreshToken(email, {
+    const { token, refreshToken: newRefreshToken } = generateJwtAndRefreshToken(email)/*, {
         permissions: user.permissions,
         roles: user.roles,
-    });
+    });*/
 
     return response.json({
         token,
         refreshToken: newRefreshToken,
-        permissions: user.permissions,
-        roles: user.roles,
+        //permissions: user.permissions,
+        //roles: user.roles,
     });
 });
 
-app.get('/me', checkAuthMiddleware, (request, response) => {
+app.get('/me', checkAuthMiddleware, async (request, response) => {
     const email = request.user;
 
-    const user = users.get(email);
+    const { user_email } = await getUser(email);
 
-    if (!user) {
+    if (!user_email) {
         return response.status(400).json({ error: true, message: 'User not found.' });
     }
 
     return response.json({
         email,
-        permissions: user.permissions,
-        roles: user.roles,
+        //permissions: user.permissions,
+        //roles: user.roles,
     });
 });
 

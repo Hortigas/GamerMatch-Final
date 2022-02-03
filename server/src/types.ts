@@ -1,10 +1,10 @@
 export type CreateSessionDTO = {
   email: string;
-  password: string;
+  hash: string;
 }
 
 type UserData = {
-  password: string;
+  hash: string;
   permissions: string[];
   roles: string[];
 }
