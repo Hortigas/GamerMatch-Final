@@ -82,7 +82,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     async function signInWithGoogle(tokenId: string) {
         try {
             const response = await api.post('sessions/google', { tokenId });
-            const { token, refreshToken, permissions, roles } = response.data;
+            const { token, refreshToken, email } = response.data;
 
             setCookie(undefined, 'GamerMatch.token', token, {
                 maxAge: 60 * 60 * 24 * 30, // 30 days
@@ -93,7 +93,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
                 path: '/',
             });
 
-            setUser({ email, permissions, roles });
+            setUser({ email, permissions: [], roles: [] });
             api.defaults.headers['Authorization'] = `Bearer ${token}`;
 
             Router.push('/');

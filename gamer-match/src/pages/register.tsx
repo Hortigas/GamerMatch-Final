@@ -1,21 +1,22 @@
 import { Container, Content, InputWrapper, Main } from '../components/Login/styles';
 import logoIMG from '../assets/logoGamerMatchNTNL.png';
 import Image from 'next/image';
-import { LoginButton } from '../components/Login/LoginButton';
 import { MdOutlineEmail } from 'react-icons/md';
 import { RiLockPasswordLine } from 'react-icons/ri';
+import { AiOutlineUser } from 'react-icons/ai';
 
 import { useContext, useState, FormEvent } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
 import { withSSRGuest } from '../../utils/withSSRGuest';
-import { GoogleLogin } from 'react-google-login';
 import Link from 'next/link';
 import sha256 from 'crypto-js/sha256';
 
-export default function Login() {
+export default function Register() {
+    const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const { signIn, signInWithGoogle } = useContext(AuthContext);
+    const [passwordConfirm, setPasswordConfirm] = useState('');
+    const {} = useContext(AuthContext);
 
     async function handleSubmit(event: FormEvent) {
         event.preventDefault();
@@ -27,15 +28,6 @@ export default function Login() {
         await signIn(data);
     }
 
-    async function handleGoogleLogin(response) {
-        const { tokenId } = response;
-        await signInWithGoogle(tokenId);
-    }
-
-    const handleGoogleFail = (response) => {
-        console.log(response);
-    };
-
     return (
         <Container>
             <Content>
@@ -46,6 +38,10 @@ export default function Login() {
                     <Image src={logoIMG} alt="logo Gamer match" width="80px" height="80px" />
                     <form onSubmit={handleSubmit}>
                         <InputWrapper>
+                            <AiOutlineUser className="Icon" />
+                            <input type="text" name="username" placeholder="Usuário" value={username} onChange={(e) => setUsername(e.target.value)} required />
+                        </InputWrapper>
+                        <InputWrapper>
                             <MdOutlineEmail className="Icon" />
                             <input type="email" name="email" placeholder="E-mail" value={email} onChange={(e) => setEmail(e.target.value)} required />
                         </InputWrapper>
@@ -53,26 +49,17 @@ export default function Login() {
                             <RiLockPasswordLine className="Icon" />
                             <input type="password" name="password" placeholder="Senha" value={password} onChange={(e) => setPassword(e.target.value)} required />
                         </InputWrapper>
+                        <InputWrapper>
+                            <RiLockPasswordLine className="Icon" />
+                            <input type="password" name="password" placeholder="Repetir senha" value={passwordConfirm} onChange={(e) => setPasswordConfirm(e.target.value)} required />
+                        </InputWrapper>
                         <div className="wrapperLogin">
-                            <Link href="/register" passHref>
-                                <button>Registrar</button>
+                            <Link href="/login" passHref>
+                                <button>Voltar</button>
                             </Link>
-                            <button type="submit">Login</button>
+                            <button type="submit">Cadastrar</button>
                         </div>
                     </form>
-                    <div className="divider">
-                        <span>OR</span>
-                    </div>
-                    <GoogleLogin
-                        clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
-                        render={(renderProps) => <LoginButton buttonType={'google'} onClick={renderProps.onClick} />}
-                        buttonText="Login"
-                        onSuccess={handleGoogleLogin}
-                        onFailure={handleGoogleFail}
-                        cookiePolicy={'single_host_origin'}
-                    />
-                    <LoginButton buttonType={'facebook'} />
-                    <LoginButton buttonType={'twitter'} />
                 </Main>
             </Content>
         </Container>

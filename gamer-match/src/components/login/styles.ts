@@ -39,6 +39,10 @@ export const Main = styled.main`
     padding: 0rem 5rem 5rem;
     width: 500px;
 
+    form {
+        width: 100%;
+    }
+
     div.wrapperLogin {
         width: 100%;
         display: flex;
@@ -46,7 +50,7 @@ export const Main = styled.main`
         margin-bottom: 30px;
 
         button {
-            width: 16rem;
+            width: 15rem;
             height: 4rem;
             border-radius: 0.8rem;
             font: 500 1.5rem Archivo;
@@ -60,10 +64,14 @@ export const Main = styled.main`
             background: #148dfd;
             box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.4);
 
-            transition: background-color 0.2s;
+            transition: filter 0.2s;
+
+            &:hover {
+                filter: brightness(0.8);
+            }
 
             &:first-child {
-                background: purple;
+                background: #89878a;
             }
         }
     }
@@ -105,17 +113,12 @@ export const InputWrapper = styled.div`
         border: none;
         border-radius: 0.8rem;
         background: rgba(255, 255, 255, 0);
+        color: rgba(255, 255, 255, 0.7);
         border: 3px solid #89878a;
         font-size: 1.5rem;
     }
 
-    .emailIcon {
-        color: #89878a;
-        position: absolute;
-        left: 15px;
-        font-size: 2.2rem;
-    }
-    .passwordIcon {
+    .Icon {
         color: #89878a;
         position: absolute;
         left: 15px;

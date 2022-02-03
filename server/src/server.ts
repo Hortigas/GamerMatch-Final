@@ -5,7 +5,7 @@ import decode from 'jwt-decode';
 import { generateJwtAndRefreshToken } from './auth';
 import { auth } from './config';
 
-import { checkRefreshTokenIsValid, users, seedUserStore, invalidateRefreshToken, getUser, setUser } from './database';
+import { checkRefreshTokenIsValid, invalidateRefreshToken, getUser, setUser } from './database';
 import { CreateSessionDTO, DecodedToken } from './types';
 import { OAuth2Client } from 'google-auth-library';
 import sha256 from 'crypto-js/sha256';
@@ -21,7 +21,6 @@ const app = express();
 
 app.use(express.json());
 app.use(cors());
-seedUserStore();
 
 function checkAuthMiddleware(request: Request, response: Response, next: NextFunction) {
     const { authorization } = request.headers;
@@ -99,12 +98,10 @@ app.post('/sessions/google', async (request, response) => {
         const { name, email } = ticket.getPayload() as GoogleProps;
 
         const user = await getUser(email);
-        if (!user) await setUser();
-        console.log(user);
-
-        const { token: TK, refreshToken } = generateJwtAndRefreshToken(email);
+        if (!user) await setUser(name, email, '', true);
+        const { token, refreshToken } = generateJwtAndRefreshToken(email);
         return response.json({
-            TK,
+            token,
             refreshToken,
         });
     } catch (err) {
