@@ -20,6 +20,7 @@ type SignIncredentials = {
 
 type AuthContextData = {
     signIn(credentials: SignIncredentials): Promise<void>;
+    signInWithGoogle(tokenId: string): Promise<void>;
     user: User;
     isAuthenticated: boolean;
     signOut(): Promise<void>;
@@ -78,11 +79,34 @@ export function AuthProvider({ children }: AuthProviderProps) {
         }
     }
 
+    async function signInWithGoogle(tokenId: string) {
+        try {
+            const response = await api.post('sessions/google', { tokenId });
+            const { token, refreshToken, permissions, roles } = response.data;
+
+            setCookie(undefined, 'GamerMatch.token', token, {
+                maxAge: 60 * 60 * 24 * 30, // 30 days
+                path: '/',
+            });
+            setCookie(undefined, 'GamerMatch.refreshToken', refreshToken, {
+                maxAge: 60 * 60 * 24 * 30, // 30 days
+                path: '/',
+            });
+
+            setUser({ email, permissions, roles });
+            api.defaults.headers['Authorization'] = `Bearer ${token}`;
+
+            Router.push('/');
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     async function signOut() {
         setUser({ email: '', permissions: [], roles: [] });
         const isAuthenticated = false;
         signOutFunc();
     }
 
-    return <AuthContext.Provider value={{ signIn, signOut, isAuthenticated, user }}>{children}</AuthContext.Provider>;
+    return <AuthContext.Provider value={{ signIn, signInWithGoogle, signOut, isAuthenticated, user }}>{children}</AuthContext.Provider>;
 }

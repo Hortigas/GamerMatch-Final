@@ -1,20 +1,26 @@
 import cors from 'cors';
-import express, { NextFunction, Request, Response } from 'express';
+import express, { application, NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import decode from 'jwt-decode';
 import { generateJwtAndRefreshToken } from './auth';
 import { auth } from './config';
 
-import { checkRefreshTokenIsValid, users, seedUserStore, invalidateRefreshToken, getUser } from './database';
+import { checkRefreshTokenIsValid, users, seedUserStore, invalidateRefreshToken, getUser, setUser } from './database';
 import { CreateSessionDTO, DecodedToken } from './types';
-
+import { OAuth2Client } from 'google-auth-library';
 import sha256 from 'crypto-js/sha256';
+
+type GoogleProps = {
+    name: string;
+    email: string;
+};
+
+const client = new OAuth2Client(process.env.REACT_APP_GOOGLE_CLIENT_ID);
 
 const app = express();
 
 app.use(express.json());
 app.use(cors());
-
 seedUserStore();
 
 function checkAuthMiddleware(request: Request, response: Response, next: NextFunction) {
@@ -76,17 +82,37 @@ app.post('/sessions', async (request, response) => {
         });
     }
 
-    const { token, refreshToken } = generateJwtAndRefreshToken(email); /*, {
-    permissions: user.permissions,
-    roles: user.roles,
-  })*/
-
+    const { token, refreshToken } = generateJwtAndRefreshToken(email);
     return response.json({
         token,
         refreshToken,
-        //permissions: user.permissions,
-        //roles: user.roles,
     });
+});
+
+app.post('/sessions/google', async (request, response) => {
+    const { tokenId } = request.body;
+    try {
+        const ticket = await client.verifyIdToken({
+            idToken: tokenId,
+            audience: process.env.GOOGLE_CLIENT_ID,
+        });
+        const { name, email } = ticket.getPayload() as GoogleProps;
+
+        const user = await getUser(email);
+        if (!user) await setUser();
+        console.log(user);
+
+        const { token: TK, refreshToken } = generateJwtAndRefreshToken(email);
+        return response.json({
+            TK,
+            refreshToken,
+        });
+    } catch (err) {
+        return response.status(401).json({
+            error: true,
+            message: err,
+        });
+    }
 });
 
 app.post('/refresh', addUserInformationToRequest, async (request, response) => {
@@ -114,7 +140,7 @@ app.post('/refresh', addUserInformationToRequest, async (request, response) => {
 
     invalidateRefreshToken(email, refreshToken);
 
-    const { token, refreshToken: newRefreshToken } = generateJwtAndRefreshToken(email)/*, {
+    const { token, refreshToken: newRefreshToken } = generateJwtAndRefreshToken(email); /*, {
         permissions: user.permissions,
         roles: user.roles,
     });*/

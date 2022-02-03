@@ -19,9 +19,11 @@
   },
   "dependencies": {
     "@prisma/client": "^3.9.0",
+    "@types/crypto-js": "^4.1.0",
     "cors": "^2.8.5",
     "crypto-js": "^4.1.1",
     "express": "^4.17.1",
+    "google-auth-library": "^7.11.0",
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^3.1.2",
     "prisma-client": "^0.0.0",

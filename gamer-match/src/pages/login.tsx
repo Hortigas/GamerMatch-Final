@@ -15,10 +15,11 @@ import sha256 from 'crypto-js/sha256';
 export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const { signIn } = useContext(AuthContext);
-    const hash:string = sha256(password).toString();
+    const { signIn, signInWithGoogle } = useContext(AuthContext);
+
     async function handleSubmit(event: FormEvent) {
-        event.preventDefault();     
+        event.preventDefault();
+        const hash: string = sha256(password).toString();
         const data = {
             email,
             hash,
@@ -26,7 +27,12 @@ export default function Login() {
         await signIn(data);
     }
 
-    const responseGoogle = (response) => {
+    async function handleGoogleLogin(response) {
+        const { tokenId } = response;
+        await signInWithGoogle(tokenId);
+    }
+
+    const handleGoogleFail = (response) => {
         console.log(response);
     };
 
@@ -59,8 +65,8 @@ export default function Login() {
                         clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
                         render={(renderProps) => <LoginButton buttonType={'google'} onClick={renderProps.onClick} />}
                         buttonText="Login"
-                        onSuccess={responseGoogle}
-                        onFailure={responseGoogle}
+                        onSuccess={handleGoogleLogin}
+                        onFailure={handleGoogleFail}
                         cookiePolicy={'single_host_origin'}
                     />
                     <LoginButton buttonType={'facebook'} />
@@ -74,14 +80,6 @@ export default function Login() {
 export const getServerSideProps = withSSRGuest(async (ctx) => {
     return { props: {} };
 });
-
-/*
-                    <GoogleLogin
-                        clientId={process.env.GOOGLE_CLIENT_ID}
-                        render={(renderProps) => <LoginButton buttonType={'google'} onClick={renderProps.onClick} />}
-                        buttonText="Login"
-                        onSuccess={responseGoogle}
-                        onFailure={responseGoogle}
-                        cookiePolicy={'single_host_origin'}
-                    />
-*/
+function signInWithGoogle(tokenId: any) {
+    throw new Error('Function not implemented.');
+}
