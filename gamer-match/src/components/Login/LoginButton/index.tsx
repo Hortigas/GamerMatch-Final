@@ -8,7 +8,7 @@ interface LoginButtonProps {
 
 export function LoginButton({ buttonType, onClick }: LoginButtonProps) {
     function handleOnclick() {
-        if (!onClick) onClick();
+        if (onClick) onClick();
     }
 
     function renderSwitch(buttonType: string) {

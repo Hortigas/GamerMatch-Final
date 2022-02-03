@@ -55,7 +55,8 @@ export default function Login() {
                         <span>OR</span>
                     </div>
                     <GoogleLogin
-                        clientId="697984612228 - schghtpce19tci05idkko63u949bj4d3.apps.googleusercontent.com"
+                        clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
+                        render={(renderProps) => <LoginButton buttonType={'google'} onClick={renderProps.onClick} />}
                         buttonText="Login"
                         onSuccess={responseGoogle}
                         onFailure={responseGoogle}
