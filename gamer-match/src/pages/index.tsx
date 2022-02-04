@@ -3,7 +3,6 @@ import { AuthContext } from '../../contexts/AuthContext';
 import { withSSRAuth } from '../../utils/withSSRAuth';
 import { setupAPIClient } from '../services/api';
 import { api } from '../services/apiClient';
-import { AuthTokenError } from '../services/errors/AuthTokenError';
 
 export default function Landing() {
     const { user, signOut } = useContext(AuthContext);
@@ -24,12 +23,7 @@ export default function Landing() {
 
 export const getServerSideProps = withSSRAuth(async (ctx) => {
     const apiClient = setupAPIClient(ctx);
-
-    try {
-        const response = await apiClient.get('/me');
-    } catch (err) {
-        console.log(err instanceof AuthTokenError);
-    }
+    const response = await apiClient.get('/me');
 
     return { props: {} };
 });
