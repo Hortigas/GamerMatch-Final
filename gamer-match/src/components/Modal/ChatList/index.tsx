@@ -1,9 +1,12 @@
 import { Container, ChatItemContainer } from './styles';
 import Image from 'next/image';
 import Avatar from '../../../assets/UserPics/userpic1.jpg';
+import { useChatbox } from '../../../hooks/useChatbox';
+import { useState } from 'react';
 
 type ChatItemData = {
     avatar: string;
+    userId: string;
     user: string;
     lastMessage: string;
     date: Date;
@@ -14,30 +17,11 @@ type ChatItemProps = {
 };
 
 export function ChatList() {
-    const dataSource = [
-        {
-            avatar: '',
-            user: 'Rebeca',
-            lastMessage: 'What are you doing?',
-            date: new Date(),
-        },
-        {
-            avatar: '',
-            user: 'Patolino',
-            lastMessage: 'What are you doing?',
-            date: new Date(),
-        },
-        {
-            avatar: '',
-            user: 'Joias',
-            lastMessage: 'What are you doing?',
-            date: new Date(),
-        },
-    ] as ChatItemData[];
+    const { chatbox } = useChatbox();
 
     return (
         <Container>
-            {dataSource.map((item) => (
+            {chatbox.map((item) => (
                 <ChatItem key={item.user} data={item} />
             ))}
         </Container>
@@ -45,8 +29,15 @@ export function ChatList() {
 }
 
 function ChatItem({ data }: ChatItemProps) {
+    const [chatInfo, setChatInfo] = useState(data);
+    const { setCurrentChat } = useChatbox();
+
+    function handleClick() {
+        setCurrentChat(chatInfo.userId);
+    }
+
     return (
-        <ChatItemContainer>
+        <ChatItemContainer onClick={handleClick}>
             <div className="avatar">
                 <Image className="avatarImg" src={Avatar} alt={data.user} width={200} height={200} />
             </div>

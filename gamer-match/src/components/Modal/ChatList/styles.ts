@@ -6,9 +6,23 @@ export const Container = styled.div`
     width: 100%;
     display: flex;
     flex-direction: column;
+    overflow: auto;
+    /* Scroll */
+    &::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+    }
+    &::-webkit-scrollbar-track {
+        background-color: transparent;
+        border-radius: 10px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: #0c4b7b;
+        border-radius: 10px;
+    }
 `;
 
-export const ChatItemContainer = styled.div`
+export const ChatItemContainer = styled.a`
     height: 100px;
     width: 100%;
     padding: 10px;
@@ -23,6 +37,9 @@ export const ChatItemContainer = styled.div`
     transition: background-color 0.2s;
     &:hover {
         background-color: ${lighten(0.03, '#141d2c')};
+    }
+    &:focus {
+        background-color: ${lighten(0.05, '#141d2c')};
     }
 
     .avatar {
