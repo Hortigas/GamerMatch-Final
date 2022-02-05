@@ -9,6 +9,12 @@ export type CreateUser = {
     hash: string;
 };
 
+export type CreateMessage = {
+    message: string;
+    sender: number;
+    receiver: number;
+}
+
 export type GoogleProps = {
     name: string;
     email: string;

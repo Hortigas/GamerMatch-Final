@@ -5,9 +5,10 @@ import decode from 'jwt-decode';
 import { generateJwtAndRefreshToken } from './auth';
 import { auth } from './config';
 
-import { checkRefreshTokenIsValid, invalidateRefreshToken, getUser, setUser } from './database';
-import { CreateSessionDTO, DecodedToken, CreateUser, GoogleProps } from './types';
+import { checkRefreshTokenIsValid, invalidateRefreshToken, getUser, setUser, setMessage } from './database';
+import { CreateSessionDTO, DecodedToken, CreateUser, GoogleProps, CreateMessage } from './types';
 import { OAuth2Client } from 'google-auth-library';
+import { timeStamp } from 'console';
 
 const client = new OAuth2Client(process.env.REACT_APP_GOOGLE_CLIENT_ID);
 
@@ -94,6 +95,19 @@ app.post('/sessions/create', async (request, response) => {
         });
     }
 });
+
+/*app.post('/sessions/message', async (request, response) => {
+    const { message, sender, receiver } = request.body as CreateMessage;
+    try {
+        await setMessage(message, sender, receiver);
+        return response.json();
+    } catch (error) {
+        return response.status(409).json({
+            error: true,
+            message: 'Error - Message not send!',
+        });
+    }
+});*/
 
 app.post('/sessions/google', async (request, response) => {
     const { tokenId } = request.body;

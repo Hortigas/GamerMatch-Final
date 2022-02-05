@@ -16,3 +16,13 @@ model public_user {
 
   @@map("public.user")
 }
+
+model public_message {
+  id               Int      @id(map: "message_pk") @default(dbgenerated("nextval('\"public.message_id_seq\"'::regclass)"))
+  message_content  String   @db.VarChar(255)
+  timestamp        DateTime @default(dbgenerated("'2022-02-04 23:12:48.67174'::timestamp without time zone")) @db.Timestamp(6)
+  user_id_sender   Int
+  user_id_receiver Int
+
+  @@map("public.message")
+}
