@@ -8,19 +8,35 @@ export const Container = styled.div`
     bottom: 0;
     background-color: #141d2c;
     padding: 10px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 640px;
+    display: flex;
 `;
 
 export const ChatContainer = styled.div`
-    height: 100%;
+    width: 50%;
     border-right: 2px solid #343c4c;
     padding-right: 10px;
 `;
 
 export const MatchesContainer = styled.div`
-    height: 100%;
+    width: 50%;
     border-left: 2px solid #343c4c;
     padding-left: 10px;
+`;
+
+export const ChatAnchor = styled.a`
+    position: absolute;
+    bottom: 50px;
+    right: 5vw;
+    width: 80px;
+    height: 80px;
+    background: #148dfd;
+    border-radius: 50%;
+    cursor: pointer;
+
+    .IconMessage {
+        width: 80px;
+        height: 80px;
+        padding: 20px;
+        color: White;
+    }
 `;

@@ -6,8 +6,6 @@ import { toast } from 'react-toastify';
 
 type User = {
     email: string;
-    permissions: string[];
-    roles: string[];
 };
 
 type Decoded = {
@@ -55,8 +53,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
         if (token) {
             api.get('/me')
                 .then((response) => {
-                    const { email, permissions, roles } = response.data;
-                    setUser({ email, permissions, roles });
+                    const { email } = response.data;
+                    setUser({ email });
                 })
                 .catch(() => {
                     signOutFunc();
@@ -78,7 +76,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
                 path: '/',
             });
 
-            setUser({ email, permissions, roles });
+            setUser({ email });
             api.defaults.headers['Authorization'] = `Bearer ${token}`;
 
             Router.push('/');
@@ -101,7 +99,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
                 path: '/',
             });
 
-            setUser({ email, permissions: [], roles: [] });
+            setUser({ email });
             api.defaults.headers['Authorization'] = `Bearer ${token}`;
 
             Router.push('/');
@@ -111,7 +109,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
 
     async function signOut() {
-        setUser({ email: '', permissions: [], roles: [] });
+        setUser({ email: '' });
         const isAuthenticated = false;
         signOutFunc();
     }

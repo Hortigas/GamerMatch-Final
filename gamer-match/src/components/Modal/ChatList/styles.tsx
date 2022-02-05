@@ -6,37 +6,27 @@ export const Container = styled.div`
     width: 100%;
     display: flex;
     flex-direction: column;
-`;
-
-export const SelectedUser = styled.div`
-    height: 80px;
-    width: 100%;
-    border-bottom: 2px solid #343c4c;
-    display: grid;
-    grid-template-columns: 80px 1fr;
-
-    .avatar {
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 10px;
-
-        .avatarImg {
-            border-radius: 50%;
-            object-fit: cover;
-        }
+    overflow: auto;
+    /* Scroll */
+    &::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
     }
-
-    h3 {
-        margin: auto 0 auto 1.5rem;
-        color: #f0f0f0;
-        font-weight: 500;
-        font-size: 2.2rem;
+    &::-webkit-scrollbar-track {
+        background-color: transparent;
+        border-radius: 10px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: #0c4b7b;
+        border-radius: 10px;
     }
 `;
 
-export const ChatItemContainer = styled.div`
+type anchorProps = {
+    focus: boolean;
+};
+
+export const ChatItemContainer = styled.a<anchorProps>`
     height: 100px;
     width: 100%;
     padding: 10px;
@@ -47,6 +37,7 @@ export const ChatItemContainer = styled.div`
         'avatar h4 h4';
     grid-template-rows: 1fr 1fr;
     grid-template-columns: 80px 1fr 1fr;
+    background-color: ${(props) => (props.focus ? lighten(0.04, '#141d2c') : 'transparent')};
 
     transition: background-color 0.2s;
     &:hover {

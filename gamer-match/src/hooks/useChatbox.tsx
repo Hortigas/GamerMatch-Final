@@ -4,7 +4,7 @@ interface ChatboxProviderProps {
     children: ReactNode;
 }
 
-type ChatItemProps = {
+export type ChatItemType = {
     avatar: string;
     userId: string;
     user: string;
@@ -12,12 +12,19 @@ type ChatItemProps = {
     date: Date;
 };
 
-type MessageProps = {};
+type MessageType = {
+    message_content: string;
+    timespan: string;
+    user_id_sender: string;
+    user_id_receiver: string;
+};
 
 interface ChatboxContextData {
+    isOpen: boolean;
+    setIsOpenFunction: (value: boolean) => void;
+    currChat: ChatItemType;
     setCurrentChat: (userId: string) => void;
-    currChat: ChatItemProps;
-    chatbox: ChatItemProps[];
+    chatbox: ChatItemType[];
 }
 
 const dataSource = [
@@ -84,21 +91,26 @@ const dataSource = [
         lastMessage: 'What are you doing?',
         date: new Date(),
     },
-] as ChatItemProps[];
+] as ChatItemType[];
 
 const ChatboxContext = createContext<ChatboxContextData>({} as ChatboxContextData);
 
 export function ChatboxProvider({ children }: ChatboxProviderProps): JSX.Element {
-    const [chatbox, setChatbox] = useState<ChatItemProps[]>(dataSource);
-    const [currChat, setCurrChat] = useState(dataSource[0]);
-    const [messages, setMessages] = useState([] as MessageProps[]);
+    const [isOpen, setIsOpen] = useState(false);
+    const [chatbox, setChatbox] = useState<ChatItemType[]>(dataSource);
+    const [currChat, setCurrChat] = useState({} as ChatItemType);
+    const [messages, setMessages] = useState([] as MessageType[]);
 
     const setCurrentChat = (userId: string) => {
         const currentChat = chatbox.find((chat) => chat.userId === userId);
         setCurrChat(currentChat);
     };
 
-    return <ChatboxContext.Provider value={{ currChat, setCurrentChat, chatbox }}>{children}</ChatboxContext.Provider>;
+    const setIsOpenFunction = (set: boolean) => {
+        setIsOpen(set);
+    };
+
+    return <ChatboxContext.Provider value={{ isOpen, setIsOpenFunction, currChat, setCurrentChat, chatbox }}>{children}</ChatboxContext.Provider>;
 }
 
 export function useChatbox(): ChatboxContextData {
