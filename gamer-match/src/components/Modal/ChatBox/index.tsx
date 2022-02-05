@@ -2,7 +2,8 @@ import { Container, SelectedUser, Conversations, MessageInput } from './styles';
 import Image from 'next/image';
 import Avatar from '../../../assets/UserPics/userpic1.jpg';
 import { useChatbox } from '../../../hooks/useChatbox';
-import { MdOutlineTagFaces } from 'react-icons/md';
+
+type MessageType = {};
 
 export function ChatBox() {
     const { currChat } = useChatbox();
