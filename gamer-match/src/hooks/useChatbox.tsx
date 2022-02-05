@@ -19,13 +19,13 @@ type MessageType = {
     user_id_receiver: string;
 };
 
-interface ChatboxContextData {
+type ChatboxContextType = {
     isOpen: boolean;
     setIsOpenFunction: (value: boolean) => void;
     currChat: ChatItemType;
     setCurrentChat: (userId: string) => void;
     chatbox: ChatItemType[];
-}
+};
 
 const dataSource = [
     {
@@ -93,7 +93,7 @@ const dataSource = [
     },
 ] as ChatItemType[];
 
-const ChatboxContext = createContext<ChatboxContextData>({} as ChatboxContextData);
+const ChatboxContext = createContext<ChatboxContextType>({} as ChatboxContextType);
 
 export function ChatboxProvider({ children }: ChatboxProviderProps): JSX.Element {
     const [isOpen, setIsOpen] = useState(false);
@@ -113,7 +113,7 @@ export function ChatboxProvider({ children }: ChatboxProviderProps): JSX.Element
     return <ChatboxContext.Provider value={{ isOpen, setIsOpenFunction, currChat, setCurrentChat, chatbox }}>{children}</ChatboxContext.Provider>;
 }
 
-export function useChatbox(): ChatboxContextData {
+export function useChatbox(): ChatboxContextType {
     const context = useContext(ChatboxContext);
     return context;
 }

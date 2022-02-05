@@ -21,8 +21,8 @@ export default function Login() {
         event.preventDefault();
         const hash: string = sha256(password).toString();
         const data = {
-            email,
-            hash,
+            inputEmail: email,
+            inputHash: hash,
         };
         await signIn(data);
     }
@@ -32,9 +32,7 @@ export default function Login() {
         await signInWithGoogle(tokenId);
     }
 
-    const handleGoogleFail = (response) => {
-        console.log(response);
-    };
+    const handleGoogleFail = (response) => {};
 
     return (
         <Container>

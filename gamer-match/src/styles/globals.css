@@ -81,3 +81,7 @@ a {
     color: inherit;
     text-decoration: none;
 }
+
+.toast {
+    font: 500 1.6rem Poppins;
+}

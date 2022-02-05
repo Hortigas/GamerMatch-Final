@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useEffect, useState } from 'react';
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import { api } from '../src/services/apiClient';
 import { destroyCookie, setCookie, parseCookies } from 'nookies';
 import Router from 'next/router';
@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 
 type User = {
     email: string;
+    username: string;
 };
 
 type Decoded = {
@@ -13,22 +14,21 @@ type Decoded = {
 };
 
 type SignIncredentials = {
-    email: string;
-    hash: string;
+    inputEmail: string;
+    inputHash: string;
 };
 
 type SignUpcredentials = {
-    username: string;
-    email: string;
-    hash: string;
+    inputUsername: string;
+    inputEmail: string;
+    inputHash: string;
 };
 
 type AuthContextData = {
     signIn(credentials: SignIncredentials): Promise<void>;
     signInWithGoogle(tokenId: string): Promise<void>;
     user: User;
-    isAuthenticated: boolean;
-    signOut(): Promise<void>;
+    signOut(): void;
     signUp(credentials: SignUpcredentials): Promise<void>;
 };
 
@@ -41,31 +41,29 @@ export const AuthContext = createContext({} as AuthContextData);
 export function signOutFunc() {
     destroyCookie(undefined, 'GamerMatch.token');
     destroyCookie(undefined, 'GamerMatch.refreshToken');
-    Router.push('/login');
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
     const [user, setUser] = useState<User>();
-    const isAuthenticated = !!user;
 
     useEffect(() => {
         const { 'GamerMatch.token': token } = parseCookies();
         if (token) {
             api.get('/me')
                 .then((response) => {
-                    const { email } = response.data;
-                    setUser({ email });
+                    const { email, username } = response.data;
+                    setUser({ email, username });
                 })
                 .catch(() => {
-                    signOutFunc();
+                    signOut();
                 });
         }
     }, []);
 
-    async function signIn({ email, hash }: SignIncredentials) {
+    async function signIn({ inputEmail, inputHash }: SignIncredentials) {
         try {
-            const response = await api.post('sessions', { email, hash });
-            const { token, refreshToken, permissions, roles } = response.data;
+            const response = await api.post('sessions', { email: inputEmail, hash: inputHash });
+            const { token, refreshToken, email, username } = response.data;
 
             setCookie(undefined, 'GamerMatch.token', token, {
                 maxAge: 60 * 60 * 24 * 30, // 30 days
@@ -76,19 +74,19 @@ export function AuthProvider({ children }: AuthProviderProps) {
                 path: '/',
             });
 
-            setUser({ email });
+            setUser({ email, username });
             api.defaults.headers['Authorization'] = `Bearer ${token}`;
 
             Router.push('/');
         } catch (err) {
-            console.log(err);
+            toast.error('E-mail ou senha inválidos');
         }
     }
 
     async function signInWithGoogle(tokenId: string) {
         try {
             const response = await api.post('sessions/google', { tokenId });
-            const { token, refreshToken, email } = response.data;
+            const { token, refreshToken, email, username } = response.data;
 
             setCookie(undefined, 'GamerMatch.token', token, {
                 maxAge: 60 * 60 * 24 * 30, // 30 days
@@ -99,23 +97,23 @@ export function AuthProvider({ children }: AuthProviderProps) {
                 path: '/',
             });
 
-            setUser({ email });
+            setUser({ email, username });
             api.defaults.headers['Authorization'] = `Bearer ${token}`;
 
             Router.push('/');
         } catch (err) {
-            console.log(err);
+            toast.error(err.message);
         }
     }
 
-    async function signOut() {
-        setUser({ email: '' });
-        const isAuthenticated = false;
+    function signOut() {
         signOutFunc();
+        setUser(null);
+        Router.push('/login');
     }
 
-    async function signUp({ username, email, hash }: SignUpcredentials) {
-        const response = await api.post('sessions/create', { username, email, hash }).catch(function (error) {
+    async function signUp({ inputUsername, inputEmail, inputHash }: SignUpcredentials) {
+        const response = await api.post('sessions/create', { inputUsername, inputEmail, inputHash }).catch(function (error) {
             if (error.response) {
                 toast.error(error.response.data.message);
             } else if (error.request) {
@@ -127,5 +125,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
         Router.push('/login');
     }
 
-    return <AuthContext.Provider value={{ signIn, signInWithGoogle, signOut, signUp, isAuthenticated, user }}>{children}</AuthContext.Provider>;
+    return <AuthContext.Provider value={{ signIn, signInWithGoogle, signOut, signUp, user }}>{children}</AuthContext.Provider>;
+}
+function tostify(err: any) {
+    throw new Error('Function not implemented.');
 }

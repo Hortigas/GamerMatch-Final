@@ -26,9 +26,9 @@ export default function Register() {
         }
         const hash: string = sha256(password).toString();
         const data = {
-            username,
-            email,
-            hash,
+            inputUsername: username,
+            inputEmail: email,
+            inputHash: hash,
         };
         await signUp(data);
     }

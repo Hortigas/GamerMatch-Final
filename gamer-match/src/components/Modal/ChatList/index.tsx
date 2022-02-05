@@ -1,11 +1,11 @@
 import { Container, ChatItemContainer } from './styles';
 import Image from 'next/image';
 import Avatar from '../../../assets/UserPics/userpic1.jpg';
-import { ChatItemData, useChatbox } from '../../../hooks/useChatbox';
+import { ChatItemType, useChatbox } from '../../../hooks/useChatbox';
 import { useState } from 'react';
 
 type ChatItemProps = {
-    data: ChatItemData;
+    data: ChatItemType;
 };
 
 export function ChatList() {

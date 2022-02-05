@@ -1,3 +1,3 @@
 export const auth = {
-  secret: 'supersecret'
+    secret: process.env.SERVER_SECRET as string,
 } as const;

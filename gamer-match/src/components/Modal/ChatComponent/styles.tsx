@@ -11,13 +11,34 @@ export const Container = styled.div`
     display: flex;
 `;
 
+export const Header = styled.div`
+    width: 100%;
+    height: 25px;
+    padding: 5px 5px 0px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+
+    .IconClose {
+        height: 100%;
+        width: auto;
+
+        color: #506e89;
+    }
+`;
+
 export const ChatContainer = styled.div`
+    margin-top: 25px;
     width: 50%;
     border-right: 2px solid #343c4c;
     padding-right: 10px;
 `;
 
 export const MatchesContainer = styled.div`
+    margin-top: 25px;
     width: 50%;
     border-left: 2px solid #343c4c;
     padding-left: 10px;

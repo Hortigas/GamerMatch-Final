@@ -10,8 +10,7 @@ import { CreateSessionDTO, DecodedToken, CreateUser, GoogleProps, CreateMessage 
 import { OAuth2Client } from 'google-auth-library';
 import { timeStamp } from 'console';
 
-const client = new OAuth2Client(process.env.REACT_APP_GOOGLE_CLIENT_ID);
-
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const app = express();
 
 app.use(express.json());
@@ -166,8 +165,6 @@ app.post('/refresh', addUserInformationToRequest, async (request, response) => {
     return response.json({
         token,
         refreshToken: newRefreshToken,
-        //permissions: user.permissions,
-        //roles: user.roles,
     });
 });
 
