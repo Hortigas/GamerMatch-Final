@@ -21,7 +21,7 @@ model public_user {
 model public_message {
   id               Int          @id(map: "message_pk") @default(dbgenerated("nextval('\"public.message_id_seq\"'::regclass)"))
   message_content  String       @db.VarChar(255)
-  timestamp        DateTime     @default(dbgenerated("'2022-02-05 21:05:33.299616'::timestamp without time zone")) @db.Timestamp(6)
+  timestamp        DateTime     @default(dbgenerated("'2022-02-05 21:19:04.902276'::timestamp without time zone")) @db.Timestamp(6)
   user_id_sender   Int
   user_id_receiver Int
   match            Int
@@ -34,7 +34,7 @@ model public_match {
   id             Int              @id(map: "match_pk") @default(dbgenerated("nextval('\"public.match_id_seq\"'::regclass)"))
   user_id_1      Int
   user_id_2      Int
-  timestamp      DateTime         @db.Timestamp(6)
+  timestamp      DateTime         @default(dbgenerated("'2022-02-05 21:19:04.902276'::timestamp without time zone")) @db.Timestamp(6)
   public_user    public_user      @relation(fields: [user_id_1], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "match_fk0")
   public_message public_message[]
 
