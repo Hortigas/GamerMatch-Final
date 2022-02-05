@@ -8,21 +8,35 @@ datasource db {
 }
 
 model public_user {
-  id            Int      @id(map: "user_pk") @default(dbgenerated("nextval('\"public.user_id_seq\"'::regclass)"))
-  user_name     String   @db.VarChar(50)
-  user_email    String   @unique @db.VarChar(50)
-  user_password String   @db.VarChar(64)
+  id            Int            @id(map: "user_pk") @default(dbgenerated("bounded_pseudo_encrypt((nextval('\"public.user_id_seq\"'::regclass))::integer, 16777215)"))
+  user_name     String         @db.VarChar(50)
+  user_email    String         @unique @db.VarChar(50)
+  user_password String         @db.VarChar(64)
   providerAuth  Boolean?
+  public_match  public_match[]
 
   @@map("public.user")
 }
 
 model public_message {
-  id               Int      @id(map: "message_pk") @default(dbgenerated("nextval('\"public.message_id_seq\"'::regclass)"))
-  message_content  String   @db.VarChar(255)
-  timestamp        DateTime @default(dbgenerated("'2022-02-04 23:12:48.67174'::timestamp without time zone")) @db.Timestamp(6)
+  id               Int          @id(map: "message_pk") @default(dbgenerated("nextval('\"public.message_id_seq\"'::regclass)"))
+  message_content  String       @db.VarChar(255)
+  timestamp        DateTime     @default(dbgenerated("'2022-02-05 21:05:33.299616'::timestamp without time zone")) @db.Timestamp(6)
   user_id_sender   Int
   user_id_receiver Int
+  match            Int
+  public_match     public_match @relation(fields: [match], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "message_fk0")
 
   @@map("public.message")
+}
+
+model public_match {
+  id             Int              @id(map: "match_pk") @default(dbgenerated("nextval('\"public.match_id_seq\"'::regclass)"))
+  user_id_1      Int
+  user_id_2      Int
+  timestamp      DateTime         @db.Timestamp(6)
+  public_user    public_user      @relation(fields: [user_id_1], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "match_fk0")
+  public_message public_message[]
+
+  @@map("public.match")
 }
