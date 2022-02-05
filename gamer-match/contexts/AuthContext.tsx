@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 type User = {
     email: string;
     username: string;
+    userId: number;
 };
 
 type Decoded = {
@@ -51,8 +52,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
         if (token) {
             api.get('/me')
                 .then((response) => {
-                    const { email, username } = response.data;
-                    setUser({ email, username });
+                    const { email, username, userId } = response.data;
+                    setUser({ email, username, userId });
                 })
                 .catch(() => {
                     signOut();
@@ -63,7 +64,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     async function signIn({ inputEmail, inputHash }: SignIncredentials) {
         try {
             const response = await api.post('sessions', { email: inputEmail, hash: inputHash });
-            const { token, refreshToken, email, username } = response.data;
+            const { token, refreshToken, email, username, userId } = response.data;
 
             setCookie(undefined, 'GamerMatch.token', token, {
                 maxAge: 60 * 60 * 24 * 30, // 30 days
@@ -74,7 +75,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
                 path: '/',
             });
 
-            setUser({ email, username });
+            setUser({ email, username, userId });
             api.defaults.headers['Authorization'] = `Bearer ${token}`;
 
             Router.push('/');
@@ -86,7 +87,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     async function signInWithGoogle(tokenId: string) {
         try {
             const response = await api.post('sessions/google', { tokenId });
-            const { token, refreshToken, email, username } = response.data;
+            const { token, refreshToken, email, username, userId } = response.data;
 
             setCookie(undefined, 'GamerMatch.token', token, {
                 maxAge: 60 * 60 * 24 * 30, // 30 days
@@ -97,7 +98,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
                 path: '/',
             });
 
-            setUser({ email, username });
+            setUser({ email, username, userId });
             api.defaults.headers['Authorization'] = `Bearer ${token}`;
 
             Router.push('/');
@@ -113,7 +114,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
 
     async function signUp({ inputUsername, inputEmail, inputHash }: SignUpcredentials) {
-        const response = await api.post('sessions/create', { inputUsername, inputEmail, inputHash }).catch(function (error) {
+        const response = await api.post('sessions/create', { username: inputUsername, email: inputEmail, hash: inputHash }).catch(function (error) {
             if (error.response) {
                 toast.error(error.response.data.message);
             } else if (error.request) {

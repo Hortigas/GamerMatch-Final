@@ -13,20 +13,20 @@ export type CreateMessage = {
     message: string;
     sender: number;
     receiver: number;
-}
+};
 
 export type GoogleProps = {
     name: string;
     email: string;
 };
 
-type UserData = {
-    hash: string;
-    permissions: string[];
-    roles: string[];
+export type UserData = {
+    id: number;
+    user_email: string;
+    user_password: string;
+    user_name: string;
+    providerAuth: boolean;
 };
-
-export type UsersStore = Map<string, UserData>;
 
 export type RefreshTokensStore = Map<string, string[]>;
 

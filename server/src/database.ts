@@ -1,6 +1,6 @@
 import { RefreshTokensStore } from './types';
 import { v4 as uuid } from 'uuid';
-
+import { UserData } from './types';
 import { PrismaClient } from '@prisma/client';
 export const prisma = new PrismaClient();
 
@@ -14,7 +14,7 @@ export async function getUser(req: string) {
                 user_email: req,
             },
         });
-        return user;
+        return user as UserData;
     } catch (error) {
         console.error(error);
         throw error;
@@ -22,7 +22,7 @@ export async function getUser(req: string) {
 }
 
 export async function getReceiverMessage(receiver: number) {
-    //busca msg recebidas 
+    //busca msg recebidas
     try {
         const user = await prisma.public_message.findMany({
             where: {
@@ -37,7 +37,7 @@ export async function getReceiverMessage(receiver: number) {
 }
 
 export async function getSendMessage(sender: number) {
-    //busca msg recebidas 
+    //busca msg recebidas
     try {
         const user = await prisma.public_message.findMany({
             where: {
@@ -54,7 +54,7 @@ export async function getSendMessage(sender: number) {
 export async function setUser(user_name: string, user_email: string, user_password: string, providerAuth: boolean = false) {
     //cria user no bd
     try {
-        return prisma.public_user.create({
+        return await prisma.public_user.create({
             data: {
                 user_name,
                 user_email,

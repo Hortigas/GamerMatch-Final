@@ -6,10 +6,8 @@ import { generateJwtAndRefreshToken } from './auth';
 import { auth } from './config';
 
 import { checkRefreshTokenIsValid, invalidateRefreshToken, getUser, setUser, setMessage } from './database';
-import { CreateSessionDTO, DecodedToken, CreateUser, GoogleProps, CreateMessage } from './types';
+import { CreateSessionDTO, DecodedToken, CreateUser, GoogleProps, CreateMessage, UserData } from './types';
 import { OAuth2Client } from 'google-auth-library';
-import { timeStamp } from 'console';
-
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const app = express();
 
@@ -66,9 +64,9 @@ function addUserInformationToRequest(request: Request, response: Response, next:
 
 app.post('/sessions', async (request, response) => {
     const { email, hash } = request.body as CreateSessionDTO;
-    const { user_email, user_password } = await getUser(email);
+    const { user_email, user_password, user_name, id, providerAuth } = await getUser(email);
 
-    if (!user_email || hash !== user_password) {
+    if (!user_email || hash !== user_password || providerAuth) {
         return response.status(401).json({
             error: true,
             message: 'E-mail or password incorrect.',
@@ -79,6 +77,9 @@ app.post('/sessions', async (request, response) => {
     return response.json({
         token,
         refreshToken,
+        email: user_email,
+        username: user_name,
+        userId: id,
     });
 });
 
@@ -88,6 +89,7 @@ app.post('/sessions/create', async (request, response) => {
         await setUser(username, email, hash);
         return response.json();
     } catch (error) {
+        console.error(error);
         return response.status(409).json({
             error: true,
             message: 'This email address is already taken.',
@@ -116,13 +118,15 @@ app.post('/sessions/google', async (request, response) => {
             audience: process.env.GOOGLE_CLIENT_ID,
         });
         const { name, email } = ticket.getPayload() as GoogleProps;
-
-        const user = await getUser(email);
-        if (!user) await setUser(name, email, '', true);
+        let user = await getUser(email);
+        if (!user) user = (await setUser(name, email, '', true)) as UserData;
         const { token, refreshToken } = generateJwtAndRefreshToken(email);
         return response.json({
             token,
             refreshToken,
+            email: user.user_email,
+            username: user.user_name,
+            userId: user.id,
         });
     } catch (err) {
         return response.status(401).json({
@@ -157,11 +161,7 @@ app.post('/refresh', addUserInformationToRequest, async (request, response) => {
 
     invalidateRefreshToken(email, refreshToken);
 
-    const { token, refreshToken: newRefreshToken } = generateJwtAndRefreshToken(email); /*, {
-        permissions: user.permissions,
-        roles: user.roles,
-    });*/
-
+    const { token, refreshToken: newRefreshToken } = generateJwtAndRefreshToken(email);
     return response.json({
         token,
         refreshToken: newRefreshToken,
@@ -171,16 +171,16 @@ app.post('/refresh', addUserInformationToRequest, async (request, response) => {
 app.get('/me', checkAuthMiddleware, async (request, response) => {
     const email = request.user;
 
-    const { user_email } = await getUser(email);
+    const { user_email, user_name, id } = await getUser(email);
 
     if (!user_email) {
         return response.status(400).json({ error: true, message: 'User not found.' });
     }
 
     return response.json({
-        email,
-        //permissions: user.permissions,
-        //roles: user.roles,
+        email: user_email,
+        username: user_name,
+        userId: id,
     });
 });
 
