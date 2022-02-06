@@ -53,22 +53,25 @@ export async function setMatch(user_id_1: number, user_id_2: number) {
     }
 }
 
-export async function getMatchs(req: number) {
+export async function getMatches(req: number) {
     //consulta match pelo user_id
     try {
-        const match = await prisma.public_match.findMany({
+        const matches = await prisma.public_match.findMany({
             where: {
-                OR:[{
-                    user_id_1: req,
-                },{
-                    user_id_2: req,
-                }
-                ]},
+                OR: [
+                    {
+                        user_id_1: req,
+                    },
+                    {
+                        user_id_2: req,
+                    },
+                ],
+            },
         });
-        return match;
+        return matches;
     } catch (error) {
         console.error(error);
-        throw error;
+        return null;
     }
 }
 

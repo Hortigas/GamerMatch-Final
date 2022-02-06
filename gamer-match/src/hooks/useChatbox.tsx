@@ -1,6 +1,7 @@
 import { parseCookies } from 'nookies';
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
+import { api } from '../services/apiClient';
 import { socket } from '../services/socket';
 
 interface ChatboxProviderProps {
@@ -11,13 +12,14 @@ export type ChatItemType = {
     avatar: string;
     userId: string;
     user: string;
-    lastMessage: string;
-    date: Date;
+    lastMessage: MessageType;
 };
 
 type MessageType = {
     userId: number;
+    toUserId: number;
     message_content: string;
+    timestamp: string;
 };
 
 type ChatboxContextType = {
@@ -35,64 +37,25 @@ const dataSource = [
         avatar: '',
         userId: '1',
         user: 'Rebeca',
-        lastMessage: 'What are you doing?',
-        date: new Date(),
+        lastMessage: { userId: 1, message_content: 'What are you doing?', toUserId: 2 },
     },
     {
         avatar: '',
         userId: '2',
         user: 'Patolino',
-        lastMessage: 'What are you doing?',
-        date: new Date(),
+        lastMessage: { userId: 1, message_content: 'What are you doing?', toUserId: 2 },
     },
     {
         avatar: '',
         userId: '3',
         user: 'Joias7',
-        lastMessage: 'What are you doing?',
-        date: new Date(),
+        lastMessage: { userId: 1, message_content: 'What are you doing?', toUserId: 2 },
     },
     {
         avatar: '',
         userId: '4',
         user: 'Joias6',
-        lastMessage: 'What are you doing?',
-        date: new Date(),
-    },
-    {
-        avatar: '',
-        userId: '5',
-        user: 'Joias5',
-        lastMessage: 'What are you doing?',
-        date: new Date(),
-    },
-    {
-        avatar: '',
-        userId: '6',
-        user: 'Joias4',
-        lastMessage: 'What are you doing?',
-        date: new Date(),
-    },
-    {
-        avatar: '',
-        userId: '7',
-        user: 'Joias3',
-        lastMessage: 'What are you doing?',
-        date: new Date(),
-    },
-    {
-        avatar: '',
-        userId: '8',
-        user: 'Joias2',
-        lastMessage: 'What are you doing?',
-        date: new Date(),
-    },
-    {
-        avatar: '',
-        userId: '9',
-        user: 'Joias1',
-        lastMessage: 'What are you doing?',
-        date: new Date(),
+        lastMessage: { userId: 1, message_content: 'What are you doing?', toUserId: 2 },
     },
 ] as ChatItemType[];
 
@@ -107,6 +70,14 @@ export function ChatboxProvider({ children }: ChatboxProviderProps): JSX.Element
 
     useEffect(() => {
         if (!!user) {
+            SearchMatches().then((data: any) => {
+                setChatbox(data);
+            });
+        }
+    }, [user]);
+
+    useEffect(() => {
+        if (!!user) {
             if (!socket.connected) {
                 socket.auth = { username: user.userId };
                 socket.connect();
@@ -118,6 +89,16 @@ export function ChatboxProvider({ children }: ChatboxProviderProps): JSX.Element
             }
         }
     }, [user]);
+
+    const SearchMatches = async () => {
+        try {
+            const response = await api.get(`/matches/${user.userId}`);
+            console.log(response.data);
+            return response.data;
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     const setCurrentChat = (userId: string) => {
         const currentChat = chatbox.find((chat) => chat.userId === userId);

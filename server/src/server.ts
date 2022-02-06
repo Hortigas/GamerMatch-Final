@@ -7,7 +7,7 @@ import { Server } from 'socket.io';
 
 import { generateJwtAndRefreshToken } from './auth';
 import { auth } from './config';
-import { checkRefreshTokenIsValid, invalidateRefreshToken, getUser, setUser, setMessage, getMessage, setMatch } from './database';
+import { checkRefreshTokenIsValid, invalidateRefreshToken, getUser, setUser, setMessage, getMessage, setMatch, getMatches } from './database';
 import { CreateSessionDTO, DecodedToken, CreateUser, GoogleProps, Message, UserData, Matches } from './types';
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -38,13 +38,20 @@ const removeUser = (socketId: string) => {
     users = users.filter((user) => user.socketId !== socketId);
 };
 
+io.use((socket, next) => {
+    const username: number = socket.handshake.auth.username;
+    if (users.some((user) => username == user.userId)) {
+        return next(new Error('invalid username'));
+    }
+    next();
+});
+
 io.on('connection', (socket) => {
     console.log('user connected', socket.id);
 
     socket.on('add.user', (userId) => {
         console.log('[SOCKET] add.user ', userId);
         addUser(userId, socket.id);
-        console.log(users);
         io.emit('get.users', users);
     });
 
@@ -145,7 +152,36 @@ app.post('/sessions/create', async (request, response) => {
         });
     }
 });
-app.post('/match', async (request, response) => {
+
+app.get('/matches/:userId', checkAuthMiddleware, async (request, response) => {
+    const userId = Number(request.params.userId);
+
+    const email = request.user;
+    if (userId !== (await getUser(email)).id) {
+        return response.status(401).json({
+            error: true,
+            message: 'unauthorized access',
+        });
+    }
+    const matches = await getMatches(Number(userId));
+    if (matches === null) {
+        return response.status(401).json({
+            error: true,
+            message: 'userId not found',
+        });
+    }
+    const users = matches.map((match) => {
+        if (match.user_id_1 === userId) {
+            return match.user_id_2;
+        } else if (match.user_id_2 === userId) {
+            return match.user_id_1;
+        }
+    });
+    console.log(users);
+    return response.json(users);
+});
+
+app.post('/matches/create', checkAuthMiddleware, async (request, response) => {
     const { user_id_1, user_id_2 } = request.body as Matches;
     try {
         await setMatch(user_id_1, user_id_2);
@@ -157,7 +193,8 @@ app.post('/match', async (request, response) => {
         });
     }
 });
-app.post('/message/send', async (request, response) => {
+
+app.post('/message/send', checkAuthMiddleware, async (request, response) => {
     const { message, sender, receiver, match } = request.body as Message;
     try {
         await setMessage(message, sender, receiver, match);
