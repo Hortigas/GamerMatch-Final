@@ -5,8 +5,8 @@ import decode from 'jwt-decode';
 import { generateJwtAndRefreshToken } from './auth';
 import { auth } from './config';
 
-import { checkRefreshTokenIsValid, invalidateRefreshToken, getUser, setUser, setMessage, getMessage } from './database';
-import { CreateSessionDTO, DecodedToken, CreateUser, GoogleProps, Message, UserData } from './types';
+import { checkRefreshTokenIsValid, invalidateRefreshToken, getUser, setUser, setMessage, getMessage, setMatch } from './database';
+import { CreateSessionDTO, DecodedToken, CreateUser, GoogleProps, Message, UserData, Matches } from './types';
 import { OAuth2Client } from 'google-auth-library';
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const app = express();
@@ -95,6 +95,19 @@ app.post('/sessions/create', async (request, response) => {
         return response.status(409).json({
             error: true,
             message: 'This email address is already taken.',
+        });
+    }
+});
+
+app.post('/match', async (request, response) => {
+    const { user_id_1, user_id_2} = request.body as Matches;
+    try {
+        await setMatch(user_id_1, user_id_2);
+        return response.json();
+    } catch (error) {
+        return response.status(409).json({
+            error: true,
+            message: 'Error - Match not set!',
         });
     }
 });

@@ -17,6 +17,12 @@ export type Message = {
     timestamp: string;
 };
 
+export type Matches = {
+    user_id_1: number;
+    user_id_2: number;
+    timestamp: string;
+};
+
 export type GoogleProps = {
     name: string;
     email: string;

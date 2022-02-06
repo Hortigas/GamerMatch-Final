@@ -38,17 +38,15 @@ export async function setMessage(message_content: string, user_id_sender: number
     }
 }
 
-
-
-export async function getUser(req: string) {
-    //consulta user pelo email
+export async function setMatch(user_id_1: number, user_id_2: number) {
+    //cria match no bd
     try {
-        const user = await prisma.public_user.findUnique({
-            where: {
-                user_email: req,
+        return prisma.public_match.create({
+            data: {
+                user_id_1,
+                user_id_2,
             },
         });
-        return user as UserData;
     } catch (error) {
         console.error(error);
         throw error;
@@ -68,6 +66,21 @@ export async function getMatchs(req: number) {
                 ]},
         });
         return match;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
+export async function getUser(req: string) {
+    //consulta user pelo email
+    try {
+        const user = await prisma.public_user.findUnique({
+            where: {
+                user_email: req,
+            },
+        });
+        return user as UserData;
     } catch (error) {
         console.error(error);
         throw error;
