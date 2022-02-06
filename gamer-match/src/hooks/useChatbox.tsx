@@ -1,4 +1,7 @@
-import { createContext, ReactNode, useContext, useState } from 'react';
+import { parseCookies } from 'nookies';
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import { AuthContext } from '../../contexts/AuthContext';
+import { socket } from '../services/socket';
 
 interface ChatboxProviderProps {
     children: ReactNode;
@@ -13,10 +16,8 @@ export type ChatItemType = {
 };
 
 type MessageType = {
+    userId: number;
     message_content: string;
-    timespan: string;
-    user_id_sender: string;
-    user_id_receiver: string;
 };
 
 type ChatboxContextType = {
@@ -25,6 +26,8 @@ type ChatboxContextType = {
     currChat: ChatItemType;
     setCurrentChat: (userId: string) => void;
     chatbox: ChatItemType[];
+    messages: MessageType[];
+    sendMessage: (str: string) => Promise<void>;
 };
 
 const dataSource = [
@@ -100,6 +103,23 @@ export function ChatboxProvider({ children }: ChatboxProviderProps): JSX.Element
     const [chatbox, setChatbox] = useState<ChatItemType[]>(dataSource);
     const [currChat, setCurrChat] = useState({} as ChatItemType);
     const [messages, setMessages] = useState([] as MessageType[]);
+    const { user } = useContext(AuthContext);
+
+    useEffect(() => {
+        const handleNewMessage = (newMessage) => {
+            setMessages([...messages, newMessage]);
+        };
+        socket.on('connection', () => console.log('conectado'));
+        socket.on('chat.message', (newMessage) => {
+            handleNewMessage(newMessage);
+        });
+        return () => {
+            socket.off('message.chat', handleNewMessage);
+            socket.on('disconnect', () => {
+                socket.removeAllListeners();
+            });
+        };
+    }, [messages]);
 
     const setCurrentChat = (userId: string) => {
         const currentChat = chatbox.find((chat) => chat.userId === userId);
@@ -110,7 +130,11 @@ export function ChatboxProvider({ children }: ChatboxProviderProps): JSX.Element
         setIsOpen(set);
     };
 
-    return <ChatboxContext.Provider value={{ isOpen, setIsOpenFunction, currChat, setCurrentChat, chatbox }}>{children}</ChatboxContext.Provider>;
+    const sendMessage = async (message_content: string) => {
+        socket.emit('chat.message', { userId: user.userId, message_content });
+    };
+
+    return <ChatboxContext.Provider value={{ isOpen, setIsOpenFunction, currChat, setCurrentChat, chatbox, messages, sendMessage }}>{children}</ChatboxContext.Provider>;
 }
 
 export function useChatbox(): ChatboxContextType {

@@ -1,5 +1,6 @@
 import { Container, Content, InputWrapper, Main } from '../components/Login/styles';
 import logoIMG from '../assets/logoGamerMatchNTNL.png';
+import heroIMG from '../assets/hero2-image.png';
 import Image from 'next/image';
 import { MdOutlineEmail } from 'react-icons/md';
 import { RiLockPasswordLine } from 'react-icons/ri';
@@ -37,7 +38,7 @@ export default function Register() {
         <Container>
             <Content>
                 <div className="wrapperHero">
-                    <Image src={logoIMG} alt="logo Gamer match" width="300px" height="300px" />
+                    <Image src={heroIMG} alt="logo Gamer match" width="600px" height="600px" />
                 </div>
                 <Main>
                     <Image src={logoIMG} alt="logo Gamer match" width="80px" height="80px" />

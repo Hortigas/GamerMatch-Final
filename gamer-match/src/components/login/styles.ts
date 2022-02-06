@@ -15,30 +15,49 @@ export const Container = styled.div`
 
 export const Content = styled.div`
     max-width: 1100px;
-    max-height: 800px;
+    max-height: 900px;
     overflow: hidden;
     border-radius: 10px;
 
     background: #36393e;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    align-items: center;
 
-    div.wrapperHero {
-        background-color: black;
+    .wrapperHero {
+        flex: 2;
+        height: 100%;
+        background-color: #222328;
         display: flex;
-        align-items: center;
+        align-items: flex-end;
         justify-content: center;
+
+        .hero {
+        }
+    }
+
+    @media (max-width: 1000px) {
+        max-height: none;
+        height: 100%;
+        width: 100%;
+    }
+
+    @media (max-width: 600px) {
+        div.wrapperHero {
+            visibility: hidden;
+            position: absolute;
+        }
     }
 `;
 
 export const Main = styled.main`
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     border-radius: 1rem;
     padding: 0rem 5rem 5rem;
-    width: 500px;
-    height: 580px;
+    height: 100%;
 
     form {
         width: 100%;
@@ -51,7 +70,7 @@ export const Main = styled.main`
         margin-bottom: 30px;
 
         button {
-            width: 15rem;
+            flex: 1;
             height: 4rem;
             border-radius: 0.8rem;
             font: 500 1.5rem Archivo;
@@ -66,6 +85,10 @@ export const Main = styled.main`
             box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.4);
 
             transition: filter 0.2s;
+
+            & + button {
+                margin-left: 2rem;
+            }
 
             &:hover {
                 filter: brightness(0.8);

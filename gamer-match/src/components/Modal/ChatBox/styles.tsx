@@ -136,6 +136,7 @@ export const Balloon = styled.div`
     border-radius: 15px;
     padding: 0.8rem 1.2rem 2.2rem 1.2rem;
     max-width: 90%;
+    min-width: 20%;
     color: white;
 
     &.right {

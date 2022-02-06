@@ -1,5 +1,6 @@
 import { Container, Content, InputWrapper, Main } from '../components/Login/styles';
 import logoIMG from '../assets/logoGamerMatchNTNL.png';
+import heroIMG from '../assets/hero-image.png';
 import Image from 'next/image';
 import { LoginButton } from '../components/Login/LoginButton';
 import { MdOutlineEmail } from 'react-icons/md';
@@ -38,7 +39,7 @@ export default function Login() {
         <Container>
             <Content>
                 <div className="wrapperHero">
-                    <Image src={logoIMG} alt="logo Gamer match" width="300px" height="300px" />
+                    <Image src={heroIMG} alt="hero image Gamer match" width="600px" height="600px" className="hero" />
                 </div>
                 <Main>
                     <Image src={logoIMG} alt="logo Gamer match" width="80px" height="80px" />
