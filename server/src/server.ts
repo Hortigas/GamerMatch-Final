@@ -7,16 +7,9 @@ import { Server } from 'socket.io';
 
 import { generateJwtAndRefreshToken } from './auth';
 import { auth } from './config';
-<<<<<<< HEAD
 import { checkRefreshTokenIsValid, invalidateRefreshToken, getUser, setUser, setMessage, getMessage } from './database';
 import { CreateSessionDTO, DecodedToken, CreateUser, GoogleProps, Message, UserData } from './types';
 
-=======
-
-import { checkRefreshTokenIsValid, invalidateRefreshToken, getUser, setUser, setMessage, getMessage, setMatch } from './database';
-import { CreateSessionDTO, DecodedToken, CreateUser, GoogleProps, Message, UserData, Matches } from './types';
-import { OAuth2Client } from 'google-auth-library';
->>>>>>> 65209e8af4aadd99f75ca446d727e78a9149b724
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const app = express();
 app.use(express.json());
@@ -34,6 +27,7 @@ const io = new Server(server, {
 });
 
 io.on('connection', (socket) => {
+    io.use((socket, next) => {});
     console.log('new connection', socket.id);
     socket.on('chat.message', (data) => {
         console.log('[SOCKET] chat.message ', data);
@@ -43,6 +37,7 @@ io.on('connection', (socket) => {
         console.log('[SOCKET] chat.message disc');
     });
 });
+
 server.listen(3455, () => {
     console.log('listening on: port 3455');
 });
@@ -131,9 +126,8 @@ app.post('/sessions/create', async (request, response) => {
         });
     }
 });
-
 app.post('/match', async (request, response) => {
-    const { user_id_1, user_id_2} = request.body as Matches;
+    const { user_id_1, user_id_2 } = request.body as Matches;
     try {
         await setMatch(user_id_1, user_id_2);
         return response.json();
@@ -144,7 +138,6 @@ app.post('/match', async (request, response) => {
         });
     }
 });
-
 app.post('/message/send', async (request, response) => {
     const { message, sender, receiver, match } = request.body as Message;
     try {
