@@ -109,7 +109,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     function signOut() {
         signOutFunc();
-        setUser(null);
+        setUser(undefined);
         Router.push('/login');
     }
 

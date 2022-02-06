@@ -106,20 +106,18 @@ export function ChatboxProvider({ children }: ChatboxProviderProps): JSX.Element
     const { user } = useContext(AuthContext);
 
     useEffect(() => {
-        const handleNewMessage = (newMessage) => {
-            setMessages([...messages, newMessage]);
-        };
-        socket.on('connection', () => console.log('conectado'));
-        socket.on('chat.message', (newMessage) => {
-            handleNewMessage(newMessage);
-        });
-        return () => {
-            socket.off('message.chat', handleNewMessage);
-            socket.on('disconnect', () => {
-                socket.removeAllListeners();
-            });
-        };
-    }, [messages]);
+        if (!!user) {
+            if (!socket.connected) {
+                socket.auth = { username: user.userId };
+                socket.connect();
+                socket.emit('add.user', user.userId);
+            }
+        } else {
+            if (socket.connected) {
+                socket.disconnect();
+            }
+        }
+    }, [user]);
 
     const setCurrentChat = (userId: string) => {
         const currentChat = chatbox.find((chat) => chat.userId === userId);

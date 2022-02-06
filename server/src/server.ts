@@ -7,8 +7,8 @@ import { Server } from 'socket.io';
 
 import { generateJwtAndRefreshToken } from './auth';
 import { auth } from './config';
-import { checkRefreshTokenIsValid, invalidateRefreshToken, getUser, setUser, setMessage, getMessage } from './database';
-import { CreateSessionDTO, DecodedToken, CreateUser, GoogleProps, Message, UserData } from './types';
+import { checkRefreshTokenIsValid, invalidateRefreshToken, getUser, setUser, setMessage, getMessage, setMatch } from './database';
+import { CreateSessionDTO, DecodedToken, CreateUser, GoogleProps, Message, UserData, Matches } from './types';
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const app = express();
@@ -26,21 +26,41 @@ const io = new Server(server, {
     },
 });
 
+type User = {
+    userId: number;
+    socketId: string;
+};
+let users = [] as User[];
+const addUser = (userId: number, socketId: string) => {
+    !users.some((user) => user.userId === userId) && users.push({ userId, socketId });
+};
+const removeUser = (socketId: string) => {
+    users = users.filter((user) => user.socketId !== socketId);
+};
+
 io.on('connection', (socket) => {
-    io.use((socket, next) => {});
-    console.log('new connection', socket.id);
+    console.log('user connected', socket.id);
+
+    socket.on('add.user', (userId) => {
+        console.log('[SOCKET] add.user ', userId);
+        addUser(userId, socket.id);
+        console.log(users);
+        io.emit('get.users', users);
+    });
+
     socket.on('chat.message', (data) => {
         console.log('[SOCKET] chat.message ', data);
         io.emit('chat.message', data);
     });
     socket.on('disconnect', () => {
-        console.log('[SOCKET] chat.message disc');
+        console.log('user disconnect', socket.id);
+        removeUser(socket.id);
+        console.log(users);
+        io.emit('get.users', users);
     });
 });
 
-server.listen(3455, () => {
-    console.log('listening on: port 3455');
-});
+server.listen(3455);
 
 function checkAuthMiddleware(request: Request, response: Response, next: NextFunction) {
     const { authorization } = request.headers;
@@ -119,7 +139,6 @@ app.post('/sessions/create', async (request, response) => {
         await setUser(username, email, hash);
         return response.json();
     } catch (error) {
-        console.error(error);
         return response.status(409).json({
             error: true,
             message: 'This email address is already taken.',
