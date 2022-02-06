@@ -90,11 +90,6 @@ export const ChatItemContainer = styled.div`
     }
 `;
 
-export const Conversations = styled.main`
-    width: 100%;
-    flex-grow: 1;
-`;
-
 export const MessageInput = styled.input`
     width: 100%;
     height: 50px;
@@ -104,4 +99,87 @@ export const MessageInput = styled.input`
     background-color: transparent;
     padding: 0px 15px;
     color: white;
+`;
+
+export const Conversations = styled.main`
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    /* Scroll */
+    &::-webkit-scrollbar {
+        width: 5px;
+        height: 10px;
+    }
+    &::-webkit-scrollbar-track {
+        margin-top: 5px;
+        background-color: transparent;
+        border-radius: 10px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: #0c4b7b;
+        border-radius: 10px;
+    }
+    padding: 10px 10px;
+`;
+
+export const BalloonWrapper = styled.div`
+    width: 100%;
+    display: flex;
+    margin-bottom: 20px;
+`;
+
+export const Balloon = styled.div`
+    position: relative;
+
+    border-radius: 15px;
+    padding: 0.8rem 1.2rem 2.2rem 1.2rem;
+    max-width: 90%;
+    color: white;
+
+    &.right {
+        background-color: #08497f;
+        margin-left: auto;
+
+        &::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            border-top: 25px solid #08497f;
+            right: 0;
+            border-left: 30px solid transparent;
+            z-index: -1;
+        }
+    }
+
+    &.left {
+        background-color: #36393e;
+        margin-right: auto;
+
+        &::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            border-top: 25px solid #36393e;
+            left: 0;
+            border-right: 30px solid transparent;
+            z-index: -1;
+        }
+    }
+
+    .message {
+        font-weight: 400;
+        word-wrap: break-word;
+    }
+
+    .date {
+        position: absolute;
+        right: 1.5rem;
+        bottom: 0;
+        text-align: right;
+        font-weight: 400;
+        font-size: 85%;
+        color: #c0c0c0;
+    }
 `;

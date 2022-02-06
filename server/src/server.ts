@@ -64,14 +64,16 @@ function addUserInformationToRequest(request: Request, response: Response, next:
 
 app.post('/sessions', async (request, response) => {
     const { email, hash } = request.body as CreateSessionDTO;
-    const { user_email, user_password, user_name, id, providerAuth } = await getUser(email);
+    const user = await getUser(email);
 
-    if (!user_email || hash !== user_password || providerAuth) {
+    if (user === null || hash !== user.user_password || user.providerAuth) {
         return response.status(401).json({
             error: true,
             message: 'E-mail or password incorrect.',
         });
     }
+
+    const { user_email, user_password, user_name, id, providerAuth } = user;
 
     const { token, refreshToken } = generateJwtAndRefreshToken(email);
     return response.json({

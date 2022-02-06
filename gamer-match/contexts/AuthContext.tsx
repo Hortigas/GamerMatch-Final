@@ -80,7 +80,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
             Router.push('/');
         } catch (err) {
-            toast.error('E-mail ou senha inválidos');
+            if (err.status == 401) toast.error('E-mail ou senha inválidos');
         }
     }
 

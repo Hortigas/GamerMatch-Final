@@ -9,7 +9,7 @@ export const Container = styled.div`
     overflow: auto;
     /* Scroll */
     &::-webkit-scrollbar {
-        width: 10px;
+        width: 5px;
         height: 10px;
     }
     &::-webkit-scrollbar-track {
