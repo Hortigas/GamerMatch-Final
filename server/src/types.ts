@@ -9,10 +9,11 @@ export type CreateUser = {
     hash: string;
 };
 
-export type CreateMessage = {
+export type Message = {
     message: string;
     sender: number;
     receiver: number;
+    match: number;
 };
 
 export type GoogleProps = {

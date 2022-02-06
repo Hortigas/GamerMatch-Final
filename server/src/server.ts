@@ -5,8 +5,8 @@ import decode from 'jwt-decode';
 import { generateJwtAndRefreshToken } from './auth';
 import { auth } from './config';
 
-import { checkRefreshTokenIsValid, invalidateRefreshToken, getUser, setUser, setMessage } from './database';
-import { CreateSessionDTO, DecodedToken, CreateUser, GoogleProps, CreateMessage, UserData } from './types';
+import { checkRefreshTokenIsValid, invalidateRefreshToken, getUser, setUser, setMessage, getMessage } from './database';
+import { CreateSessionDTO, DecodedToken, CreateUser, GoogleProps, Message, UserData } from './types';
 import { OAuth2Client } from 'google-auth-library';
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const app = express();
@@ -99,10 +99,10 @@ app.post('/sessions/create', async (request, response) => {
     }
 });
 
-/*app.post('/sessions/message', async (request, response) => {
-    const { message, sender, receiver } = request.body as CreateMessage;
+app.post('/message/send', async (request, response) => {
+    const { message, sender, receiver, match } = request.body as Message;
     try {
-        await setMessage(message, sender, receiver);
+        await setMessage(message, sender, receiver, match);
         return response.json();
     } catch (error) {
         return response.status(409).json({
@@ -110,7 +110,25 @@ app.post('/sessions/create', async (request, response) => {
             message: 'Error - Message not send!',
         });
     }
+});
+
+/*app.get('/message', checkAuthMiddleware, async (request, response) => {
+    const email = request.user;
+    const { id } = await getUser(email);
+
+
+
+    if (!user_email) {
+        return response.status(400).json({ error: true, message: 'User not found.' });
+    }
+
+    return response.json({
+        email: user_email,
+        username: user_name,
+        userId: id,
+    });
 });*/
+
 
 app.post('/sessions/google', async (request, response) => {
     const { tokenId } = request.body;

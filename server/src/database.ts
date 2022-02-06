@@ -6,6 +6,38 @@ export const prisma = new PrismaClient();
 
 export const tokens: RefreshTokensStore = new Map();
 
+export async function getMessage(match_id: number) {
+    //busca msg recebidas
+    try {
+        const msg = await prisma.public_message.findMany({
+            where: {
+                match: match_id,
+            },
+        });
+        return msg;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
+export async function setMessage(message_content: string, user_id_sender: number, user_id_receiver: number, match: number) {
+    //cria msg no bd
+    try {
+        return prisma.public_message.create({
+            data: {
+                message_content,
+                user_id_sender,
+                user_id_receiver,
+                match,
+            },
+        });
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
 export async function getUser(req: string) {
     //consulta user pelo email
     try {
@@ -21,36 +53,6 @@ export async function getUser(req: string) {
     }
 }
 
-export async function getReceiverMessage(receiver: number) {
-    //busca msg recebidas
-    try {
-        const user = await prisma.public_message.findMany({
-            where: {
-                user_id_receiver: receiver,
-            },
-        });
-        return user;
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
-}
-
-export async function getSendMessage(sender: number) {
-    //busca msg recebidas
-    try {
-        const user = await prisma.public_message.findMany({
-            where: {
-                user_id_sender: sender,
-            },
-        });
-        return user;
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
-}
-
 export async function setUser(user_name: string, user_email: string, user_password: string, providerAuth: boolean = false) {
     //cria user no bd
     try {
@@ -60,23 +62,6 @@ export async function setUser(user_name: string, user_email: string, user_passwo
                 user_email,
                 user_password,
                 providerAuth,
-            },
-        });
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
-}
-
-export async function setMessage(message_content: string, user_id_sender: number, user_id_receiver: number) {
-    //cria msg no bd
-    const timestamp = Date.now();
-    try {
-        return prisma.public_message.create({
-            data: {
-                message_content,
-                user_id_sender,
-                user_id_receiver,
             },
         });
     } catch (error) {
