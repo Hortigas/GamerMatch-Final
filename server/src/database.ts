@@ -90,6 +90,22 @@ export async function getUser(req: string) {
     }
 }
 
+export async function getUsersById(req: number[]) {
+    try {
+        const users = await prisma.public_user.findMany({
+            where: {
+                id: {
+                    in:req,
+                }
+            },
+        });
+        return users;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
 export async function setUser(user_name: string, user_email: string, user_password: string, providerAuth: boolean = false) {
     //cria user no bd
     try {

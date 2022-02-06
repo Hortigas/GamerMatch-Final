@@ -7,7 +7,7 @@ import { Server } from 'socket.io';
 
 import { generateJwtAndRefreshToken } from './auth';
 import { auth } from './config';
-import { checkRefreshTokenIsValid, invalidateRefreshToken, getUser, setUser, setMessage, getMessage, setMatch, getMatches } from './database';
+import { checkRefreshTokenIsValid, invalidateRefreshToken, getUser, setUser, setMessage, getMessage, setMatch, getMatches, getUsersById } from './database';
 import { CreateSessionDTO, DecodedToken, CreateUser, GoogleProps, Message, UserData, Matches } from './types';
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -170,14 +170,14 @@ app.get('/matches/:userId', checkAuthMiddleware, async (request, response) => {
             message: 'userId not found',
         });
     }
-    const users = matches.map((match) => {
+    const usersId = matches.map((match) => {
         if (match.user_id_1 === userId) {
             return match.user_id_2;
         } else if (match.user_id_2 === userId) {
             return match.user_id_1;
         }
-    });
-    console.log(users);
+    }) as number[] ;
+    const users = await getUsersById(usersId);
     return response.json(users);
 });
 
