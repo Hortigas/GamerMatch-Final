@@ -38,6 +38,8 @@ export async function setMessage(message_content: string, user_id_sender: number
     }
 }
 
+
+
 export async function getUser(req: string) {
     //consulta user pelo email
     try {
@@ -47,6 +49,25 @@ export async function getUser(req: string) {
             },
         });
         return user as UserData;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
+export async function getMatchs(req: number) {
+    //consulta match pelo user_id
+    try {
+        const match = await prisma.public_match.findMany({
+            where: {
+                OR:[{
+                    user_id_1: req,
+                },{
+                    user_id_2: req,
+                }
+                ]},
+        });
+        return match;
     } catch (error) {
         console.error(error);
         throw error;

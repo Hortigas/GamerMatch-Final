@@ -14,6 +14,7 @@ export type Message = {
     sender: number;
     receiver: number;
     match: number;
+    timestamp: string;
 };
 
 export type GoogleProps = {
