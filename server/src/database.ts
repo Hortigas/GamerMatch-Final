@@ -95,11 +95,13 @@ export async function getUsersById(req: number[]) {
         const users = await prisma.public_user.findMany({
             where: {
                 id: {
-                    in:req,
-                }
+                    in: req,
+                },
             },
         });
-        return users;
+        return users.map((u) => {
+            return { userId: u.id, username: u.user_name, avatar: '', messages: [] };
+        });
     } catch (error) {
         console.error(error);
         throw error;

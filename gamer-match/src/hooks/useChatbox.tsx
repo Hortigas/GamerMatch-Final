@@ -1,8 +1,9 @@
 import { parseCookies } from 'nookies';
-import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import { createContext, ReactNode, useContext, useEffect, useRef, useState } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
 import { api } from '../services/apiClient';
-import { socket } from '../services/socket';
+import { SocketContext } from '../services/socket';
+import convertDate from 'date-and-time';
 
 interface ChatboxProviderProps {
     children: ReactNode;
@@ -10,15 +11,15 @@ interface ChatboxProviderProps {
 
 export type ChatItemType = {
     avatar: string;
-    userId: string;
+    userId: number;
     user: string;
-    lastMessage: MessageType;
+    messages: MessageType[];
 };
 
 type MessageType = {
     userId: number;
     toUserId: number;
-    message_content: string;
+    messageContent: string;
     timestamp: string;
 };
 
@@ -26,52 +27,40 @@ type ChatboxContextType = {
     isOpen: boolean;
     setIsOpenFunction: (value: boolean) => void;
     currChat: ChatItemType;
-    setCurrentChat: (userId: string) => void;
-    chatbox: ChatItemType[];
-    messages: MessageType[];
+    setCurrentChat: (userId: number) => void;
+    CH: ChatItemType[];
+    onlineChatbox: number[];
     sendMessage: (str: string) => Promise<void>;
 };
-
-const dataSource = [
-    {
-        avatar: '',
-        userId: '1',
-        user: 'Rebeca',
-        lastMessage: { userId: 1, message_content: 'What are you doing?', toUserId: 2 },
-    },
-    {
-        avatar: '',
-        userId: '2',
-        user: 'Patolino',
-        lastMessage: { userId: 1, message_content: 'What are you doing?', toUserId: 2 },
-    },
-    {
-        avatar: '',
-        userId: '3',
-        user: 'Joias7',
-        lastMessage: { userId: 1, message_content: 'What are you doing?', toUserId: 2 },
-    },
-    {
-        avatar: '',
-        userId: '4',
-        user: 'Joias6',
-        lastMessage: { userId: 1, message_content: 'What are you doing?', toUserId: 2 },
-    },
-] as ChatItemType[];
 
 const ChatboxContext = createContext<ChatboxContextType>({} as ChatboxContextType);
 
 export function ChatboxProvider({ children }: ChatboxProviderProps): JSX.Element {
+    const socket = useContext(SocketContext);
     const [isOpen, setIsOpen] = useState(false);
-    const [chatbox, setChatbox] = useState<ChatItemType[]>(dataSource);
-    const [currChat, setCurrChat] = useState({} as ChatItemType);
-    const [messages, setMessages] = useState([] as MessageType[]);
+    const [message, setMessage] = useState();
+    const [CH, setCH] = useState([] as ChatItemType[]);
+    const [onlineChatbox, setOnlineChatbox] = useState<number[]>([]);
+    const [currChat, setCurrChat] = useState(null);
     const { user } = useContext(AuthContext);
+
+    let msg;
+    useEffect(() => {
+        if (!!user) {
+            SearchMatches().then((data) => {
+                setCH(data);
+            });
+        }
+    }, []);
+
+    useEffect(() => {
+        if (!!message && !!user) addMessage(message);
+    }, [message]);
 
     useEffect(() => {
         if (!!user) {
-            SearchMatches().then((data: any) => {
-                setChatbox(data);
+            SearchMatches().then((data) => {
+                setCH(data);
             });
         }
     }, [user]);
@@ -82,6 +71,13 @@ export function ChatboxProvider({ children }: ChatboxProviderProps): JSX.Element
                 socket.auth = { username: user.userId };
                 socket.connect();
                 socket.emit('add.user', user.userId);
+                socket.on('get.users', (users) => {
+                    setOnlineChatbox(users.map((i) => i.userId));
+                });
+                socket.on('chat.message', (data) => {
+                    setMessage(data);
+                });
+                socket.on('user.Id', () => socket.emit('add.user', user.userId));
             }
         } else {
             if (socket.connected) {
@@ -90,18 +86,23 @@ export function ChatboxProvider({ children }: ChatboxProviderProps): JSX.Element
         }
     }, [user]);
 
-    const SearchMatches = async () => {
-        try {
-            const response = await api.get(`/matches/${user.userId}`);
-            console.log(response.data);
-            return response.data;
-        } catch (error) {
-            console.log(error);
+    function addMessage(message: MessageType) {
+        const newCH = [...CH];
+        if (message.userId === user.userId) {
+            newCH.find((c) => c.userId == message.toUserId).messages.push(message);
+        } else {
+            newCH.find((c) => c.userId == message.userId).messages.push(message);
         }
-    };
+        setCH(newCH);
+    }
 
-    const setCurrentChat = (userId: string) => {
-        const currentChat = chatbox.find((chat) => chat.userId === userId);
+    async function SearchMatches() {
+        const res = await api.get(`/matches/${user.userId}`);
+        return res.data;
+    }
+
+    const setCurrentChat = (userId: number) => {
+        const currentChat = CH.find((chat) => chat.userId === userId);
         setCurrChat(currentChat);
     };
 
@@ -109,11 +110,13 @@ export function ChatboxProvider({ children }: ChatboxProviderProps): JSX.Element
         setIsOpen(set);
     };
 
-    const sendMessage = async (message_content: string) => {
-        socket.emit('chat.message', { userId: user.userId, message_content });
+    const sendMessage = async (messageContent: string) => {
+        const timestamp = convertDate.format(new Date(), 'YYYY-MM-DD HH:mm:ss:SSS');
+        socket.emit('chat.message', { userId: user.userId, toUserId: currChat.userId, messageContent, timestamp });
+        addMessage({ userId: user.userId, toUserId: currChat.userId, messageContent, timestamp });
     };
 
-    return <ChatboxContext.Provider value={{ isOpen, setIsOpenFunction, currChat, setCurrentChat, chatbox, messages, sendMessage }}>{children}</ChatboxContext.Provider>;
+    return <ChatboxContext.Provider value={{ isOpen, setIsOpenFunction, currChat, setCurrentChat, CH, onlineChatbox, sendMessage }}>{children}</ChatboxContext.Provider>;
 }
 
 export function useChatbox(): ChatboxContextType {

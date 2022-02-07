@@ -12,12 +12,12 @@ type MessageProps = {
 
 type MessageData = {
     own: boolean;
-    message_content: string;
+    messageContent: string;
 };
 
 export function ChatBox() {
     const messagesEndRef = createRef<HTMLDivElement>();
-    const { currChat, messages, sendMessage } = useChatbox();
+    const { currChat, sendMessage } = useChatbox();
     const { user } = useContext(AuthContext);
 
     function handleKeyPress(e) {
@@ -35,29 +35,33 @@ export function ChatBox() {
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [messages]);
+    }, [currChat]);
 
-    return (
-        <Container>
-            <SelectedUser>
-                <div className="avatar">
-                    <Image className="avatarImg" src={Avatar} alt={currChat.user} width={200} height={200} />
-                </div>
-                <h3>{currChat.user}</h3>
-            </SelectedUser>
-            <Conversations>
-                {messages.map((data, index) => {
-                    return <Message key={index} messageData={{ message_content: data.message_content, own: user.userId == data.userId }} />;
-                })}
-                <div ref={messagesEndRef} />
-            </Conversations>
-            <MessageInput onKeyPress={handleKeyPress} />
-        </Container>
-    );
+    if (currChat) {
+        return (
+            <Container>
+                <SelectedUser>
+                    <div className="avatar">
+                        <Image className="avatarImg" src={Avatar} alt={currChat.user} width={200} height={200} />
+                    </div>
+                    <h3>{currChat.user}</h3>
+                </SelectedUser>
+                <Conversations>
+                    {currChat.messages?.map((data, index) => {
+                        return <Message key={index} messageData={{ messageContent: data.messageContent, own: user.userId == data.userId }} />;
+                    })}
+                    <div ref={messagesEndRef} />
+                </Conversations>
+                <MessageInput onKeyPress={handleKeyPress} />
+            </Container>
+        );
+    } else {
+        return <div></div>;
+    }
 }
 
 function Message({ messageData }: MessageProps) {
-    const { own, message_content } = messageData;
+    const { own, messageContent } = messageData;
 
     var dateUTC = new Date();
     var userTimezoneOffset = dateUTC.getTimezoneOffset();
@@ -66,7 +70,7 @@ function Message({ messageData }: MessageProps) {
     return (
         <BalloonWrapper>
             <Balloon className={own ? 'right' : 'left'}>
-                <span className="message">{message_content}</span>
+                <span className="message">{messageContent}</span>
                 <span className="date">{date}</span>
             </Balloon>
         </BalloonWrapper>

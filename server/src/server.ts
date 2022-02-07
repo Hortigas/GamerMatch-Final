@@ -3,71 +3,19 @@ import express, { application, NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import decode from 'jwt-decode';
 import { OAuth2Client } from 'google-auth-library';
-import { Server } from 'socket.io';
 
 import { generateJwtAndRefreshToken } from './auth';
 import { auth } from './config';
 import { checkRefreshTokenIsValid, invalidateRefreshToken, getUser, setUser, setMessage, getMessage, setMatch, getMatches, getUsersById } from './database';
 import { CreateSessionDTO, DecodedToken, CreateUser, GoogleProps, Message, UserData, Matches } from './types';
+import { socketIO } from './socketIo';
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-const app = express();
+export const app = express();
 app.use(express.json());
 app.use(cors());
 
-const http = require('http');
-const server = http.createServer(app);
-const io = new Server(server, {
-    cors: {
-        origin: 'http://localhost:3000',
-        methods: ['GET', 'POST'],
-        allowedHeaders: ['authorization'],
-        credentials: true,
-    },
-});
-
-type User = {
-    userId: number;
-    socketId: string;
-};
-let users = [] as User[];
-const addUser = (userId: number, socketId: string) => {
-    !users.some((user) => user.userId === userId) && users.push({ userId, socketId });
-};
-const removeUser = (socketId: string) => {
-    users = users.filter((user) => user.socketId !== socketId);
-};
-
-io.use((socket, next) => {
-    const username: number = socket.handshake.auth.username;
-    if (users.some((user) => username == user.userId)) {
-        return next(new Error('invalid username'));
-    }
-    next();
-});
-
-io.on('connection', (socket) => {
-    console.log('user connected', socket.id);
-
-    socket.on('add.user', (userId) => {
-        console.log('[SOCKET] add.user ', userId);
-        addUser(userId, socket.id);
-        io.emit('get.users', users);
-    });
-
-    socket.on('chat.message', (data) => {
-        console.log('[SOCKET] chat.message ', data);
-        io.emit('chat.message', data);
-    });
-    socket.on('disconnect', () => {
-        console.log('user disconnect', socket.id);
-        removeUser(socket.id);
-        console.log(users);
-        io.emit('get.users', users);
-    });
-});
-
-server.listen(3455);
+socketIO();
 
 function checkAuthMiddleware(request: Request, response: Response, next: NextFunction) {
     const { authorization } = request.headers;
@@ -156,13 +104,6 @@ app.post('/sessions/create', async (request, response) => {
 app.get('/matches/:userId', checkAuthMiddleware, async (request, response) => {
     const userId = Number(request.params.userId);
 
-    const email = request.user;
-    if (userId !== (await getUser(email)).id) {
-        return response.status(401).json({
-            error: true,
-            message: 'unauthorized access',
-        });
-    }
     const matches = await getMatches(Number(userId));
     if (matches === null) {
         return response.status(401).json({
@@ -176,8 +117,10 @@ app.get('/matches/:userId', checkAuthMiddleware, async (request, response) => {
         } else if (match.user_id_2 === userId) {
             return match.user_id_1;
         }
-    }) as number[] ;
+    }) as number[];
+    console.log(usersId);
     const users = await getUsersById(usersId);
+    console.log('matches:', users);
     return response.json(users);
 });
 

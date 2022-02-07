@@ -13,3 +13,9 @@ export default function Landing() {
         </Home>
     );
 }
+
+export const getServerSideProps = withSSRAuth(async (ctx) => {
+    return {
+        props: {},
+    };
+});

@@ -5,15 +5,18 @@ import { ChatComponent } from '../components/Modal/ChatComponent/index';
 import { ToastContainer } from 'react-toastify';
 import { ChatboxProvider } from '../hooks/useChatbox';
 import 'react-toastify/dist/ReactToastify.css';
+import { socket, SocketContext } from '../services/socket';
 
 function MyApp({ Component, pageProps }: AppProps) {
     return (
         <AuthProvider>
             <Component {...pageProps} />
             <ToastContainer bodyClassName="toast" />
-            <ChatboxProvider>
-                <ChatComponent />
-            </ChatboxProvider>
+            <SocketContext.Provider value={socket}>
+                <ChatboxProvider>
+                    <ChatComponent />
+                </ChatboxProvider>
+            </SocketContext.Provider>
         </AuthProvider>
     );
 }
