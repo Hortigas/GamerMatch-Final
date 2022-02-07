@@ -11,7 +11,6 @@ type ChatItemProps = {
 
 export function ChatList() {
     const { CH, onlineChatbox } = useChatbox();
-
     return (
         <Container>
             {CH?.map((item) => (
@@ -32,10 +31,10 @@ function ChatItem({ data, online }: ChatItemProps) {
     return (
         <ChatItemContainer onClick={handleClick} focus={currChat?.userId === chatInfo.userId}>
             <div className="avatar">
-                <Image className="avatarImg" src={Avatar} alt={data.user} width={200} height={200} />
+                <Image className="avatarImg" src={Avatar} alt={data.username} width={200} height={200} />
                 <div className={online ? 'status' : ''} />
             </div>
-            <h3>{data.user}</h3>
+            <h3>{data.username}</h3>
             <h4>test</h4>
             <span>Just Now</span>
         </ChatItemContainer>

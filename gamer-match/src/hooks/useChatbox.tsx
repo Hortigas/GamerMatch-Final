@@ -12,7 +12,7 @@ interface ChatboxProviderProps {
 export type ChatItemType = {
     avatar: string;
     userId: number;
-    user: string;
+    username: string;
     messages: MessageType[];
 };
 

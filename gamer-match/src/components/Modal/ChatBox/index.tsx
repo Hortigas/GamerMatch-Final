@@ -42,9 +42,9 @@ export function ChatBox() {
             <Container>
                 <SelectedUser>
                     <div className="avatar">
-                        <Image className="avatarImg" src={Avatar} alt={currChat.user} width={200} height={200} />
+                        <Image className="avatarImg" src={Avatar} alt={currChat.username} width={200} height={200} />
                     </div>
-                    <h3>{currChat.user}</h3>
+                    <h3>{currChat.username}</h3>
                 </SelectedUser>
                 <Conversations>
                     {currChat.messages?.map((data, index) => {
