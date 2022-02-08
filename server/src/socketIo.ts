@@ -5,7 +5,7 @@ const http = require('http');
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: process.env.socketEndpoint as string,
+        origin: process.env.SOCKET_ENDPOINT,
         methods: ['GET', 'POST'],
         allowedHeaders: ['authorization'],
         credentials: true,
