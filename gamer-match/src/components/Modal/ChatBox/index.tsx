@@ -17,7 +17,7 @@ type MessageData = {
 
 export function ChatBox() {
     const messagesEndRef = createRef<HTMLDivElement>();
-    const { currChat, sendMessage } = useChatbox();
+    const { currChat, message, sendMessage } = useChatbox();
     const { user } = useContext(AuthContext);
 
     function handleKeyPress(e) {
@@ -29,13 +29,14 @@ export function ChatBox() {
         if (e.key === 'Enter' && str.length > 0) {
             str = str.trim();
             sendMessage(str);
+            messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
             e.target.value = '';
         }
     }
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [currChat]);
+    }, [message]);
 
     if (currChat) {
         return (

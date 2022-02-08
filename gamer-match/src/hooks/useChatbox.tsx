@@ -30,6 +30,7 @@ type ChatboxContextType = {
     setCurrentChat: (userId: number) => void;
     CH: ChatItemType[];
     onlineChatbox: number[];
+    message: string[];
     sendMessage: (str: string) => Promise<void>;
 };
 
@@ -116,7 +117,7 @@ export function ChatboxProvider({ children }: ChatboxProviderProps): JSX.Element
         addMessage({ userId: user.userId, toUserId: currChat.userId, messageContent, timestamp });
     };
 
-    return <ChatboxContext.Provider value={{ isOpen, setIsOpenFunction, currChat, setCurrentChat, CH, onlineChatbox, sendMessage }}>{children}</ChatboxContext.Provider>;
+    return <ChatboxContext.Provider value={{ isOpen, setIsOpenFunction, currChat, setCurrentChat, CH, onlineChatbox, message, sendMessage }}>{children}</ChatboxContext.Provider>;
 }
 
 export function useChatbox(): ChatboxContextType {

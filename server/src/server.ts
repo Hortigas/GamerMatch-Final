@@ -118,9 +118,7 @@ app.get('/matches/:userId', checkAuthMiddleware, async (request, response) => {
             return match.user_id_1;
         }
     }) as number[];
-    console.log(usersId);
     const users = await getUsersById(usersId);
-    console.log('matches:', users);
     return response.json(users);
 });
 

@@ -118,7 +118,7 @@ export const Conversations = styled.main`
         border-radius: 10px;
     }
     &::-webkit-scrollbar-thumb {
-        background-color: #0c4b7b;
+        background-color: #89878a;
         border-radius: 10px;
     }
     padding: 10px 10px;

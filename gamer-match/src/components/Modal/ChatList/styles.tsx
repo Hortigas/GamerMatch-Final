@@ -37,11 +37,11 @@ export const ChatItemContainer = styled.a<anchorProps>`
         'avatar h4 h4';
     grid-template-rows: 1fr 1fr;
     grid-template-columns: 80px 1fr 1fr;
-    background-color: ${(props) => (props.focus ? lighten(0.04, '#141d2c') : 'transparent')};
+    background-color: ${(props) => (props.focus ? lighten(0.05, '#222328') : 'transparent')};
 
     transition: background-color 0.2s;
     &:hover {
-        background-color: ${lighten(0.03, '#141d2c')};
+        background-color: ${lighten(0.04, '#222328')};
     }
 
     .avatar {

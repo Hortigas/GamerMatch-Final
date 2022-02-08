@@ -6,7 +6,7 @@ export const Container = styled.div`
     width: 800px;
     right: 50px;
     bottom: 0;
-    background-color: #141d2c;
+    background-color: #222328;
     padding: 10px;
     display: flex;
 `;
@@ -33,14 +33,14 @@ export const Header = styled.div`
 export const ChatContainer = styled.div`
     margin-top: 25px;
     width: 50%;
-    border-right: 2px solid #343c4c;
+    border-right: 2px solid #89878a;
     padding-right: 10px;
 `;
 
 export const MatchesContainer = styled.div`
     margin-top: 25px;
     width: 50%;
-    border-left: 2px solid #343c4c;
+    border-left: 2px solid #89878a;
     padding-left: 10px;
 `;
 
@@ -50,7 +50,7 @@ export const ChatAnchor = styled.a`
     right: 5vw;
     width: 80px;
     height: 80px;
-    background: #148dfd;
+    background: #6ea8de;
     border-radius: 50%;
     cursor: pointer;
 
