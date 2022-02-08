@@ -77,6 +77,23 @@ export async function getMatches(req: number) {
     }
 }
 
+export async function updateMessages(req: any){
+    try {
+        const { match } = req;
+        return prisma.public_match.update({
+            where: { id: match },
+            data:{
+                messages:{
+                    push: req,
+                },
+            },
+        });
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
 export async function getUser(req: string) {
     //consulta user pelo email
     try {

@@ -113,7 +113,7 @@ export function ChatboxProvider({ children }: ChatboxProviderProps): JSX.Element
 
     const sendMessage = async (messageContent: string) => {
         const timestamp = convertDate.format(new Date(), 'YYYY-MM-DD HH:mm:ss:SSS');
-        socket.emit('chat.message', { userId: user.userId, toUserId: currChat.userId, messageContent, timestamp });
+        socket.emit('chat.message', { userId: user.userId, toUserId: currChat.userId, messageContent, timestamp, match: 5});
         addMessage({ userId: user.userId, toUserId: currChat.userId, messageContent, timestamp });
     };
 

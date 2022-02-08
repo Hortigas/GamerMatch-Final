@@ -1,4 +1,5 @@
 import { Server } from 'socket.io';
+import { updateMessages } from './database';
 import { app } from './server';
 
 const http = require('http');
@@ -26,13 +27,14 @@ const removeUser = (socketId: string) => {
 
 export function socketIO() {
     io.on('connection', (socket) => {
+        let salva:number;
         console.log('user connected', socket.id);
         socket.emit('user.Id');
         socket.on('add.user', (userId) => {
             addUser(userId, socket.id);
+            salva = userId;
             io.emit('get.users', users);
         });
-
         socket.on('chat.message', (data) => {
             const { toUserId } = data;
             const to = users.find((u) => u.userId === toUserId)?.socketId;
@@ -41,6 +43,8 @@ export function socketIO() {
                 return;
             } //tratar usuário offline
             socket.to(to).emit('chat.message', data);
+            updateMessages(data);
+            //console.log(data);
         });
         socket.on('disconnect', () => {
             console.log('user disconnect', socket.id);

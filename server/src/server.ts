@@ -123,8 +123,8 @@ app.get('/matches/:userId', checkAuthMiddleware, async (request, response) => {
         }
     }) as number[];
     const users = await getUsersById(usersId); //retorna conteúdo da tabela user que dá match com usuário atual
-    const messagesByUser = await getMessage(matchesId); //retorna TODAS mensagens com quem o usuário atual conversou
-    //console.log(messagesByUser);
+   // const messagesByUser = await getMessage(matchesId); //retorna TODAS mensagens com quem o usuário atual conversou
+    console.log(users);
     return response.json(users);
 });
 
