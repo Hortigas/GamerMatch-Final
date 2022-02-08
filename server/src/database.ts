@@ -6,12 +6,14 @@ export const prisma = new PrismaClient();
 
 export const tokens: RefreshTokensStore = new Map();
 
-export async function getMessage(match_id: number) {
-    //busca msg recebidas
+export async function getMessage(req: number[]) {
+    //busca msg recebidas/enviadas
     try {
         const msg = await prisma.public_message.findMany({
             where: {
-                match: match_id,
+                match: {
+                    in: req,
+                },
             },
         });
         return msg;

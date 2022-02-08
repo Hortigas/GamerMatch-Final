@@ -6,7 +6,7 @@ import { OAuth2Client } from 'google-auth-library';
 
 import { generateJwtAndRefreshToken } from './auth';
 import { auth } from './config';
-import { checkRefreshTokenIsValid, invalidateRefreshToken, getUser, setUser, setMessage, getMessage, setMatch, getMatches, getUsersById } from './database';
+import { checkRefreshTokenIsValid, invalidateRefreshToken, getUser, setUser, setMessage, getMessage, setMatch, getMatches, getUsersById} from './database';
 import { CreateSessionDTO, DecodedToken, CreateUser, GoogleProps, Message, UserData, Matches } from './types';
 import { socketIO } from './socketIo';
 
@@ -104,21 +104,27 @@ app.post('/sessions/create', async (request, response) => {
 app.get('/matches/:userId', checkAuthMiddleware, async (request, response) => {
     const userId = Number(request.params.userId);
 
-    const matches = await getMatches(Number(userId));
+    const matches = await getMatches(Number(userId)); //retorna conteudo da tabela match
     if (matches === null) {
         return response.status(401).json({
             error: true,
             message: 'userId not found',
         });
     }
-    const usersId = matches.map((match) => {
+    const matchesId = matches.map((match) => { //retorna todos matches id do usuário atual
+        return match.id;
+    }) as number[];
+
+    const usersId = matches.map((match) => { //retorna id dos usuários que dá match com o usuário atual
         if (match.user_id_1 === userId) {
             return match.user_id_2;
         } else if (match.user_id_2 === userId) {
             return match.user_id_1;
         }
     }) as number[];
-    const users = await getUsersById(usersId);
+    const users = await getUsersById(usersId); //retorna conteúdo da tabela user que dá match com usuário atual
+    const messagesByUser = await getMessage(matchesId); //retorna TODAS mensagens com quem o usuário atual conversou
+    //console.log(messagesByUser);
     return response.json(users);
 });
 
