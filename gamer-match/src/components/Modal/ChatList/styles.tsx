@@ -63,7 +63,6 @@ export const ChatItemContainer = styled.a<anchorProps>`
             width: 20px;
             height: 20px;
             border-radius: 50%;
-            background-color: green;
             border: 3px solid #141d2c;
             right: 8px;
             bottom: 8px;

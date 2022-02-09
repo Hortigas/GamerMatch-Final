@@ -77,13 +77,13 @@ export async function getMatches(req: number) {
     }
 }
 
-export async function updateMessages(req: any){
+export async function updateMessages(req: any) {
     try {
         const { match } = req;
         return prisma.public_match.update({
             where: { id: match },
-            data:{
-                messages:{
+            data: {
+                messages: {
                     push: req,
                 },
             },
@@ -119,7 +119,7 @@ export async function getUsersById(req: number[]) {
             },
         });
         return users.map((u) => {
-            return { userId: u.id, username: u.user_name, avatar: '', messages: [] };
+            return { userId: u.id, username: u.user_name, avatar: '' };
         });
     } catch (error) {
         console.error(error);

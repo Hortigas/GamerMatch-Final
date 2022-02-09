@@ -3,11 +3,20 @@ import { api } from '../src/services/apiClient';
 import { destroyCookie, setCookie, parseCookies } from 'nookies';
 import Router from 'next/router';
 import { toast } from 'react-toastify';
+import { MessageType } from '../src/hooks/useChatbox';
 
 type User = {
     email: string;
     username: string;
     userId: number;
+};
+
+type Match = {
+    matchId: number;
+    userId: number;
+    avatar: string;
+    username: string;
+    messages: MessageType[];
 };
 
 type Decoded = {
@@ -29,6 +38,8 @@ type AuthContextData = {
     signIn(credentials: SignIncredentials): Promise<void>;
     signInWithGoogle(tokenId: string): Promise<void>;
     user: User;
+    matches: Match[];
+    setMatches(value: Match[]): void;
     signOut(): void;
     signUp(credentials: SignUpcredentials): Promise<void>;
 };
@@ -46,6 +57,7 @@ export function signOutFunc() {
 
 export function AuthProvider({ children }: AuthProviderProps) {
     const [user, setUser] = useState<User>();
+    const [matches, setMatches] = useState([] as Match[]);
 
     useEffect(() => {
         const { 'GamerMatch.token': token } = parseCookies();
@@ -60,6 +72,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
                 });
         }
     }, []);
+
+    useEffect(() => {
+        if (!!user) {
+            searchMatches();
+        }
+    }, [user]);
+
+    async function searchMatches() {
+        const data = (await api.get(`/matches/${user.userId}`)).data as Match[];
+        setMatches(data);
+    }
 
     async function signIn({ inputEmail, inputHash }: SignIncredentials) {
         try {
@@ -126,7 +149,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         Router.push('/login');
     }
 
-    return <AuthContext.Provider value={{ signIn, signInWithGoogle, signOut, signUp, user }}>{children}</AuthContext.Provider>;
+    return <AuthContext.Provider value={{ signIn, signInWithGoogle, signOut, signUp, user, matches, setMatches }}>{children}</AuthContext.Provider>;
 }
 function tostify(err: any) {
     throw new Error('Function not implemented.');

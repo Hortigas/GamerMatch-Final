@@ -6,10 +6,12 @@ import { ToastContainer } from 'react-toastify';
 import { ChatboxProvider } from '../hooks/useChatbox';
 import 'react-toastify/dist/ReactToastify.css';
 import { socket, SocketContext } from '../services/socket';
+import { Header } from '../components/Header';
 
 function MyApp({ Component, pageProps }: AppProps) {
     return (
         <AuthProvider>
+            <Header />
             <Component {...pageProps} />
             <ToastContainer bodyClassName="toast" />
             <SocketContext.Provider value={socket}>
