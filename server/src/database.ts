@@ -6,40 +6,6 @@ export const prisma = new PrismaClient();
 
 export const tokens: RefreshTokensStore = new Map();
 
-export async function getMessage(req: number[]) {
-    //busca msg recebidas/enviadas
-    try {
-        const msg = await prisma.public_message.findMany({
-            where: {
-                match: {
-                    in: req,
-                },
-            },
-        });
-        return msg;
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
-}
-
-export async function setMessage(message_content: string, user_id_sender: number, user_id_receiver: number, match: number) {
-    //cria msg no bd
-    try {
-        return prisma.public_message.create({
-            data: {
-                message_content,
-                user_id_sender,
-                user_id_receiver,
-                match,
-            },
-        });
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
-}
-
 export async function setMatch(user_id_1: number, user_id_2: number) {
     //cria match no bd
     try {

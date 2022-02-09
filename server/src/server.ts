@@ -6,7 +6,7 @@ import { OAuth2Client } from 'google-auth-library';
 
 import { generateJwtAndRefreshToken } from './auth';
 import { auth } from './config';
-import { checkRefreshTokenIsValid, invalidateRefreshToken, getUser, setUser, setMessage, getMessage, setMatch, getMatches, getUsersById } from './database';
+import { checkRefreshTokenIsValid, invalidateRefreshToken, getUser, setUser, setMatch, getMatches, getUsersById } from './database';
 import { CreateSessionDTO, DecodedToken, CreateUser, GoogleProps, Message, UserData, Matches } from './types';
 import { socketIO } from './socketIo';
 

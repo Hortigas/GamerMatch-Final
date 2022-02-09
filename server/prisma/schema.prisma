@@ -19,27 +19,14 @@ model public_user {
   @@map("public.user")
 }
 
-model public_message {
-  id               Int          @id(map: "message_pk") @default(dbgenerated("nextval('\"public.message_id_seq\"'::regclass)"))
-  message_content  String       @db.VarChar(255)
-  timestamp        DateTime     @default(now()) @db.Timestamp(6)
-  user_id_sender   Int
-  user_id_receiver Int
-  match            Int
-  public_match     public_match @relation(fields: [match], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "message_fk0")
-
-  @@map("public.message")
-}
-
 model public_match {
-  id                                              Int              @id(map: "match_pk") @default(dbgenerated("nextval('\"public.match_id_seq\"'::regclass)"))
+  id                                              Int         @id(map: "match_pk") @default(dbgenerated("nextval('\"public.match_id_seq\"'::regclass)"))
   user_id_1                                       Int
   user_id_2                                       Int
-  timestamp                                       DateTime         @default(now()) @db.Timestamp(6)
-  messages                                        Json[]           @db.Json
-  public_user                                     public_user      @relation(fields: [user_id_1], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "match_fk0")
-  public_user_public_match_user_id_2Topublic_user public_user      @relation("public_match_user_id_2Topublic_user", fields: [user_id_2], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "match_fk1")
-  public_message                                  public_message[]
+  timestamp                                       DateTime    @default(now()) @db.Timestamp(6)
+  messages                                        Json[]      @db.Json
+  public_user                                     public_user @relation(fields: [user_id_1], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "match_fk0")
+  public_user_public_match_user_id_2Topublic_user public_user @relation("public_match_user_id_2Topublic_user", fields: [user_id_2], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "match_fk1")
 
   @@map("public.match")
 }
