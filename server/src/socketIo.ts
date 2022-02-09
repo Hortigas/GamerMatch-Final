@@ -27,12 +27,11 @@ const removeUser = (socketId: string) => {
 
 export function socketIO() {
     io.on('connection', (socket) => {
-        let salva: number;
+        const tempData = [] as any;
         console.log('user connected', socket.id);
         socket.emit('user.Id');
         socket.on('add.user', (userId) => {
             addUser(userId, socket.id);
-            salva = userId;
             io.emit('get.users', users);
         });
         socket.on('chat.message', (data) => {
@@ -43,12 +42,17 @@ export function socketIO() {
                 return;
             } //tratar usuário offline
             socket.to(to).emit('chat.message', data);
-            updateMessages(data);
+            tempData.push(data);
+            
+            //updateMessages(data);
         });
         socket.on('disconnect', () => {
             console.log('user disconnect', socket.id);
             removeUser(socket.id);
             io.emit('get.users', users);
+            tempData.forEach((msg) => {
+                updateMessages(msg);
+            }); //melhorar isso aqui
         });
     });
 
