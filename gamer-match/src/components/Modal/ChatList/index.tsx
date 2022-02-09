@@ -4,6 +4,7 @@ import Avatar from '../../../assets/UserPics/userpic1.jpg';
 import { MatchType, useChatbox } from '../../../hooks/useChatbox';
 import { useState, useContext, useEffect } from 'react';
 import { AuthContext } from '../../../../contexts/AuthContext';
+import convertDate from 'date-and-time';
 
 type ChatItemProps = {
     data: MatchType;
@@ -39,6 +40,14 @@ function ChatItem({ data, online }: ChatItemProps) {
             return msg.messageContent;
         }
     }
+    function checktime(time:any){
+        if(typeof time == 'undefined' ){
+            return '';
+        }else{
+            const date = new Date(time.timestamp);
+            return convertDate.format(date, ' HH:mm DD/MM/YY');;
+        }
+    }
 
     return (
         <ChatItemContainer onClick={handleClick} focus={currChat?.userId === chatInfo.userId}>
@@ -49,7 +58,7 @@ function ChatItem({ data, online }: ChatItemProps) {
             <h3>{data.username}</h3>
             
             <h4>{checkmsg(lastmsg)}</h4>
-            <span>Just Now</span>
+            <span>{checktime(lastmsg)}</span>
         </ChatItemContainer>
     );
 }
