@@ -5,7 +5,7 @@ import { AuthContext } from '../../../../contexts/AuthContext';
 import { useContext, useState } from 'react';
 
 export function SubMenu() {
-    const { signOut } = useContext(AuthContext);
+    const { user, signOut } = useContext(AuthContext);
 
     function handleLogout() {
         signOut();
@@ -14,8 +14,8 @@ export function SubMenu() {
     return (
         <Container>
             <div className="perfil">
-                <h5>hortigas</h5>
-                <span>horta@gmail.com</span>
+                <h5>{user?.username}</h5>
+                <span>{user?.email}</span>
             </div>
             <div className="nav">
                 <a href="/profile">
