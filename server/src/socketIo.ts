@@ -38,6 +38,11 @@ export function socketIO() {
             const { toUserId } = data;
             const to = users.find((u) => u.userId === toUserId)?.socketId;
             if (!to) {
+                try {
+                    updateMessages(data);
+                } catch (error) {
+                    throw error;
+                }
                 console.error('NAO ENCONTRADO', users);
                 return;
             } //tratar usuário offline
