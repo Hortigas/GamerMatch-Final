@@ -28,9 +28,16 @@ export function ChatList() {
 function ChatItem({ data, online }: ChatItemProps) {
     const [chatInfo, setChatInfo] = useState(data);
     const { currChat, setCurrentChat } = useChatbox();
-
+    const lastmsg = data.messages.at(-1);
     function handleClick() {
         setCurrentChat(chatInfo.userId);
+    }
+    function checkmsg(msg:any){
+        if(typeof msg == 'undefined' ){
+            return '';
+        }else{
+            return msg.messageContent;
+        }
     }
 
     return (
@@ -40,7 +47,8 @@ function ChatItem({ data, online }: ChatItemProps) {
                 <div className="status" style={{ background: online ? '#43b581' : '#99aab5' }} />
             </div>
             <h3>{data.username}</h3>
-            <h4>test</h4>
+            
+            <h4>{checkmsg(lastmsg)}</h4>
             <span>Just Now</span>
         </ChatItemContainer>
     );
