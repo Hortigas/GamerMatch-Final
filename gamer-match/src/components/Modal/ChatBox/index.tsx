@@ -61,8 +61,9 @@ function Message({ messageData }: MessageProps) {
     const { own, messageContent } = messageData;
 
     var dateUTC = new Date();
-    var userTimezoneOffset = dateUTC.getTimezoneOffset();
-    const date = dateLib.format(dateLib.addMinutes(dateUTC, -userTimezoneOffset), 'HH:mm');
+    //var userTimezoneOffset = dateUTC.getTimezoneOffset();
+    //const date = dateLib.format(dateLib.addMinutes(dateUTC, userTimezoneOffset), 'HH:mm');
+    const date = dateLib.format(dateLib.addMinutes(dateUTC, 0), 'HH:mm');
 
     return (
         <BalloonWrapper>
