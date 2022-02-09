@@ -143,7 +143,7 @@ app.post('/matches/create', checkAuthMiddleware, async (request, response) => {
     }
 });
 
-app.post('/message/send', checkAuthMiddleware, async (request, response) => {
+/*app.post('/message/send', checkAuthMiddleware, async (request, response) => {
     const { message, sender, receiver, match } = request.body as Message;
     try {
         await setMessage(message, sender, receiver, match);
@@ -154,7 +154,7 @@ app.post('/message/send', checkAuthMiddleware, async (request, response) => {
             message: 'Error - Message not send!',
         });
     }
-});
+});*/
 
 /*app.get('/message', checkAuthMiddleware, async (request, response) => {
     const email = request.user;
