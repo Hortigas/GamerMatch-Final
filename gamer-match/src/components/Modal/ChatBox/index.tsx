@@ -38,27 +38,23 @@ export function ChatBox() {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [message]);
 
-    if (currChat) {
-        return (
-            <Container>
-                <SelectedUser>
-                    <div className="avatar">
-                        <Image className="avatarImg" src={Avatar} alt={currChat.username} width={200} height={200} />
-                    </div>
-                    <h3>{currChat.username}</h3>
-                </SelectedUser>
-                <Conversations>
-                    {currChat.messages?.map((data, index) => {
-                        return <Message key={index} messageData={{ messageContent: data.messageContent, own: user.userId == data.userId }} />;
-                    })}
-                    <div ref={messagesEndRef} />
-                </Conversations>
-                <MessageInput onKeyPress={handleKeyPress} />
-            </Container>
-        );
-    } else {
-        return <div></div>;
-    }
+    return (
+        <Container>
+            <SelectedUser>
+                <div className="avatar">
+                    <Image className="avatarImg" src={Avatar} alt={currChat.username} width={200} height={200} />
+                </div>
+                <h3>{currChat.username}</h3>
+            </SelectedUser>
+            <Conversations>
+                {currChat.messages?.map((data, index) => {
+                    return <Message key={index} messageData={{ messageContent: data.messageContent, own: user.userId == data.userId }} />;
+                })}
+                <div ref={messagesEndRef} />
+            </Conversations>
+            <MessageInput onKeyPress={handleKeyPress} />
+        </Container>
+    );
 }
 
 function Message({ messageData }: MessageProps) {

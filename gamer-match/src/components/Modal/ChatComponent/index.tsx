@@ -10,6 +10,7 @@ import { useContext } from 'react';
 export function ChatComponent() {
     const { isOpen, setIsOpenFunction } = useChatbox();
     const { user } = useContext(AuthContext);
+    const { currChat } = useChatbox();
 
     function handleOnClick() {
         setIsOpenFunction(!isOpen);
@@ -20,17 +21,28 @@ export function ChatComponent() {
     return (
         <>
             {isOpen ? (
-                <Container>
-                    <Header>
-                        <AiOutlineClose className="IconClose" onClick={handleOnClick} />
-                    </Header>
-                    <ChatContainer>
-                        <ChatBox />
-                    </ChatContainer>
-                    <MatchesContainer>
-                        <ChatList />
-                    </MatchesContainer>
-                </Container>
+                currChat ? (
+                    <Container>
+                        <Header>
+                            <AiOutlineClose className="IconClose" onClick={handleOnClick} />
+                        </Header>
+                        <ChatContainer>
+                            <ChatBox />
+                        </ChatContainer>
+                        <MatchesContainer>
+                            <ChatList />
+                        </MatchesContainer>
+                    </Container>
+                ) : (
+                    <Container>
+                        <Header>
+                            <AiOutlineClose className="IconClose" onClick={handleOnClick} />
+                        </Header>
+                        <MatchesContainer>
+                            <ChatList />
+                        </MatchesContainer>
+                    </Container>
+                )
             ) : (
                 <ChatAnchor onClick={handleOnClick}>
                     <FiMessageCircle className="IconMessage" />
