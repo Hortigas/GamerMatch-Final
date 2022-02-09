@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Avatar from '../../../assets/UserPics/userpic1.jpg';
 import { useChatbox } from '../../../hooks/useChatbox';
 import dateLib from 'date-and-time';
+import convertDate from 'date-and-time';
 import { createRef, useContext, useEffect } from 'react';
 import { AuthContext } from '../../../../contexts/AuthContext';
 
@@ -13,6 +14,7 @@ type MessageProps = {
 type MessageData = {
     own: boolean;
     messageContent: string;
+    time: string
 };
 
 export function ChatBox() {
@@ -48,7 +50,7 @@ export function ChatBox() {
             </SelectedUser>
             <Conversations>
                 {currChat.messages?.map((data, index) => {
-                    return <Message key={index} messageData={{ messageContent: data.messageContent, own: user.userId == data.userId }} />;
+                    return <Message key={index} messageData={{ messageContent: data.messageContent, own: user.userId == data.userId, time: data.timestamp }} />;
                 })}
                 <div ref={messagesEndRef} />
             </Conversations>
@@ -58,12 +60,12 @@ export function ChatBox() {
 }
 
 function Message({ messageData }: MessageProps) {
-    const { own, messageContent } = messageData;
+    const { own, messageContent, time } = messageData;
 
-    var dateUTC = new Date();
+    const dateUTC = new Date(time);
     //var userTimezoneOffset = dateUTC.getTimezoneOffset();
     //const date = dateLib.format(dateLib.addMinutes(dateUTC, userTimezoneOffset), 'HH:mm');
-    const date = dateLib.format(dateLib.addMinutes(dateUTC, 0), 'HH:mm');
+    const date = convertDate.format(dateUTC, 'HH:mm');
 
     return (
         <BalloonWrapper>
