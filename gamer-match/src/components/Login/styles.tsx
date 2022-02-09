@@ -10,7 +10,7 @@ export const Container = styled.div`
 
     color: var(--color-text-in-primary);
     background: var(--color-primary);
-    background: linear-gradient(180deg, #14171e 12.88%, #14171e 45.17%, #08497f 100%);
+    background: #14171e;
 `;
 
 export const Content = styled.div`
@@ -19,14 +19,14 @@ export const Content = styled.div`
     overflow: hidden;
     border-radius: 10px;
 
-    background: #36393e;
+    background: #23252b;
     display: flex;
     align-items: center;
 
     .wrapperHero {
         flex: 2;
         height: 100%;
-        background-color: #222328;
+        background-color: #0c111d;
         display: flex;
         align-items: flex-end;
         justify-content: center;
@@ -112,7 +112,7 @@ export const Main = styled.main`
         span {
             text-align: center;
             width: 40px;
-            background: #36393e;
+            background: #23252b;
             color: #89878a;
             font-size: 1.1rem;
             font-weight: bold;

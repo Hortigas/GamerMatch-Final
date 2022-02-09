@@ -4,7 +4,7 @@ export const Container = styled.div`
     position: fixed;
     height: 640px;
     width: 800px;
-    right: 50px;
+    right: 5vw;
     bottom: 0;
     background-color: #222328;
     padding: 10px;
@@ -47,7 +47,7 @@ export const MatchesContainer = styled.div`
 export const ChatAnchor = styled.a`
     position: absolute;
     bottom: 50px;
-    right: 5vw;
+    right: 8vw;
     width: 80px;
     height: 80px;
     background: #6ea8de;

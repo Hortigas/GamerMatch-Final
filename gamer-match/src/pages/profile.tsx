@@ -1,7 +1,8 @@
 import { withSSRAuth } from '../../utils/withSSRAuth';
+import { Container } from '../components/Profile/styles';
 
-export default function Login() {
-    return <h1>profile page</h1>;
+export default function Profile() {
+    return <Container></Container>;
 }
 
 export const getServerSideProps = withSSRAuth(async (ctx) => {
