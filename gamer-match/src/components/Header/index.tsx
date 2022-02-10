@@ -24,7 +24,7 @@ export function Header() {
                 <div className="perfilMenuWrapper">
                     <a className="navbarPerfil" onClick={handleOpenMenu}>
                         {user.username}
-                        <MdKeyboardArrowDown className="navbarArrow" />
+                        <MdKeyboardArrowDown className={submenu ? 'navbarArrow inveted' : 'navbarArrow'} />
                     </a>
                     {submenu ? <SubMenu /> : ''}
                 </div>

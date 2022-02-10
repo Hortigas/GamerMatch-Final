@@ -33,6 +33,10 @@ export const Container = styled.div`
             height: 2rem;
             width: 2rem;
             color: #c4c4c4;
+
+            &.inveted {
+                transform: rotate(180deg);
+            }
         }
     }
 `;
