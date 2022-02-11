@@ -20,13 +20,49 @@ export const Container = styled.div`
     }
 
     .profile {
-        .avatar {
-            border-radius: 50%;
-        }
-    }
+        display: flex;
+        flex-direction: rows;
+        align-items: center;
+        justify-content: space-between;
+        background-image: url('https://cdn.wallpapersafari.com/53/92/qZjSsf.jpg');
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
 
-    .aboutme {
-        min-height: 150px;
+        .info {
+            display: flex;
+            align-items: center;
+            position: relative;
+
+            .name {
+                margin-left: 50px;
+            }
+
+            .avatar {
+                border-radius: 50%;
+            }
+
+            .editPerfil {
+                position: absolute;
+                top: 5px;
+                left: 140px;
+                height: 40px;
+                width: 40px;
+                padding: 5px;
+                background-color: #148dfd;
+                border-radius: 50%;
+            }
+
+            h2 {
+                color: white;
+                font-weight: 500;
+                font-size: 2.5rem;
+            }
+
+            h3 {
+                font-weight: 400;
+            }
+        }
     }
 
     .gamesList {
@@ -34,7 +70,46 @@ export const Container = styled.div`
             font-weight: 500;
             font-size: 2.2rem;
             margin-bottom: 20px;
+            color: white;
+        }
+    }
+
+    .aboutme {
+        min-height: 150px;
+        margin-bottom: 100px;
+        font-weight: 500;
+        font-size: 2.2rem;
+        margin-bottom: 20px;
+        color: white;
+
+        textarea {
+            font-size: 1.8rem;
+            margin-top: 10px;
+            display: block;
+            background-color: transparent;
+            width: 100%;
+            overflow-wrap: break-word;
+            resize: none;
             color: gray;
+        }
+    }
+
+    @media (max-width: 1000px) {
+        .profile {
+            flex-direction: column;
+
+            .buttons {
+                margin-top: 50px;
+            }
+
+            .info {
+                flex-direction: column;
+                text-align: center;
+
+                h2 {
+                    margin-top: 30px;
+                }
+            }
         }
     }
 `;

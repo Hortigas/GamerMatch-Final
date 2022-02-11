@@ -9,6 +9,7 @@ export const Container = styled.div`
     border-top: 2px solid #ffffff0f;
     border-radius: 4px;
     color: #c4c4c4;
+    z-index: 3;
 
     &:after {
         content: '';

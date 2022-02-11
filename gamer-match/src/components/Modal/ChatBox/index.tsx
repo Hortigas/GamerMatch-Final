@@ -14,12 +14,12 @@ type MessageProps = {
 type MessageData = {
     own: boolean;
     messageContent: string;
-    time: string
+    time: string;
 };
 
 export function ChatBox() {
     const messagesEndRef = createRef<HTMLDivElement>();
-    const { currChat, message, sendMessage } = useChatbox();
+    const { currChat, sendMessage } = useChatbox();
     const { user } = useContext(AuthContext);
 
     function handleKeyPress(e) {
@@ -38,7 +38,8 @@ export function ChatBox() {
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [message]);
+        console.log('nova msg');
+    }, [currChat.messages]);
 
     return (
         <Container>

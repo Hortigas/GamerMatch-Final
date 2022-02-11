@@ -2,18 +2,18 @@ import styled from 'styled-components';
 import { darken } from 'polished';
 
 interface Props {
-    buttonType: 'google' | 'facebook' | 'twitter';
+    buttonType: 'blizzard' | 'steam' | 'epicGames';
 }
 
 const defaultConfigs = {
-    google: {
-        background: '#DB4437',
+    blizzard: {
+        background: '#009AE4',
     },
-    facebook: {
-        background: '#4267B2',
+    steam: {
+        background: '#1b2838',
     },
-    twitter: {
-        background: '#1DA1F2',
+    epicGames: {
+        background: '#000',
     },
 };
 
@@ -57,7 +57,6 @@ export const Icon = styled.div<Props>`
     border-bottom-left-radius: 0.8rem;
     height: 100%;
     width: 50px;
-    background: ${(p) => darken(0.1, defaultConfigs[p.buttonType as keyof typeof defaultConfigs].background)} !important;
 
     .ic {
         font-size: 1.8rem;

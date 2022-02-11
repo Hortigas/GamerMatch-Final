@@ -10,7 +10,6 @@ export function LoginButton({ buttonType, onClick }: LoginButtonProps) {
     function handleOnclick() {
         if (onClick) onClick();
     }
-
     function renderSwitch(buttonType: string) {
         switch (buttonType) {
             case 'google':

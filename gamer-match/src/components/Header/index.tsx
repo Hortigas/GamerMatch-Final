@@ -4,7 +4,7 @@ import logoIMG from '../../assets/logoGamerMatchNTNL.png';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 import { SubMenu } from './SubMenu';
 
-import { createRef, useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { AuthContext } from '../../../contexts/AuthContext';
 
 export function Header() {

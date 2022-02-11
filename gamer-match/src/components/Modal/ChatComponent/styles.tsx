@@ -45,9 +45,9 @@ export const MatchesContainer = styled.div`
 `;
 
 export const ChatAnchor = styled.a`
-    position: absolute;
+    position: fixed;
     bottom: 50px;
-    right: 8vw;
+    right: 50px;
     width: 80px;
     height: 80px;
     background: #6ea8de;
