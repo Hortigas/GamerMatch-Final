@@ -4,9 +4,10 @@ import Image from 'next/image';
 import Avatar from '../assets/UserPics/userpic1.jpg';
 import Control from '../assets/control.svg';
 import { AuthContext } from '../../contexts/AuthContext';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { LoginButton } from './../components/Profile/LoginButton/index';
 import { MdModeEditOutline } from 'react-icons/md';
+import React from 'react';
 
 const dataT = [
     { name: 'Overwatch', played: 1230 },
@@ -21,14 +22,65 @@ const dataT = [
 ];
 
 export default function Profile() {
-    const { user } = useContext(AuthContext);
+    const [postImage, setPostImage] = useState({
+        myFile: "",
+    });
+    const { user, uploadIMG } = useContext(AuthContext);
+    const hiddenFileInput = React.useRef(null);
+
+    const upload = async (post) => {
+        try {
+            console.log("chamando upload", post);
+            await uploadIMG(post);
+        } catch (error) {
+            console.log(error.message);
+            console.log("erro bct");
+        }
+    };
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        upload(postImage);
+        console.log("submeteu", postImage);
+    };
+    const convertToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const fileReader = new FileReader();
+            fileReader.readAsDataURL(file);
+            fileReader.onload = () => {
+                resolve(fileReader.result);
+            };
+            fileReader.onerror = (error) => {
+                reject(error);
+            };
+            console.log("converteu");
+        });
+    };
+    const handleFileUpload = async (e) => {
+        const file = e.target.files[0];
+        const base64 = await convertToBase64(file);
+        console.log('meia quatro',base64);
+        setPostImage({ ...postImage, myFile: base64 as string });
+        console.log("tentado upar", postImage);
+    };
+    const handleChange = event => {
+        //const fileUploaded = event.target.files[0];
+        handleFileUpload(event);
+    };
+    const handleClick = event => {
+        hiddenFileInput.current.click();
+        console.log("clicou");
+    };
 
     return (
         <Container>
             <div className="profile wrapper">
                 <div className="info">
                     <Image src={Avatar} alt="hero image Gamer match" width="180px" height="180px" className="avatar" />
-                    <MdModeEditOutline className="editPerfil" />
+                    <form onSubmit={handleSubmit}>
+                    <input type="file" label="Image" name="myFile" ref={hiddenFileInput} onChange={handleChange} style={{ display: 'none' }} accept=".jpeg, .png, .jpg" />
+                    <MdModeEditOutline className="editPerfil" onClick={handleClick} />
+                    <button>Submit</button>
+                    </form>
                     <div className="name">
                         <h2>{user?.username}</h2>
                         <h3>23 anos</h3>

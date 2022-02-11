@@ -101,6 +101,21 @@ app.post('/sessions/create', async (request, response) => {
     }
 });
 
+app.post('/upload', async (request, response) => {
+    const { image } = request.body;
+    try {
+        console.log('cheguei',image.myFile);
+        //await setUser(username, email, hash);
+        //return response.json();
+    } catch (error) {
+        console.log('deu ruim na rota upload');
+        /*return response.status(409).json({
+            error: true,
+            message: 'This email address is already taken.',
+        });*/
+    }
+});
+
 app.get('/matches/:userId', checkAuthMiddleware, async (request, response) => {
     const userId = Number(request.params.userId);
 
