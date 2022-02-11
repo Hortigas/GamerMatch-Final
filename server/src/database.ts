@@ -2,6 +2,7 @@ import { RefreshTokensStore } from './types';
 import { v4 as uuid } from 'uuid';
 import { UserData } from './types';
 import { PrismaClient } from '@prisma/client';
+
 export const prisma = new PrismaClient();
 
 export const tokens: RefreshTokensStore = new Map();
@@ -60,6 +61,23 @@ export async function updateMessages(req: any) {
     }
 }
 
+export async function updateProfileIMG(req: string) {
+    try {
+        const base64Response = await Buffer.from(req, 'base64');
+        console.log(base64Response);
+        //const { match } = req;
+        return prisma.public_user.update({
+            where: { id: 6465475 },
+            data: {
+                perfil_photo: base64Response,
+            },
+        });
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
 export async function getUser(req: string) {
     //consulta user pelo email
     try {
@@ -85,7 +103,13 @@ export async function getUsersById(req: number[]) {
             },
         });
         return users.map((u) => {
-            return { userId: u.id, username: u.user_name, avatar: '' };
+            if(u.perfil_photo != null){
+                const buff = Buffer.from(u.perfil_photo);
+                const user_avatar = buff.toString('base64').replace(/^dataimage\/pngbase64/, "data:image/png;base64,");
+                return { userId: u.id, username: u.user_name, avatar: user_avatar };
+            }else{
+                return { userId: u.id, username: u.user_name, avatar: '' };
+            }
         });
     } catch (error) {
         console.error(error);

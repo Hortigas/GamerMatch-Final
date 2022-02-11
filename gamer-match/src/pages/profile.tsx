@@ -77,7 +77,7 @@ export default function Profile() {
                 <div className="info">
                     <Image src={Avatar} alt="hero image Gamer match" width="180px" height="180px" className="avatar" />
                     <form onSubmit={handleSubmit}>
-                    <input type="file" label="Image" name="myFile" ref={hiddenFileInput} onChange={handleChange} style={{ display: 'none' }} accept=".jpeg, .png, .jpg" />
+                    <input type="file" label="Image" name="myFile" ref={hiddenFileInput} onChange={handleChange} style={{ display: 'none' }} accept=".png" />
                     <MdModeEditOutline className="editPerfil" onClick={handleClick} />
                     <button>Submit</button>
                     </form>
