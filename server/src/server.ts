@@ -6,7 +6,7 @@ import { OAuth2Client } from 'google-auth-library';
 
 import { generateJwtAndRefreshToken } from './auth';
 import { auth } from './config';
-import { checkRefreshTokenIsValid, invalidateRefreshToken, getUser, setUser, setMatch, getMatches, getUsersById } from './database';
+import { checkRefreshTokenIsValid, invalidateRefreshToken, getUser, setUser, setMatch, getMatches, getUsersById, updateProfileIMG } from './database';
 import { CreateSessionDTO, DecodedToken, CreateUser, GoogleProps, Message, UserData, Matches } from './types';
 import { socketIO } from './socketIo';
 
@@ -104,15 +104,9 @@ app.post('/sessions/create', async (request, response) => {
 app.post('/upload', async (request, response) => {
     const { image } = request.body;
     try {
-        console.log('cheguei',image.myFile);
-        //await setUser(username, email, hash);
-        //return response.json();
+        updateProfileIMG(image.myFile);
     } catch (error) {
-        console.log('deu ruim na rota upload');
-        /*return response.status(409).json({
-            error: true,
-            message: 'This email address is already taken.',
-        });*/
+        throw error;
     }
 });
 
@@ -136,6 +130,7 @@ app.get('/matches/:userId', checkAuthMiddleware, async (request, response) => {
         }
     }) as number[];
     const users = await getUsersById(usersId);
+    console.log(users);
     const arrData = [] as any;
     matches.forEach((match) => {
         const user = users.find((user) => user.userId === match.user_id_1 || user.userId === match.user_id_2);
