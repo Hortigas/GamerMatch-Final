@@ -35,7 +35,20 @@ export const Container = styled.div`
             position: relative;
 
             .name {
-                margin-left: 50px;
+                margin-left: 30px;
+                background: RGBA(0, 0, 0, 0.6);
+                padding: 5px 20px;
+                border-radius: 10px;
+
+                h2 {
+                    color: white;
+                    font-weight: 500;
+                    font-size: 2.5rem;
+                }
+
+                h3 {
+                    font-weight: 400;
+                }
             }
 
             .avatar {
@@ -51,16 +64,6 @@ export const Container = styled.div`
                 padding: 5px;
                 background-color: #148dfd;
                 border-radius: 50%;
-            }
-
-            h2 {
-                color: white;
-                font-weight: 500;
-                font-size: 2.5rem;
-            }
-
-            h3 {
-                font-weight: 400;
             }
         }
     }

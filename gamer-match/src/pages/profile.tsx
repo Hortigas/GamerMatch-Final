@@ -23,7 +23,7 @@ const dataT = [
 
 export default function Profile() {
     const [postImage, setPostImage] = useState({
-        myFile: "",
+        myFile: '',
     });
     const { user, uploadIMG } = useContext(AuthContext);
     const hiddenFileInput = React.useRef(null);
@@ -56,11 +56,11 @@ export default function Profile() {
         const base64 = await convertToBase64(file);
         setPostImage({ ...postImage, myFile: base64 as string });
     };
-    const handleChange = event => {
+    const handleChange = (event) => {
         //const fileUploaded = event.target.files[0];
         handleFileUpload(event);
     };
-    const handleClick = event => {
+    const handleClick = (event) => {
         hiddenFileInput.current.click();
     };
 
@@ -70,14 +70,15 @@ export default function Profile() {
                 <div className="info">
                     <Image src={Avatar} alt="hero image Gamer match" width="180px" height="180px" className="avatar" />
                     <form onSubmit={handleSubmit}>
-                    <input type="file" label="Image" name="myFile" ref={hiddenFileInput} onChange={handleChange} style={{ display: 'none' }} accept=".png" />
-                    <MdModeEditOutline className="editPerfil" onClick={handleClick} />
-                    <button>Submit</button>
+                        <input type="file" label="Image" name="myFile" ref={hiddenFileInput} onChange={handleChange} style={{ display: 'none' }} accept=".png" />
+                        <MdModeEditOutline className="editPerfil" onClick={handleClick} />
+                        <button>Submit</button>
                     </form>
                     <div className="name">
                         <h2>{user?.username}</h2>
                         <h3>23 anos</h3>
                     </div>
+                    <button>Submit</button>
                 </div>
                 <div className="buttons">
                     <LoginButton buttonType={'blizzard'} />
