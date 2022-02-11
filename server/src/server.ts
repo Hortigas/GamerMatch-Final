@@ -102,9 +102,9 @@ app.post('/sessions/create', async (request, response) => {
 });
 
 app.post('/upload', async (request, response) => {
-    const { image } = request.body;
+    const { image, id } = request.body;
     try {
-        updateProfileIMG(image.myFile);
+        updateProfileIMG(image.myFile, id);
     } catch (error) {
         throw error;
     }
@@ -130,7 +130,7 @@ app.get('/matches/:userId', checkAuthMiddleware, async (request, response) => {
         }
     }) as number[];
     const users = await getUsersById(usersId);
-    console.log(users);
+    //console.log(users);
     const arrData = [] as any;
     matches.forEach((match) => {
         const user = users.find((user) => user.userId === match.user_id_1 || user.userId === match.user_id_2);

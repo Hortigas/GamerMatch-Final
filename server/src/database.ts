@@ -61,11 +61,11 @@ export async function updateMessages(req: any) {
     }
 }
 
-export async function updateProfileIMG(req: string) {
+export async function updateProfileIMG(req: string, id: number) {
     try {
         const base64Response = await Buffer.from(req, 'base64');
         return prisma.public_user.update({
-            where: { id: 6465475 },
+            where: { id: id },
             data: {
                 perfil_photo: base64Response,
             },
@@ -117,6 +117,8 @@ export async function getUsersById(req: number[]) {
 
 export async function setUser(user_name: string, user_email: string, user_password: string, providerAuth: boolean = false) {
     //cria user no bd
+    const birth_date = null;
+    const perfil_photo = null;
     try {
         return await prisma.public_user.create({
             data: {
@@ -124,6 +126,8 @@ export async function setUser(user_name: string, user_email: string, user_passwo
                 user_email,
                 user_password,
                 providerAuth,
+                birth_date,
+                perfil_photo,
             },
         });
     } catch (error) {

@@ -151,7 +151,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
 
     async function uploadIMG(imgBase64: string) {
-        const response = await api.post('/upload', { image: imgBase64}).catch(function (error) {
+        const response = await api.post('/upload', { image: imgBase64, id: user.userId}).catch(function (error) {
             if (error.response) {
                 toast.error(error.response.data.message);
             } else if (error.request) {
