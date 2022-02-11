@@ -151,7 +151,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
 
     async function uploadIMG(imgBase64: string) {
-        console.log('q isso',imgBase64);
         const response = await api.post('/upload', { image: imgBase64}).catch(function (error) {
             if (error.response) {
                 toast.error(error.response.data.message);

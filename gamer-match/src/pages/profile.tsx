@@ -30,17 +30,14 @@ export default function Profile() {
 
     const upload = async (post) => {
         try {
-            console.log("chamando upload", post);
             await uploadIMG(post);
         } catch (error) {
             console.log(error.message);
-            console.log("erro bct");
         }
     };
     const handleSubmit = (e) => {
         e.preventDefault();
         upload(postImage);
-        console.log("submeteu", postImage);
     };
     const convertToBase64 = (file) => {
         return new Promise((resolve, reject) => {
@@ -52,15 +49,12 @@ export default function Profile() {
             fileReader.onerror = (error) => {
                 reject(error);
             };
-            console.log("converteu");
         });
     };
     const handleFileUpload = async (e) => {
         const file = e.target.files[0];
         const base64 = await convertToBase64(file);
-        console.log('meia quatro',base64);
         setPostImage({ ...postImage, myFile: base64 as string });
-        console.log("tentado upar", postImage);
     };
     const handleChange = event => {
         //const fileUploaded = event.target.files[0];
@@ -68,7 +62,6 @@ export default function Profile() {
     };
     const handleClick = event => {
         hiddenFileInput.current.click();
-        console.log("clicou");
     };
 
     return (

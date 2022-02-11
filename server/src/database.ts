@@ -64,8 +64,6 @@ export async function updateMessages(req: any) {
 export async function updateProfileIMG(req: string) {
     try {
         const base64Response = await Buffer.from(req, 'base64');
-        console.log(base64Response);
-        //const { match } = req;
         return prisma.public_user.update({
             where: { id: 6465475 },
             data: {
