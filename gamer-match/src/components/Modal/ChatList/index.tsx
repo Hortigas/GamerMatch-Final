@@ -24,10 +24,14 @@ export function ChatList({ className }: ChatListProps) {
         if (!oa && ob) return 1;
         else if (oa && !ob) return -1;
         else {
-            const dateA = new Date(a.messages.at(-1).timestamp);
-            const dateB = new Date(b.messages.at(-1).timestamp);
-            if (dateA < dateB) return 1;
-            else return -1;
+            if (a.messages.length === 0 && b.messages.length > 0) return 1;
+            if (a.messages.length > 0 && b.messages.length === 0) return -1;
+            else {
+                const dateA = new Date(a.messages.at(-1).timestamp);
+                const dateB = new Date(b.messages.at(-1).timestamp);
+                if (dateA < dateB) return 1;
+                else return -1;
+            }
         }
     });
 

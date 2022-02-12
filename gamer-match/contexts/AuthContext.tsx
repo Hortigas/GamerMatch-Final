@@ -21,7 +21,7 @@ type Match = {
 
 type GameType = {
     gameName: string;
-    timePlayed: string;
+    timePlayed: number;
     gameCategory: string;
 };
 
@@ -43,7 +43,7 @@ type AuthContextData = {
     matches: Match[];
     setMatches(value: Match[]): void;
     gameList: GameType[];
-    setGames(value: GameType[]): void;
+    setGameList(value: GameType[]): void;
     signOut(): void;
     signUp(credentials: SignUpcredentials): Promise<void>;
 };
@@ -51,6 +51,18 @@ type AuthContextData = {
 type AuthProviderProps = {
     children: ReactNode;
 };
+
+const dataT = [
+    { gameName: 'Overwatch', gameCategory: 'FPS', timePlayed: 1230 },
+    { gameName: 'Minecraft', gameCategory: 'Survival', timePlayed: 402 },
+    { gameName: 'CS-GO', gameCategory: 'FPS', timePlayed: 2311 },
+    { gameName: 'LOL', gameCategory: 'FPS', timePlayed: 1511 },
+    { gameName: 'Heroes of the Storm', gameCategory: 'FPS', timePlayed: 511 },
+    { gameName: 'World of Warcraft', gameCategory: 'FPS', timePlayed: 511 },
+    { gameName: 'Valorant', gameCategory: 'FPS', timePlayed: 211 },
+    { gameName: 'Pinball', gameCategory: 'FPS', timePlayed: 133 },
+    { gameName: 'Animal Crossing', gameCategory: 'FPS', timePlayed: 4031 },
+] as GameType[];
 
 export const AuthContext = createContext({} as AuthContextData);
 
@@ -80,20 +92,20 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     useEffect(() => {
         if (!!user) {
-            searchMatches();
-            //searchGames();
+            fetchMatches();
+            fetchGames();
         }
     }, [user]);
 
-    async function searchMatches() {
+    async function fetchMatches() {
         const data = (await api.get(`/matches/${user.userId}`)).data as Match[];
         setMatches(data);
     }
 
-    /*async function searchGames() {
-        const data = await api.get(`/games/${user.userId}`) as Games;
-        setGames(data);
-    }*/
+    async function fetchGames() {
+        const data = (await api.get(`/gameList/${user.userId}`)) as GameType[];
+        setGameList(dataT);
+    }
 
     async function signIn({ inputEmail, inputHash }: SignIncredentials) {
         try {

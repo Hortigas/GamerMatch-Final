@@ -10,18 +10,6 @@ import { MdModeEditOutline } from 'react-icons/md';
 import { IoIosRemoveCircle } from 'react-icons/io';
 import AvatarEditor from 'react-avatar-editor';
 
-const dataT = [
-    { name: 'Overwatch', played: 1230 },
-    { name: 'Minecraft', played: 402 },
-    { name: 'CS-GO', played: 2311 },
-    { name: 'LOL', played: 1511 },
-    { name: 'Heroes of the Storm', played: 511 },
-    { name: 'World of Warcraft', played: 511 },
-    { name: 'Valorant', played: 211 },
-    { name: 'Pinball', played: 133 },
-    { name: 'Animal Crossing', played: 4031 },
-];
-
 type GameListProps = {
     handleRemove: () => void;
 };
@@ -66,14 +54,16 @@ export default function Profile() {
 }
 
 function GameList({ handleRemove }: GameListProps) {
+    const { gameList } = useContext(AuthContext);
+
     return (
         <UL>
-            {dataT.map((i) => (
-                <li key={i.name}>
+            {gameList.map((i) => (
+                <li key={i.gameName}>
                     <div className="gameIcon">
                         <Image src={Control} width="40px" />
                     </div>
-                    {i.name} <span> ({i.played} horas)</span>
+                    {i.gameName} <span> ({i.timePlayed} horas)</span>
                     <IoIosRemoveCircle className="removeIcon" onClick={handleRemove} />
                 </li>
             ))}
