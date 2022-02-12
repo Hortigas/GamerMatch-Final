@@ -167,12 +167,17 @@ export async function getGames(req: number) {
 
 export async function addGames(req: any) {
     try {
-        const { user_id } = req;
+        const { userID, jogo } = req;
+        const user = await prisma.public_games.findMany({
+            where: {
+              user_id:userID,
+            },
+          });
         return prisma.public_games.update({
-            where: { id: user_id },
+            where: { id: user[0].id },
             data: {
                 games: {
-                    push: req,
+                    push: jogo,
                 },
             },
         });

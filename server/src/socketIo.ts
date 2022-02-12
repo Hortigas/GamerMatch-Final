@@ -1,5 +1,5 @@
 import { Server } from 'socket.io';
-import { updateMessages } from './database';
+import { addGames, updateMessages } from './database';
 import { app } from './server';
 
 const http = require('http');
@@ -47,6 +47,10 @@ export function socketIO() {
             } //tratar usuário offline
             socket.to(to).emit('chat.message', data);
             updateMessages(data);
+            //const af = 5942175
+            //const jogo = { gameName: "GTA V", timePlayed:10425, gameCategory:"Mundo Aberto"};
+            //const teste = {userID:af, jogo};
+            //addGames(teste);
         });
         socket.on('disconnect', () => {
             console.log('user disconnect', socket.id);

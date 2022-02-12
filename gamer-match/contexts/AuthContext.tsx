@@ -19,6 +19,11 @@ type Match = {
     messages: MessageType[];
 };
 
+type Games = {
+    userId: number;
+    games: GameType[];
+};
+
 type GameType = {
     gameName: string;
     timePlayed: number;
