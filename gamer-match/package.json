@@ -10,6 +10,7 @@
     "dependencies": {
         "@prisma/client": "^3.9.0",
         "@types/date-and-time": "^0.13.0",
+        "@types/react-avatar-editor": "^10.3.6",
         "@types/uuid": "^8.3.4",
         "axios": "^0.25.0",
         "crypto-js": "^4.1.1",
@@ -20,6 +21,7 @@
         "nookies": "^2.5.2",
         "polished": "^4.1.4",
         "react": "17.0.2",
+        "react-avatar-editor": "^12.0.0",
         "react-dom": "17.0.2",
         "react-google-login": "^5.2.2",
         "react-icons": "^4.3.1",

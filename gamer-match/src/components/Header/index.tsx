@@ -4,7 +4,7 @@ import logoIMG from '../../assets/logoGamerMatchNTNL.png';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 import { SubMenu } from './SubMenu';
 
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../../../contexts/AuthContext';
 
 export function Header() {
@@ -26,7 +26,7 @@ export function Header() {
                         {user.username}
                         <MdKeyboardArrowDown className={submenu ? 'navbarArrow inveted' : 'navbarArrow'} />
                     </a>
-                    {submenu ? <SubMenu /> : ''}
+                    {submenu ? <SubMenu setSubmenu={setSubmenu} /> : ''}
                 </div>
             </Container>
         );

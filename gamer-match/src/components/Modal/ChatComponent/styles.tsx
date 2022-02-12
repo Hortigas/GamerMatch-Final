@@ -1,47 +1,113 @@
 import styled from 'styled-components';
 
-export const Container = styled.div`
+export const ContainerMatches = styled.div`
     position: fixed;
+    max-height: 100%;
     height: 640px;
-    width: 800px;
+    width: 400px;
     right: 5vw;
+    bottom: 0;
+    background-color: #222328;
+
+    display: flex;
+    flex-direction: column;
+
+    .matchesContainer {
+    }
+
+    @media (max-width: 600px) {
+        height: 100%;
+        width: 100%;
+        left: 0;
+        top: 0;
+    }
+`;
+
+export const ContainerChat = styled.div`
+    position: fixed;
+    max-height: 100%;
+    height: 640px;
+    width: 400px;
+    right: calc(400px + 5vw);
     bottom: 0;
     background-color: #222328;
     padding: 10px;
     display: flex;
-`;
 
-export const Header = styled.div`
-    width: 100%;
-    height: 25px;
-    padding: 5px 5px 0px;
-    position: absolute;
-    top: 0;
-    left: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-
-    .IconClose {
-        height: 100%;
-        width: auto;
-
+    .closeChat {
+        position: absolute;
         color: #506e89;
+        right: 20px;
+        top: 5px;
+        height: 30px;
+        width: 30px;
+    }
+
+    .chatContainer {
+        padding-right: 10px;
+        border-right: 3px solid #506e89;
+        width: 100%;
+    }
+
+    @media (max-width: 1000px) {
+        right: calc(5vw);
+
+        .closeChat {
+            right: 5px;
+        }
+
+        .chatContainer {
+            padding-right: 0;
+            border-right: none;
+        }
+    }
+
+    @media (max-width: 600px) {
+        height: 100%;
+        width: 100%;
+        left: 0;
+        top: 0;
     }
 `;
 
-export const ChatContainer = styled.div`
-    margin-top: 25px;
-    width: 50%;
-    border-right: 2px solid #89878a;
-    padding-right: 10px;
+export const Header = styled.div`
+    position: relative;
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    border-bottom: 2px solid #506e89;
+
+    .perfil {
+        display: flex;
+        align-items: center;
+
+        h1 {
+            margin-left: 25px;
+            font-size: 2.5rem;
+            font-weight: 500;
+            color: #6ea8de;
+        }
+
+        .avatar {
+            border-radius: 50%;
+        }
+    }
+
+    .IconClose {
+        position: absolute;
+        right: 5px;
+        top: 5px;
+        width: 30px;
+        height: 30px;
+        color: #506e89;
+        cursor: pointer;
+    }
 `;
 
-export const MatchesContainer = styled.div`
+export const matchesContainer = styled.div`
     margin-top: 25px;
     width: 50%;
     border-left: 2px solid #89878a;
-    padding-left: 10px;
 `;
 
 export const ChatAnchor = styled.a`

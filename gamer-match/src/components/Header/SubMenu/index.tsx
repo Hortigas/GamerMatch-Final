@@ -4,11 +4,20 @@ import { FiLogOut } from 'react-icons/fi';
 import { AuthContext } from '../../../../contexts/AuthContext';
 import { useContext, useState } from 'react';
 
-export function SubMenu() {
+type SubmenuProps = {
+    setSubmenu: (value: boolean) => void;
+};
+
+export function SubMenu({ setSubmenu }: SubmenuProps) {
     const { user, signOut } = useContext(AuthContext);
 
     function handleLogout() {
+        setSubmenu(false);
         signOut();
+    }
+
+    function handleCloseSubmenu() {
+        setSubmenu(false);
     }
 
     return (
@@ -18,7 +27,7 @@ export function SubMenu() {
                 <span>{user?.email}</span>
             </div>
             <div className="nav">
-                <a href="/profile">
+                <a href="/profile" onClick={handleCloseSubmenu}>
                     <BsFillGearFill className="navIcon" />
                     Perfil
                 </a>

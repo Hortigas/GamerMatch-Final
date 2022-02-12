@@ -29,27 +29,10 @@ export const Container = styled.div`
         background-repeat: no-repeat;
         background-size: cover;
 
-        .info {
+        .avatarWrapper {
+            position: relative;
             display: flex;
             align-items: center;
-            position: relative;
-
-            .name {
-                margin-left: 30px;
-                background: RGBA(0, 0, 0, 0.6);
-                padding: 5px 20px;
-                border-radius: 10px;
-
-                h2 {
-                    color: white;
-                    font-weight: 500;
-                    font-size: 2.5rem;
-                }
-
-                h3 {
-                    font-weight: 400;
-                }
-            }
 
             .avatar {
                 border-radius: 50%;
@@ -64,6 +47,42 @@ export const Container = styled.div`
                 padding: 5px;
                 background-color: #148dfd;
                 border-radius: 50%;
+            }
+        }
+
+        .name {
+            margin-left: 30px;
+            background: RGBA(0, 0, 0, 0.6);
+            padding: 5px 20px;
+            border-radius: 10px;
+            display: grid;
+            grid-template-areas:
+                'h2 b'
+                'h3 b';
+
+            h2 {
+                grid-area: h2;
+                color: white;
+                font-weight: 500;
+                font-size: 2.5rem;
+            }
+
+            h3 {
+                grid-area: h3;
+                font-weight: 400;
+            }
+
+            button {
+                grid-area: b;
+                height: 35px;
+                margin: auto;
+                margin-left: 20px;
+                padding: 10px 15px;
+                text-align: center;
+                line-height: 1rem;
+                background-color: #148dfd;
+                color: white;
+                border-radius: 30px;
             }
         }
     }
@@ -100,19 +119,28 @@ export const Container = styled.div`
     @media (max-width: 1000px) {
         .profile {
             flex-direction: column;
+        }
 
-            .buttons {
-                margin-top: 50px;
-            }
+        .avatarWrapper {
+            display: flex;
+            flex-direction: column;
 
-            .info {
+            .name {
+                margin: 0;
+                margin-top: 30px;
+                display: flex;
+                align-items: center;
                 flex-direction: column;
-                text-align: center;
+                padding: 20px;
 
-                h2 {
-                    margin-top: 30px;
+                h3 {
+                    margin-bottom: 10px;
                 }
             }
+        }
+
+        .buttons {
+            margin-top: 50px;
         }
     }
 `;

@@ -19,10 +19,6 @@ type Match = {
     messages: MessageType[];
 };
 
-type Decoded = {
-    sub: string;
-};
-
 type SignIncredentials = {
     inputEmail: string;
     inputHash: string;
@@ -42,7 +38,6 @@ type AuthContextData = {
     setMatches(value: Match[]): void;
     signOut(): void;
     signUp(credentials: SignUpcredentials): Promise<void>;
-    uploadIMG(imgBase64: string): Promise<void>;
 };
 
 type AuthProviderProps = {
@@ -150,20 +145,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         Router.push('/login');
     }
 
-    async function uploadIMG(imgBase64: string) {
-        const response = await api.post('/upload', { image: imgBase64}).catch(function (error) {
-            if (error.response) {
-                toast.error(error.response.data.message);
-            } else if (error.request) {
-                toast.error('Error', error.message);
-            }
-        });
-        if (!response) return;
-        toast.success('Imagem carregada com sucesso!');
-        Router.push('/profile');
-    }
-
-    return <AuthContext.Provider value={{ signIn, signInWithGoogle, signOut, signUp, user, matches, setMatches, uploadIMG }}>{children}</AuthContext.Provider>;
+    return <AuthContext.Provider value={{ signIn, signInWithGoogle, signOut, signUp, user, matches, setMatches }}>{children}</AuthContext.Provider>;
 }
 function tostify(err: any) {
     throw new Error('Function not implemented.');

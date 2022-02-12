@@ -7,6 +7,11 @@ interface ChatboxProviderProps {
     children: ReactNode;
 }
 
+type User = {
+    userId: number;
+    socketId: string;
+};
+
 export type MatchType = {
     matchId: number;
     userId: number;
@@ -54,7 +59,7 @@ export function ChatboxProvider({ children }: ChatboxProviderProps): JSX.Element
                 socket.auth = { username: user.userId };
                 socket.connect();
                 socket.emit('add.user', user.userId);
-                socket.on('get.users', (users) => {
+                socket.on('get.users', (users: User[]) => {
                     setOnlineChatbox(users.map((i) => i.userId));
                 });
                 socket.on('chat.message', (data) => {

@@ -9,7 +9,7 @@ export const Container = styled.div`
     border-top: 2px solid #ffffff0f;
     border-radius: 4px;
     color: #c4c4c4;
-    z-index: 3;
+    z-index: 2;
 
     &:after {
         content: '';
@@ -17,10 +17,11 @@ export const Container = styled.div`
         top: -8px;
         right: 10px;
         background-color: #ffffff0f;
-        z-index: -1;
-        width: 10px;
-        height: 10px;
-        transform: rotate(45deg);
+        width: 0;
+        height: 0;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-bottom: 10px solid #ffffff0f;
     }
 
     .perfil {

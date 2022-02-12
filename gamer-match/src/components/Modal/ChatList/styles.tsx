@@ -29,7 +29,7 @@ type anchorProps = {
 export const ChatItemContainer = styled.a<anchorProps>`
     height: 100px;
     width: 100%;
-    padding: 10px;
+    padding: 15px;
     border-bottom: 1px solid #343c4c;
     display: grid;
     grid-template-areas:
