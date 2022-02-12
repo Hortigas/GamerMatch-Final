@@ -7,6 +7,7 @@ import { AuthContext } from '../../contexts/AuthContext';
 import { useContext } from 'react';
 import { LoginButton } from './../components/Profile/LoginButton/index';
 import { MdModeEditOutline } from 'react-icons/md';
+import { IoIosRemoveCircle } from 'react-icons/io';
 import AvatarEditor from 'react-avatar-editor';
 
 const dataT = [
@@ -21,10 +22,16 @@ const dataT = [
     { name: 'Animal Crossing', played: 4031 },
 ];
 
+type GameListProps = {
+    handleRemove: () => void;
+};
+
 export default function Profile() {
     const { user } = useContext(AuthContext);
 
     function handleEditPerfil() {}
+
+    function handleRemove() {}
 
     return (
         <Container>
@@ -46,9 +53,9 @@ export default function Profile() {
                 </div>
             </div>
 
-            <div className="gamesList wrapper">
+            <div className="GameList wrapper">
                 <h3>Seus jogos mais jogados:</h3>
-                <GamesList />
+                <GameList handleRemove={handleRemove} />
             </div>
             <div className="aboutme wrapper">
                 about me:
@@ -58,7 +65,7 @@ export default function Profile() {
     );
 }
 
-function GamesList() {
+function GameList({ handleRemove }: GameListProps) {
     return (
         <UL>
             {dataT.map((i) => (
@@ -67,6 +74,7 @@ function GamesList() {
                         <Image src={Control} width="40px" />
                     </div>
                     {i.name} <span> ({i.played} horas)</span>
+                    <IoIosRemoveCircle className="removeIcon" onClick={handleRemove} />
                 </li>
             ))}
         </UL>

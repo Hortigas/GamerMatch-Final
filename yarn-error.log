@@ -1,0 +1,36 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\yarn\bin\yarn.js add @type/react-icons
+
+PATH: 
+  c:\Users\xxvsv\AppData\Roaming\Code\User\globalStorage\microsoft-isvexptools.powerplatform-vscode\pac\tools;C:\Program Files (x86)\Razer Chroma SDK\bin;C:\Program Files\Razer Chroma SDK\bin;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Program Files (x86)\Razer\ChromaBroadcast\bin;C:\Program Files\Razer\ChromaBroadcast\bin;C:\Python39\Scripts\;C:\Python39\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\dotnet\;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\ProgramData\chocolatey\bin;C:\Windows\system32\config\systemprofile\AppData\Local\Microsoft\WindowsApps;C:\Meus Arquivos\Apps\Git\cmd;%NVM_HOME%;%NVM_SYMLINK%;C:\Users\xxvsv\AppData\Local\Microsoft\WindowsApps;C:\Meus Arquivos\Apps\Microsoft VS Code\bin;C:\Users\xxvsv\.dotnet\tools;C:\Users\xxvsv\AppData\Local\GitHubDesktop\bin;C:\Users\xxvsv\AppData\Local\Android\Sdk\platform-tools;C:\Users\xxvsv\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Users\xxvsv\AppData\Local\Google\Cloud SDK\google-cloud-sdk\bin
+
+Yarn version: 
+  1.22.17
+
+Node version: 
+  16.13.2
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: https://registry.yarnpkg.com/@type%2freact-icons: Not found
+      at Request.params.callback [as _callback] (C:\Users\xxvsv\AppData\Roaming\nvm\v16.13.2\node_modules\yarn\lib\cli.js:67029:18)
+      at Request.self.callback (C:\Users\xxvsv\AppData\Roaming\nvm\v16.13.2\node_modules\yarn\lib\cli.js:140883:22)
+      at Request.emit (node:events:390:28)
+      at Request.<anonymous> (C:\Users\xxvsv\AppData\Roaming\nvm\v16.13.2\node_modules\yarn\lib\cli.js:141855:10)
+      at Request.emit (node:events:390:28)
+      at IncomingMessage.<anonymous> (C:\Users\xxvsv\AppData\Roaming\nvm\v16.13.2\node_modules\yarn\lib\cli.js:141777:12)
+      at Object.onceWrapper (node:events:509:28)
+      at IncomingMessage.emit (node:events:402:35)
+      at endReadableNT (node:internal/streams/readable:1343:12)
+      at processTicksAndRejections (node:internal/process/task_queues:83:21)
+
+npm manifest: 
+  No manifest
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

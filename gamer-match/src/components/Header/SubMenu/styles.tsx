@@ -14,11 +14,8 @@ export const Container = styled.div`
     &:after {
         content: '';
         position: absolute;
-        top: -8px;
+        top: -12px;
         right: 10px;
-        background-color: #ffffff0f;
-        width: 0;
-        height: 0;
         border-left: 8px solid transparent;
         border-right: 8px solid transparent;
         border-bottom: 10px solid #ffffff0f;
