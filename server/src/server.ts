@@ -166,7 +166,7 @@ app.post('/games/create', checkAuthMiddleware, async (request, response) => {
     }
 });
 
-app.get('/games/:userId', checkAuthMiddleware, async (request, response) => {
+app.get('/gameList/:userId', checkAuthMiddleware, async (request, response) => {
     const userId = Number(request.params.userId);
 
     const games = await getGames(Number(userId)); //retorna conteudo da tabela match
