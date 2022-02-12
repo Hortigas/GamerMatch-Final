@@ -23,6 +23,10 @@ export type Matches = {
     timestamp: string;
 };
 
+export type Games = {
+    user_id: number;
+};
+
 export type GoogleProps = {
     name: string;
     email: string;

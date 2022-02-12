@@ -19,6 +19,18 @@ type Match = {
     messages: MessageType[];
 };
 
+type Games = {
+    gameId: number;
+    userId: number;
+    games: GameType[];
+};
+
+type GameType = {
+    gameName: string;
+    timePlayed: string;
+    gameCategory: string;
+};
+
 type SignIncredentials = {
     inputEmail: string;
     inputHash: string;
@@ -36,6 +48,8 @@ type AuthContextData = {
     user: User;
     matches: Match[];
     setMatches(value: Match[]): void;
+    games: Games;
+    setGames(value: Games): void;
     signOut(): void;
     signUp(credentials: SignUpcredentials): Promise<void>;
 };
@@ -54,6 +68,7 @@ export function signOutFunc() {
 export function AuthProvider({ children }: AuthProviderProps) {
     const [user, setUser] = useState<User>();
     const [matches, setMatches] = useState([] as Match[]);
+    const [games, setGames] = useState<Games>();
 
     useEffect(() => {
         const { 'GamerMatch.token': token } = parseCookies();
@@ -72,6 +87,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     useEffect(() => {
         if (!!user) {
             searchMatches();
+            //searchGames();
         }
     }, [user]);
 
@@ -79,6 +95,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
         const data = (await api.get(`/matches/${user.userId}`)).data as Match[];
         setMatches(data);
     }
+
+    /*async function searchGames() {
+        const data = await api.get(`/games/${user.userId}`) as Games;
+        setGames(data);
+    }*/
 
     async function signIn({ inputEmail, inputHash }: SignIncredentials) {
         try {
@@ -145,7 +166,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         Router.push('/login');
     }
 
-    return <AuthContext.Provider value={{ signIn, signInWithGoogle, signOut, signUp, user, matches, setMatches }}>{children}</AuthContext.Provider>;
+    return <AuthContext.Provider value={{ signIn, signInWithGoogle, signOut, signUp, user, matches, setMatches, games, setGames }}>{children}</AuthContext.Provider>;
 }
 function tostify(err: any) {
     throw new Error('Function not implemented.');

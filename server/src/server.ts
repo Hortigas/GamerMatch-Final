@@ -6,8 +6,8 @@ import { OAuth2Client } from 'google-auth-library';
 
 import { generateJwtAndRefreshToken } from './auth';
 import { auth } from './config';
-import { checkRefreshTokenIsValid, invalidateRefreshToken, getUser, setUser, setMatch, getMatches, getUsersById, updateProfileIMG } from './database';
-import { CreateSessionDTO, DecodedToken, CreateUser, GoogleProps, Message, UserData, Matches } from './types';
+import { checkRefreshTokenIsValid, invalidateRefreshToken, getUser, setUser, setMatch, getMatches, getUsersById, updateProfileIMG, getGames, setGames, addGames } from './database';
+import { CreateSessionDTO, DecodedToken, CreateUser, GoogleProps, Message, UserData, Matches, Games } from './types';
 import { socketIO } from './socketIo';
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -101,10 +101,10 @@ app.post('/sessions/create', async (request, response) => {
     }
 });
 
-app.post('/upload', async (request, response) => {
-    const { image } = request.body;
+app.post('/upload', checkAuthMiddleware, async (request, response) => {
+    const { image, id } = request.body;
     try {
-        updateProfileIMG(image.myFile);
+        updateProfileIMG(image.myFile, id);
     } catch (error) {
         throw error;
     }
@@ -130,7 +130,7 @@ app.get('/matches/:userId', checkAuthMiddleware, async (request, response) => {
         }
     }) as number[];
     const users = await getUsersById(usersId);
-    console.log(users);
+    //console.log(users);
     const arrData = [] as any;
     matches.forEach((match) => {
         const user = users.find((user) => user.userId === match.user_id_1 || user.userId === match.user_id_2);
@@ -151,6 +151,34 @@ app.post('/matches/create', checkAuthMiddleware, async (request, response) => {
             message: 'Error - Match not set!',
         });
     }
+});
+
+app.post('/games/create', checkAuthMiddleware, async (request, response) => {
+    const { user_id } = request.body as Games;
+    try {
+        await setGames(user_id);
+        return response.json();
+    } catch (error) {
+        return response.status(409).json({
+            error: true,
+            message: 'Error - Games not set!',
+        });
+    }
+});
+
+app.get('/games/:userId', checkAuthMiddleware, async (request, response) => {
+    const userId = Number(request.params.userId);
+
+    const games = await getGames(Number(userId)); //retorna conteudo da tabela match
+    if (games === null) {
+        return response.status(401).json({
+            error: true,
+            message: 'userId not found',
+        });
+    }
+
+    const data = { gameId: games.id, games: games.games, userId: games?.user_id };
+    return response.json(data);
 });
 
 /*app.post('/message/send', checkAuthMiddleware, async (request, response) => {
