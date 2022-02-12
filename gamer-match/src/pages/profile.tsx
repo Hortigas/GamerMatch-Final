@@ -8,6 +8,8 @@ import { useContext } from 'react';
 import { LoginButton } from './../components/Profile/LoginButton/index';
 import { MdModeEditOutline } from 'react-icons/md';
 import { IoIosRemoveCircle } from 'react-icons/io';
+import { IoIosAddCircle } from 'react-icons/io';
+
 import AvatarEditor from 'react-avatar-editor';
 
 type GameListProps = {
@@ -42,7 +44,9 @@ export default function Profile() {
             </div>
 
             <div className="GameList wrapper">
-                <h3>Seus jogos mais jogados:</h3>
+                <h3>
+                    Seus jogos mais jogados: <IoIosAddCircle />
+                </h3>
                 <GameList handleRemove={handleRemove} />
             </div>
             <div className="aboutme wrapper">
@@ -58,7 +62,7 @@ function GameList({ handleRemove }: GameListProps) {
 
     return (
         <UL>
-            {gameList.map((i) => (
+            {gameList?.map((i) => (
                 <li key={i.gameName}>
                     <div className="gameIcon">
                         <Image src={Control} width="40px" />

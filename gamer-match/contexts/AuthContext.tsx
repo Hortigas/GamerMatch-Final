@@ -98,13 +98,21 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }, [user]);
 
     async function fetchMatches() {
-        const data = (await api.get(`/matches/${user.userId}`)).data as Match[];
-        setMatches(data);
+        try {
+            const data = (await api.get(`/matches/${user.userId}`)).data as Match[];
+            setMatches(data);
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     async function fetchGames() {
-        const data = (await api.get(`/gameList/${user.userId}`)) as GameType[];
-        setGameList(dataT);
+        try {
+            //const data = (await api.get(`/gameList/${user.userId}`)) as GameType[];
+            setGameList(dataT);
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     async function signIn({ inputEmail, inputHash }: SignIncredentials) {
