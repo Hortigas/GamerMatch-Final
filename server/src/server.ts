@@ -101,7 +101,7 @@ app.post('/sessions/create', async (request, response) => {
     }
 });
 
-app.post('/upload', async (request, response) => {
+app.post('/upload', checkAuthMiddleware, async (request, response) => {
     const { image, id } = request.body;
     try {
         updateProfileIMG(image.myFile, id);
