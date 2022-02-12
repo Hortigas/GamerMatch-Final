@@ -92,7 +92,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     useEffect(() => {
         if (!!user) {
             searchMatches();
-            searchGames();
+            //searchGames();
         }
     }, [user]);
 
@@ -101,10 +101,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
         setMatches(data);
     }
 
-    async function searchGames() {
-        const data = (await api.get(`/games/${user.userId}`)).data as Games;
+    /*async function searchGames() {
+        const data = await api.get(`/games/${user.userId}`) as Games;
         setGames(data);
-    }
+    }*/
 
     async function signIn({ inputEmail, inputHash }: SignIncredentials) {
         try {
