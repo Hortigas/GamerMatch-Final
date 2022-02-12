@@ -136,6 +136,52 @@ export async function setUser(user_name: string, user_email: string, user_passwo
     }
 }
 
+export async function setGames(user_id: number) {
+    //cria games no bd
+    try {
+        return prisma.public_games.create({
+            data: {
+                user_id,
+            },
+        });
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
+export async function getGames(req: number) {
+    //retorna lista de games pelo user_id
+    try {
+        const games = await prisma.public_games.findFirst({
+            where: {
+                user_id: req,
+            },
+        });
+        return games;
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+}
+
+export async function addGames(req: any) {
+    try {
+        const { user_id } = req;
+        return prisma.public_games.update({
+            where: { id: user_id },
+            data: {
+                games: {
+                    push: req,
+                },
+            },
+        });
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
 export function createRefreshToken(email: string) {
     const currentUserTokens = tokens.get(email) ?? [];
     const refreshToken = uuid();
