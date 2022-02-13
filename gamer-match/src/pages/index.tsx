@@ -19,7 +19,7 @@ export default function Landing() {
         console.log(data);
     }
 
-    async function searchGameByCategory() { //pesquisa jogo pela categoria
+    async function searchGameByCategory() { //pesquisa jogo pela categoria.. retorna max 20
         const categoria = document.getElementById("categorias").value;
         const searchCategory = genre_id => `${base_url}${category_games}${genre_id}&page_size=20`;
         let response = await fetch(searchCategory(categoria));
@@ -35,9 +35,25 @@ export default function Landing() {
             <input type="text" placeholder="Enter text" />
             <button onClick={searchGameList}>buscar</button>
             <select id="categorias" onChange={searchGameByCategory}>
-                <option value="4">acao</option>
-                <option value="51">indie</option>
-                <option value="14">simulacao</option>
+                <option value="4">Ação</option>
+                <option value="3">Aventura</option>
+                <option value="5">RPG</option>
+                <option value="10">Estratégia</option>
+                <option value="2">Tiro</option>
+                <option value="40">Casual</option>
+                <option value="7">Puzzle</option>
+                <option value="51">Indie</option>
+                <option value="11">Arcade</option>
+                <option value="14">Simulação</option>
+                <option value="10">Plataforma</option>
+                <option value="1">Corrida</option>
+                <option value="59">Multiplayer massivo</option>
+                <option value="15">Esportes</option>
+                <option value="6">Luta</option>
+                <option value="19">Família</option>
+                <option value="28">Tabuleiro</option>
+                <option value="34">Educacional</option>
+                <option value="17">Carta</option>
             </select>
         </Home>
     );
