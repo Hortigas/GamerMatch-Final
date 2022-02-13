@@ -87,24 +87,33 @@ export const Container = styled.div`
         }
     }
 
-    .gamesList {
+    .gameList {
         h3 {
             font-weight: 500;
             font-size: 2.2rem;
             margin-bottom: 20px;
             color: white;
+            align-items: center;
+            display: flex;
+
+            .addIcon {
+                color: #148dfd;
+                height: 3rem;
+                width: 3rem;
+                margin-left: 5px;
+            }
         }
     }
 
     .aboutme {
-        min-height: 150px;
         margin-bottom: 100px;
         font-weight: 500;
         font-size: 2.2rem;
-        margin-bottom: 20px;
         color: white;
 
         textarea {
+            padding: 5px 10px;
+            min-height: 100px;
             font-size: 1.8rem;
             margin-top: 10px;
             display: block;
@@ -156,6 +165,13 @@ export const UL = styled.div`
         list-style-type: none;
         color: white;
 
+            .removeIcon {
+                color: #ee3e54;
+                margin-left: 5px;
+                width: 2.2rem;
+            height: 2.2rem;
+            }
+        }
         .gameIcon {
             display: flex;
             align-items: center;
