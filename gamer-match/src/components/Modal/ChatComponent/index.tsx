@@ -3,7 +3,6 @@ import { FiMessageCircle } from 'react-icons/fi';
 import { AiOutlineClose } from 'react-icons/ai';
 import { AiOutlineArrowRight } from 'react-icons/ai';
 import Image from 'next/image';
-import Avatar from '../../../assets/UserPics/userpic1.jpg';
 
 import { useChatbox } from '../../../hooks/useChatbox';
 import { AuthContext } from '../../../../contexts/AuthContext';
@@ -34,7 +33,7 @@ export function ChatComponent() {
                         <Header>
                             <AiOutlineClose className="IconClose" onClick={handleOnClick} />
                             <div className="perfil">
-                                <Image src={Avatar} alt="hero image Gamer match" width="90px" height="90px" className="avatar" />
+                                <Image src={user.avatar} alt="hero image Gamer match" width="90px" height="90px" className="avatar" />
                                 <h1>{user.username}</h1>
                             </div>
                         </Header>

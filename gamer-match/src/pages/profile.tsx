@@ -1,6 +1,5 @@
 import { withSSRAuth } from '../../utils/withSSRAuth';
 import { Container, UL } from '../components/Profile/styles';
-import Avatar from '../assets/UserPics/userpic1.jpg';
 import Control from '../assets/control.svg';
 import { MdModeEditOutline } from 'react-icons/md';
 import { IoIosRemoveCircle } from 'react-icons/io';
@@ -11,8 +10,8 @@ import { LoginButton } from './../components/Profile/LoginButton/index';
 import { AuthContext } from '../../contexts/AuthContext';
 import React, { useContext, useEffect, useState } from 'react';
 
-import AvatarEditor from 'react-avatar-editor';
 import { ModalAddGame } from '../components/Profile/ModalAddGame';
+import { ModalAddAvatar } from '../components/Profile/ModalAddAvatar';
 
 type GameType = {
     gameName: string;
@@ -29,14 +28,20 @@ type GameListProps = {
 export default function Profile() {
     const { user, gameList, setGameList } = useContext(AuthContext);
     const [editMode, setEditMode] = useState(false);
-    const [isOpen, setIsOpen] = useState(false);
+    const [modalAddGameIsOpen, setModalAddGameIsOpen] = useState(false);
+    const [modalAddAvatarIsOpen, setModalAddAvatarIsOpen] = useState(false);
 
-    function handleOpenModal() {
-        setIsOpen(true);
+    function handleOpenModalAddAvatar() {
+        setModalAddAvatarIsOpen(true);
+    }
+
+    function handleOpenModalAddGame() {
+        setModalAddGameIsOpen(true);
     }
 
     function handleEditPerfil() {
         if (editMode) {
+        } else {
         }
 
         setEditMode(!editMode);
@@ -48,14 +53,17 @@ export default function Profile() {
         setGameList(newGameList);
     }
 
+    if (!user) return <></>;
+
     return (
         <Container>
-            <ModalAddGame isOpen={isOpen} setIsOpen={setIsOpen} />
+            <ModalAddAvatar isOpen={modalAddAvatarIsOpen} setIsOpen={setModalAddAvatarIsOpen} />
+            <ModalAddGame isOpen={modalAddGameIsOpen} setIsOpen={setModalAddGameIsOpen} />
             <div className="profile wrapper">
                 <div className="infoWrapper">
                     <div className="avatarWrapper">
-                        <Image src={Avatar} alt="Avatar" width="180px" height="180px" className="avatar" />
-                        {editMode ? <MdModeEditOutline className="editAvatar" /> : ''}
+                        <Image src={user.avatar} alt="Avatar" width="180px" height="180px" className="avatar" />
+                        {editMode ? <MdModeEditOutline className="editAvatar" onClick={handleOpenModalAddAvatar} /> : ''}
                     </div>
                     <div className="name">
                         <h2>{user?.username}</h2>
@@ -71,12 +79,12 @@ export default function Profile() {
             </div>
 
             <div className="gameList wrapper">
-                <h3>Seus jogos mais jogados: {editMode ? <IoIosAddCircle className="addIcon" onClick={handleOpenModal} /> : ''}</h3>
+                <h3>Seus jogos mais jogados: {editMode ? <IoIosAddCircle className="addIcon" onClick={handleOpenModalAddGame} /> : ''}</h3>
                 <GameList handleRemove={handleRemove} editMode={editMode} gameList={gameList} />
             </div>
             <div className="aboutme wrapper">
                 sobre mim:
-                <textarea disabled={!editMode} placeholder={editMode ? 'escreva algo sobre você' : ''} style={editMode ? { background: '#14171E90' } : {}} />
+                <textarea maxLength={255} disabled={!editMode} placeholder={editMode ? 'escreva algo sobre você' : ''} style={editMode ? { background: '#14171E90' } : {}} />
             </div>
         </Container>
     );

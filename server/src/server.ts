@@ -91,7 +91,7 @@ app.post('/sessions', async (request, response) => {
 app.post('/sessions/create', async (request, response) => {
     const { username, email, hash } = request.body as CreateUser;
     try {
-        await setUser(username, email, hash);
+        await setUser(username, email, '', hash);
         return response.json();
     } catch (error) {
         return response.status(409).json({
@@ -218,15 +218,18 @@ app.post('/sessions/google', async (request, response) => {
             idToken: tokenId,
             audience: process.env.GOOGLE_CLIENT_ID,
         });
-        const { name, email } = ticket.getPayload() as GoogleProps;
+        const teste = ticket.getPayload() as GoogleProps;
+        console.log(teste);
+        const { name, email, picture } = teste;
         let user = await getUser(email);
-        if (!user) user = (await setUser(name, email, '', true)) as UserData;
+        if (!user) user = (await setUser(name, picture, email, '', true)) as UserData;
         const { token, refreshToken } = generateJwtAndRefreshToken(email);
         return response.json({
             token,
             refreshToken,
             email: user.user_email,
             username: user.user_name,
+            avatar: user.user_avatar,
             userId: user.id,
         });
     } catch (err) {
@@ -272,16 +275,21 @@ app.post('/refresh', addUserInformationToRequest, async (request, response) => {
 app.get('/me', checkAuthMiddleware, async (request, response) => {
     const email = request.user;
 
-    const { user_email, user_name, id } = await getUser(email);
+    const user = await getUser(email);
 
-    if (!user_email) {
+    console.log(user);
+
+    if (!user.user_email) {
         return response.status(400).json({ error: true, message: 'User not found.' });
     }
 
     return response.json({
-        email: user_email,
-        username: user_name,
-        userId: id,
+        userId: user.id,
+        email: user.user_email,
+        username: user.user_name,
+        avatar: user.user_photo,
+        birth: user.birth_date,
+        aboutme: user.user_aboutme,
     });
 });
 

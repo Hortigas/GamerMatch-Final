@@ -101,11 +101,11 @@ export async function getUsersById(req: number[]) {
             },
         });
         return users.map((u) => {
-            if(u.perfil_photo != null){
+            if (u.perfil_photo != null) {
                 const buff = Buffer.from(u.perfil_photo);
-                const user_avatar = buff.toString('base64').replace(/^dataimage\/pngbase64/, "data:image/png;base64,");
+                const user_avatar = buff.toString('base64').replace(/^dataimage\/pngbase64/, 'data:image/png;base64,');
                 return { userId: u.id, username: u.user_name, avatar: user_avatar };
-            }else{
+            } else {
                 return { userId: u.id, username: u.user_name, avatar: '' };
             }
         });
@@ -115,10 +115,9 @@ export async function getUsersById(req: number[]) {
     }
 }
 
-export async function setUser(user_name: string, user_email: string, user_password: string, providerAuth: boolean = false) {
+export async function setUser(user_name: string, user_email: string, user_avatar: string, user_password: string, providerAuth: boolean = false) {
     //cria user no bd
     const birth_date = null;
-    const perfil_photo = null;
     try {
         return await prisma.public_user.create({
             data: {
@@ -127,7 +126,7 @@ export async function setUser(user_name: string, user_email: string, user_passwo
                 user_password,
                 providerAuth,
                 birth_date,
-                perfil_photo,
+                perfil_photo: user_avatar,
             },
         });
     } catch (error) {
@@ -170,9 +169,9 @@ export async function addGames(req: any) {
         const { userID, jogo } = req;
         const user = await prisma.public_games.findMany({
             where: {
-              user_id:userID,
+                user_id: userID,
             },
-          });
+        });
         return prisma.public_games.update({
             where: { id: user[0].id },
             data: {

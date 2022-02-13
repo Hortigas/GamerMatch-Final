@@ -30,6 +30,7 @@ export type Games = {
 export type GoogleProps = {
     name: string;
     email: string;
+    picture: string;
 };
 
 export type UserData = {
@@ -38,6 +39,9 @@ export type UserData = {
     user_password: string;
     user_name: string;
     providerAuth: boolean;
+    user_photo: string;
+    user_aboutme: string;
+    birth_date?: string;
 };
 
 export type RefreshTokensStore = Map<string, string[]>;

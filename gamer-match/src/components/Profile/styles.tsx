@@ -11,6 +11,10 @@ export const Container = styled.div`
     flex-direction: column;
     align-items: center;
 
+    .avatarEditor {
+        position: fixed;
+    }
+
     .wrapper {
         background-color: #23252b;
         width: 100%;
@@ -130,9 +134,13 @@ export const Container = styled.div`
         }
     }
 
-    @media (max-width: 1000px) {
+    @media (max-width: 900px) {
         .profile {
             flex-direction: column;
+        }
+
+        .wrapper {
+            padding: 20px;
         }
 
         .infoWrapper {

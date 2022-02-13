@@ -4,18 +4,22 @@ import { destroyCookie, setCookie, parseCookies } from 'nookies';
 import Router from 'next/router';
 import { toast } from 'react-toastify';
 import { MessageType } from '../src/hooks/useChatbox';
+import Avatar from './../src/assets/UserPics/userpic1.jpg';
 
 type User = {
+    userId: number;
     email: string;
     username: string;
-    userId: number;
+    avatar?: string | StaticImageData;
+    birth?: string;
+    aboutme: string;
 };
 
 type Match = {
     matchId: number;
     userId: number;
-    avatar: string;
     username: string;
+    avatar: string;
     messages: MessageType[];
 };
 
@@ -25,7 +29,7 @@ type GameType = {
     gameCategory: string;
 };
 
-type categoryType = {
+type CategoryType = {
     id: number;
     name: string;
 };
@@ -49,7 +53,7 @@ type AuthContextData = {
     setMatches(value: Match[]): void;
     gameList: GameType[];
     setGameList(value: GameType[]): void;
-    categories: categoryType[];
+    categories: CategoryType[];
     signOut(): void;
     signUp(credentials: SignUpcredentials): Promise<void>;
 };
@@ -147,7 +151,7 @@ const categoriesData = [
         id: 83,
         name: 'Plataforma',
     },
-] as categoryType[];
+] as CategoryType[];
 
 export const AuthContext = createContext({} as AuthContextData);
 
@@ -160,15 +164,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const [user, setUser] = useState<User>();
     const [matches, setMatches] = useState([] as Match[]);
     const [gameList, setGameList] = useState<GameType[]>();
-    const [categories, setCategories] = useState<categoryType[]>(categoriesData);
+    const [categories, setCategories] = useState<CategoryType[]>(categoriesData);
 
     useEffect(() => {
         const { 'GamerMatch.token': token } = parseCookies();
         if (token) {
             api.get('/me')
                 .then((response) => {
-                    const { email, username, userId } = response.data;
-                    setUser({ email, username, userId });
+                    const { userId, email, username, avatar, birth, aboutme } = response.data as User;
+                    setUser({ userId, email, username, avatar, birth, aboutme });
                 })
                 .catch(() => {
                     signOut();
@@ -178,10 +182,28 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     useEffect(() => {
         if (!!user) {
+            if (!user.avatar) {
+                const newUser = user;
+                newUser.avatar = Avatar;
+                setUser(newUser);
+            }
             fetchMatches();
             fetchGames();
         }
     }, [user]);
+
+    async function updateProfile(aboutMe: string) {
+        const response = await api.post('user/update', { aboutMe, gameList }).catch(function (error) {
+            if (error.response) {
+                toast.error(error.response.data.message);
+            } else if (error.request) {
+                toast.error('Error', error.message);
+            }
+        });
+        if (!response) return;
+        toast.success('Cadastro realizado com sucesso!');
+        Router.push('/login');
+    }
 
     async function fetchMatches() {
         try {
