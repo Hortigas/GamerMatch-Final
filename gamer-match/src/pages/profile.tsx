@@ -29,7 +29,11 @@ type GameListProps = {
 export default function Profile() {
     const { user, gameList, setGameList } = useContext(AuthContext);
     const [editMode, setEditMode] = useState(false);
-    const childFunc = React.useRef(null);
+    const [isOpen, setIsOpen] = useState(false);
+
+    function handleOpenModal() {
+        setIsOpen(true);
+    }
 
     function handleEditPerfil() {
         setEditMode(!editMode);
@@ -43,11 +47,11 @@ export default function Profile() {
 
     return (
         <Container>
-            <ModalAddGame childFunc={childFunc} />
+            <ModalAddGame isOpen={isOpen} setIsOpen={setIsOpen} />
             <div className="profile wrapper">
                 <div className="avatarWrapper">
                     <Image src={Avatar} alt="hero image Gamer match" width="180px" height="180px" className="avatar" />
-                    <MdModeEditOutline className="editPerfil" />
+                    {editMode ? <MdModeEditOutline className="editPerfil" /> : ''}
 
                     <div className="name">
                         <h2>{user?.username}</h2>
@@ -63,7 +67,7 @@ export default function Profile() {
             </div>
 
             <div className="gameList wrapper">
-                <h3>Seus jogos mais jogados: {editMode ? <IoIosAddCircle className="addIcon" onClick={() => childFunc.current()} /> : ''}</h3>
+                <h3>Seus jogos mais jogados: {editMode ? <IoIosAddCircle className="addIcon" onClick={handleOpenModal} /> : ''}</h3>
                 <GameList handleRemove={handleRemove} editMode={editMode} gameList={gameList} />
             </div>
             <div className="aboutme wrapper">

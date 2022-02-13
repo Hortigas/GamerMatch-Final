@@ -165,13 +165,13 @@ export const UL = styled.div`
         list-style-type: none;
         color: white;
 
-            .removeIcon {
-                color: #ee3e54;
-                margin-left: 5px;
-                width: 2.2rem;
+        .removeIcon {
+            color: var(--red);
+            margin-left: 5px;
+            width: 2.2rem;
             height: 2.2rem;
-            }
         }
+
         .gameIcon {
             display: flex;
             align-items: center;

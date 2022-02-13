@@ -1,31 +1,43 @@
 import { Container } from './styles';
+import { useEffect, useState } from 'react';
 import Modal from 'react-modal';
-import { MutableRefObject, useEffect, useState } from 'react';
+import { AiOutlineClose } from 'react-icons/ai';
 
 interface ModalAddGameProps {
-    childFunc: MutableRefObject<any>;
+    isOpen: boolean;
+    setIsOpen: (value: boolean) => void;
 }
 
-function afterOpenModal() {}
+export function ModalAddGame({ isOpen, setIsOpen }: ModalAddGameProps) {
+    const [game, setGame] = useState('');
+    const [timePlayed, setTimePlayed] = useState(0);
+    const [category, setCategory] = useState('');
 
-function closeModal() {}
-
-export function ModalAddGame({ childFunc }: ModalAddGameProps) {
-    const [isOpen, setIsOpen] = useState(false);
-
-    useEffect(() => {
-        childFunc.current = openModal;
-    }, []);
-
-    function openModal() {
-        setIsOpen(true);
+    function onRequestClose() {
+        setIsOpen(false);
     }
 
-    return (
-        <Container>
-            <Modal ariaHideApp={false} isOpen={isOpen} onAfterOpen={afterOpenModal} onRequestClose={closeModal} className="modalAddGame" contentLabel="Example Modal">
+    async function handleCreateNewTransaction(event: React.FormEvent) {
+        event.preventDefault();
+    }
+
+    return isOpen ? (
+        <Modal ariaHideApp={false} isOpen={isOpen} onRequestClose={onRequestClose} overlayClassName="react-modal-overlay" className="react-modal-content">
+            <Container onSubmit={handleCreateNewTransaction}>
+                <AiOutlineClose className="IconClose" onClick={onRequestClose} />
                 <h2>Adicionar jogo</h2>
-            </Modal>
-        </Container>
+                <input placeholder="Título" value={game} onChange={(event) => setGame(event.target.value)} />
+                <input placeholder="tempo jogado" type="number" value={timePlayed} onChange={(event) => setTimePlayed(Number(event.target.value))} />
+                <select placeholder="Categoria" onChange={(event) => setCategory(event.target.value)}>
+                    <option value="volvo">Volvo</option>
+                    <option value="saab">Saab</option>
+                    <option value="mercedes">Mercedes</option>
+                    <option value="audi">Audi</option>
+                </select>
+                <button type="submit">Cadastrar</button>
+            </Container>
+        </Modal>
+    ) : (
+        <></>
     );
 }

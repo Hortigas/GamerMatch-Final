@@ -1,4 +1,3 @@
-import '../styles/globals.css';
 import { AppProps } from 'next/app';
 import { AuthProvider } from '../../contexts/AuthContext';
 import { ChatComponent } from '../components/Modal/ChatComponent/index';
@@ -7,6 +6,7 @@ import { ChatboxProvider } from '../hooks/useChatbox';
 import 'react-toastify/dist/ReactToastify.css';
 import { socket, SocketContext } from '../services/socket';
 import { Header } from '../components/Header';
+import { GlobalStyle } from './../styles/global';
 
 function MyApp({ Component, pageProps }: AppProps) {
     return (
@@ -19,6 +19,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                     <ChatComponent />
                 </ChatboxProvider>
             </SocketContext.Provider>
+            <GlobalStyle />
         </AuthProvider>
     );
 }

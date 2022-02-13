@@ -25,6 +25,11 @@ type GameType = {
     gameCategory: string;
 };
 
+type categoryType = {
+    id: number;
+    name: string;
+};
+
 type SignIncredentials = {
     inputEmail: string;
     inputHash: string;
@@ -44,6 +49,7 @@ type AuthContextData = {
     setMatches(value: Match[]): void;
     gameList: GameType[];
     setGameList(value: GameType[]): void;
+    categories: categoryType[];
     signOut(): void;
     signUp(credentials: SignUpcredentials): Promise<void>;
 };
@@ -64,6 +70,85 @@ const dataT = [
     { gameName: 'Animal Crossing', gameCategory: 'FPS', timePlayed: 4031 },
 ] as GameType[];
 
+const categoriesData = [
+    {
+        id: 1,
+        name: 'Corrida',
+    },
+    {
+        id: 2,
+        name: 'Tiro',
+    },
+    {
+        id: 3,
+        name: 'Aventura',
+    },
+    {
+        id: 4,
+        name: 'Ação',
+    },
+    {
+        id: 5,
+        name: 'RPG',
+    },
+    {
+        id: 6,
+        name: 'Luta',
+    },
+    {
+        id: 7,
+        name: 'Puzzle',
+    },
+    {
+        id: 10,
+        name: 'Estratégia',
+    },
+    {
+        id: 11,
+        name: 'Arcade',
+    },
+    {
+        id: 14,
+        name: 'Simulação',
+    },
+    {
+        id: 15,
+        name: 'Esportes',
+    },
+    {
+        id: 17,
+        name: 'Carta',
+    },
+    {
+        id: 19,
+        name: 'Família',
+    },
+    {
+        id: 28,
+        name: 'Tabuleiro',
+    },
+    {
+        id: 34,
+        name: 'Educacional',
+    },
+    {
+        id: 40,
+        name: 'Casual',
+    },
+    {
+        id: 51,
+        name: 'Indie',
+    },
+    {
+        id: 59,
+        name: 'Multiplayer massivo',
+    },
+    {
+        id: 83,
+        name: 'Plataforma',
+    },
+] as categoryType[];
+
 export const AuthContext = createContext({} as AuthContextData);
 
 export function signOutFunc() {
@@ -75,6 +160,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const [user, setUser] = useState<User>();
     const [matches, setMatches] = useState([] as Match[]);
     const [gameList, setGameList] = useState<GameType[]>();
+    const [categories, setCategories] = useState<categoryType[]>(categoriesData);
 
     useEffect(() => {
         const { 'GamerMatch.token': token } = parseCookies();
@@ -180,7 +266,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         Router.push('/login');
     }
 
-    return <AuthContext.Provider value={{ signIn, signInWithGoogle, signOut, signUp, user, matches, setMatches, gameList, setGameList }}>{children}</AuthContext.Provider>;
+    return <AuthContext.Provider value={{ signIn, signInWithGoogle, signOut, signUp, user, matches, setMatches, gameList, setGameList, categories }}>{children}</AuthContext.Provider>;
 }
 function tostify(err: any) {
     throw new Error('Function not implemented.');
