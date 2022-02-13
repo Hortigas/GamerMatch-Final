@@ -36,6 +36,9 @@ export default function Profile() {
     }
 
     function handleEditPerfil() {
+        if (editMode) {
+        }
+
         setEditMode(!editMode);
     }
 
@@ -49,10 +52,11 @@ export default function Profile() {
         <Container>
             <ModalAddGame isOpen={isOpen} setIsOpen={setIsOpen} />
             <div className="profile wrapper">
-                <div className="avatarWrapper">
-                    <Image src={Avatar} alt="hero image Gamer match" width="180px" height="180px" className="avatar" />
-                    {editMode ? <MdModeEditOutline className="editPerfil" /> : ''}
-
+                <div className="infoWrapper">
+                    <div className="avatarWrapper">
+                        <Image src={Avatar} alt="Avatar" width="180px" height="180px" className="avatar" />
+                        {editMode ? <MdModeEditOutline className="editAvatar" /> : ''}
+                    </div>
                     <div className="name">
                         <h2>{user?.username}</h2>
                         <h3>23 anos</h3>

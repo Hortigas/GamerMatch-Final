@@ -1,7 +1,8 @@
 import { Container } from './styles';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import Modal from 'react-modal';
 import { AiOutlineClose } from 'react-icons/ai';
+import { AuthContext } from '../../../../contexts/AuthContext';
 
 interface ModalAddGameProps {
     isOpen: boolean;
@@ -9,31 +10,39 @@ interface ModalAddGameProps {
 }
 
 export function ModalAddGame({ isOpen, setIsOpen }: ModalAddGameProps) {
-    const [game, setGame] = useState('');
+    const [gameName, setGameName] = useState('');
     const [timePlayed, setTimePlayed] = useState(0);
-    const [category, setCategory] = useState('');
+    const [gameCategory, setGameCategory] = useState('');
+    const { categories, gameList, setGameList } = useContext(AuthContext);
 
     function onRequestClose() {
         setIsOpen(false);
     }
 
-    async function handleCreateNewTransaction(event: React.FormEvent) {
+    async function handleCreateNewGame(event: React.FormEvent) {
         event.preventDefault();
+        setGameList([...gameList, { gameName, timePlayed, gameCategory }].sort((a, b) => b.timePlayed - a.timePlayed));
+        setGameName('');
+        setTimePlayed(0);
     }
 
     return isOpen ? (
         <Modal ariaHideApp={false} isOpen={isOpen} onRequestClose={onRequestClose} overlayClassName="react-modal-overlay" className="react-modal-content">
-            <Container onSubmit={handleCreateNewTransaction}>
+            <Container onSubmit={handleCreateNewGame}>
                 <AiOutlineClose className="IconClose" onClick={onRequestClose} />
-                <h2>Adicionar jogo</h2>
-                <input placeholder="Título" value={game} onChange={(event) => setGame(event.target.value)} />
-                <input placeholder="tempo jogado" type="number" value={timePlayed} onChange={(event) => setTimePlayed(Number(event.target.value))} />
-                <select placeholder="Categoria" onChange={(event) => setCategory(event.target.value)}>
-                    <option value="volvo">Volvo</option>
-                    <option value="saab">Saab</option>
-                    <option value="mercedes">Mercedes</option>
-                    <option value="audi">Audi</option>
+                <h2>ADICIONE UM NOVO JOGO</h2>
+                <span>NOME</span>
+                <input value={gameName} onChange={(event) => setGameName(event.target.value)} />
+                <span>CATEGORIA</span>
+                <select onChange={(event) => setGameCategory(event.target.value)}>
+                    {categories.map((c) => (
+                        <option key={c.id} value={c.id}>
+                            {c.name}
+                        </option>
+                    ))}
                 </select>
+                <span>TEMPO JOGADO</span>
+                <input type="number" value={timePlayed} onChange={(event) => setTimePlayed(Number(event.target.value))} />
                 <button type="submit">Cadastrar</button>
             </Container>
         </Modal>

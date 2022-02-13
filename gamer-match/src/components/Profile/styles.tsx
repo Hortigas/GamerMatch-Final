@@ -29,24 +29,28 @@ export const Container = styled.div`
         background-repeat: no-repeat;
         background-size: cover;
 
-        .avatarWrapper {
-            position: relative;
+        .infoWrapper {
             display: flex;
             align-items: center;
 
-            .avatar {
-                border-radius: 50%;
-            }
+            .avatarWrapper {
+                position: relative;
 
-            .editPerfil {
-                position: absolute;
-                top: 5px;
-                left: 140px;
-                height: 40px;
-                width: 40px;
-                padding: 5px;
-                background-color: #148dfd;
-                border-radius: 50%;
+                .avatar {
+                    border-radius: 50%;
+                }
+
+                .editAvatar {
+                    position: absolute;
+                    top: 5px;
+                    right: 5px;
+                    height: 40px;
+                    width: 40px;
+                    padding: 5px;
+                    background-color: #148dfd;
+                    border-radius: 50%;
+                    cursor: pointer;
+                }
             }
         }
 
@@ -101,6 +105,7 @@ export const Container = styled.div`
                 height: 3rem;
                 width: 3rem;
                 margin-left: 5px;
+                cursor: pointer;
             }
         }
     }
@@ -130,7 +135,7 @@ export const Container = styled.div`
             flex-direction: column;
         }
 
-        .avatarWrapper {
+        .infoWrapper {
             display: flex;
             flex-direction: column;
 
@@ -170,6 +175,7 @@ export const UL = styled.div`
             margin-left: 5px;
             width: 2.2rem;
             height: 2.2rem;
+            cursor: pointer;
         }
 
         .gameIcon {
@@ -177,6 +183,7 @@ export const UL = styled.div`
             align-items: center;
             background-image: url#14171e;
             margin-right: 15px;
+            cursor: pointer;
         }
 
         span {

@@ -80,7 +80,7 @@ export const Main = styled.main`
             justify-content: center;
 
             text-decoration: none;
-            color: var(--color-button-text);
+            color: white;
             background: #148dfd;
             box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.4);
 
@@ -138,8 +138,9 @@ export const InputWrapper = styled.div`
         border-radius: 0.8rem;
         background: rgba(255, 255, 255, 0);
         color: rgba(255, 255, 255, 0.7);
-        border: 3px solid #89878a;
+        border: 1px solid #89878a;
         font-size: 1.5rem;
+        font-weight: 400;
     }
 
     .Icon {

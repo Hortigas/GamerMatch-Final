@@ -50,10 +50,10 @@ a {
     font: 500 1.6rem Poppins;
 }
 
-   [disabled] {
+[disabled] {
       opacity:0.6;
       cursor: not-allowed;
-   }
+}
 
    .react-modal-overlay {
       background : rgba(0,0,0,0.5);
@@ -73,8 +73,8 @@ a {
 
    .react-modal-content {
       width:100%;
-      max-width:576px;
-      background:#1A1C23;
+      max-width:500px;
+      background:#15171E;
       padding:40px;
       position: relative;
       border-radius:10px;

@@ -195,7 +195,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
     async function fetchGames() {
         try {
             //const data = (await api.get(`/gameList/${user.userId}`)) as GameType[];
-            setGameList(dataT);
+            const sortedArray = dataT.sort((a, b) => {
+                return b.timePlayed - a.timePlayed;
+            });
+            setGameList(sortedArray);
         } catch (err) {
             console.log(err);
         }
