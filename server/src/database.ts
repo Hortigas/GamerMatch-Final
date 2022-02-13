@@ -61,14 +61,17 @@ export async function updateMessages(req: any) {
     }
 }
 
-export async function updateProfileIMG(req: string, id: number) {
+export async function updateProfile(user_id: number, aboutMe: string, games: any, photo: string) {
     try {
-        const base64Response = await Buffer.from(req, 'base64');
+        const base64Response = await Buffer.from(photo, 'base64'); //string to bytea
+        const arrayGames = {user_id, games};
+        await addGames(arrayGames);
         return prisma.public_user.update({
-            where: { id: id },
+            where: { id: user_id },
             data: {
+                perfil_aboutme: aboutMe,                
                 perfil_photo: base64Response,
-            },
+            }
         });
     } catch (error) {
         console.error(error);

@@ -53,10 +53,10 @@ export default function Login() {
                             <input type="password" name="password" placeholder="Senha" value={password} onChange={(e) => setPassword(e.target.value)} required />
                         </InputWrapper>
                         <div className="wrapperLogin">
+                            <button type="submit">Login</button>
                             <Link href="/register" passHref>
                                 <button>Registrar</button>
                             </Link>
-                            <button type="submit">Login</button>
                         </div>
                     </form>
                     <div className="divider">

@@ -6,7 +6,7 @@ import { OAuth2Client } from 'google-auth-library';
 
 import { generateJwtAndRefreshToken } from './auth';
 import { auth } from './config';
-import { checkRefreshTokenIsValid, invalidateRefreshToken, getUser, setUser, setMatch, getMatches, getUsersById, updateProfileIMG, getGames, setGames, addGames } from './database';
+import { checkRefreshTokenIsValid, invalidateRefreshToken, getUser, setUser, setMatch, getMatches, getUsersById, updateProfile, getGames, setGames, addGames } from './database';
 import { CreateSessionDTO, DecodedToken, CreateUser, GoogleProps, Message, UserData, Matches, Games } from './types';
 import { socketIO } from './socketIo';
 
@@ -101,10 +101,10 @@ app.post('/sessions/create', async (request, response) => {
     }
 });
 
-app.post('/upload', checkAuthMiddleware, async (request, response) => {
-    const { image, id } = request.body;
+app.post('/updateProfile', checkAuthMiddleware, async (request, response) => {
+    const {user_id, aboutMe, games, photo } = request.body;
     try {
-        updateProfileIMG(image.myFile, id);
+        updateProfile(user_id, aboutMe, games, photo );
     } catch (error) {
         throw error;
     }
@@ -293,4 +293,4 @@ app.get('/me', checkAuthMiddleware, async (request, response) => {
     });
 });
 
-app.listen(3333);
+app.listen(process.env.PORT || 3333);
