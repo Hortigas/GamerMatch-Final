@@ -63,14 +63,13 @@ export async function updateMessages(req: any) {
 
 export async function updateProfile(user_id: number, aboutMe: string, games: any, photo: string) {
     try {
-        const base64Response = await Buffer.from(photo, 'base64'); //string to bytea
         const arrayGames = {user_id, games};
         await addGames(arrayGames);
         return prisma.public_user.update({
             where: { id: user_id },
             data: {
-                perfil_aboutme: aboutMe,                
-                perfil_photo: base64Response,
+                user_aboutme: aboutMe,                
+                user_photo: photo,
             }
         });
     } catch (error) {
@@ -104,8 +103,8 @@ export async function getUsersById(req: number[]) {
             },
         });
         return users.map((u) => {
-            if (u.perfil_photo != null) {
-                const buff = Buffer.from(u.perfil_photo);
+            if (u.user_photo != null) {
+                const buff = Buffer.from(u.user_photo);
                 const user_avatar = buff.toString('base64').replace(/^dataimage\/pngbase64/, 'data:image/png;base64,');
                 return { userId: u.id, username: u.user_name, avatar: user_avatar };
             } else {
@@ -129,7 +128,7 @@ export async function setUser(user_name: string, user_email: string, user_avatar
                 user_password,
                 providerAuth,
                 birth_date,
-                perfil_photo: user_avatar,
+                user_photo: user_avatar,
             },
         });
     } catch (error) {

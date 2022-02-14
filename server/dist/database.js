@@ -80,14 +80,13 @@ exports.updateMessages = updateMessages;
 function updateProfile(user_id, aboutMe, games, photo) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const base64Response = yield Buffer.from(photo, 'base64'); //string to bytea
             const arrayGames = { user_id, games };
             yield addGames(arrayGames);
             return exports.prisma.public_user.update({
                 where: { id: user_id },
                 data: {
-                    perfil_aboutme: aboutMe,
-                    perfil_photo: base64Response,
+                    user_aboutme: aboutMe,
+                    user_photo: photo,
                 }
             });
         }
@@ -127,9 +126,9 @@ function getUsersById(req) {
                 },
             });
             return users.map((u) => {
-                if (u.perfil_photo != null) {
-                    const buff = Buffer.from(u.perfil_photo);
-                    const user_avatar = buff.toString('base64').replace(/^dataimage\/pngbase64/, "data:image/png;base64,");
+                if (u.user_photo != null) {
+                    const buff = Buffer.from(u.user_photo);
+                    const user_avatar = buff.toString('base64').replace(/^dataimage\/pngbase64/, 'data:image/png;base64,');
                     return { userId: u.id, username: u.user_name, avatar: user_avatar };
                 }
                 else {
@@ -144,11 +143,10 @@ function getUsersById(req) {
     });
 }
 exports.getUsersById = getUsersById;
-function setUser(user_name, user_email, user_password, providerAuth = false) {
+function setUser(user_name, user_email, user_avatar, user_password, providerAuth = false) {
     return __awaiter(this, void 0, void 0, function* () {
         //cria user no bd
         const birth_date = null;
-        const perfil_photo = null;
         try {
             return yield exports.prisma.public_user.create({
                 data: {
@@ -157,7 +155,7 @@ function setUser(user_name, user_email, user_password, providerAuth = false) {
                     user_password,
                     providerAuth,
                     birth_date,
-                    perfil_photo,
+                    user_photo: user_avatar,
                 },
             });
         }

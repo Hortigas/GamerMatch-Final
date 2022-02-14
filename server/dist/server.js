@@ -85,7 +85,7 @@ exports.app.post('/sessions', (request, response) => __awaiter(void 0, void 0, v
 exports.app.post('/sessions/create', (request, response) => __awaiter(void 0, void 0, void 0, function* () {
     const { username, email, hash } = request.body;
     try {
-        yield (0, database_1.setUser)(username, email, hash);
+        yield (0, database_1.setUser)(username, email, '', hash);
         return response.json();
     }
     catch (error) {
@@ -205,16 +205,19 @@ exports.app.post('/sessions/google', (request, response) => __awaiter(void 0, vo
             idToken: tokenId,
             audience: process.env.GOOGLE_CLIENT_ID,
         });
-        const { name, email } = ticket.getPayload();
+        const teste = ticket.getPayload();
+        console.log(teste);
+        const { name, email, picture } = teste;
         let user = yield (0, database_1.getUser)(email);
         if (!user)
-            user = (yield (0, database_1.setUser)(name, email, '', true));
+            user = (yield (0, database_1.setUser)(name, picture, email, '', true));
         const { token, refreshToken } = (0, auth_1.generateJwtAndRefreshToken)(email);
         return response.json({
             token,
             refreshToken,
             email: user.user_email,
             username: user.user_name,
+            avatar: user.user_photo,
             userId: user.id,
         });
     }
@@ -251,14 +254,18 @@ exports.app.post('/refresh', addUserInformationToRequest, (request, response) =>
 }));
 exports.app.get('/me', checkAuthMiddleware, (request, response) => __awaiter(void 0, void 0, void 0, function* () {
     const email = request.user;
-    const { user_email, user_name, id } = yield (0, database_1.getUser)(email);
-    if (!user_email) {
+    const user = yield (0, database_1.getUser)(email);
+    console.log(user);
+    if (!user.user_email) {
         return response.status(400).json({ error: true, message: 'User not found.' });
     }
     return response.json({
-        email: user_email,
-        username: user_name,
-        userId: id,
+        userId: user.id,
+        email: user.user_email,
+        username: user.user_name,
+        avatar: user.user_photo,
+        birth: user.birth_date,
+        aboutme: user.user_aboutme,
     });
 }));
 exports.app.listen(process.env.PORT || 3333);
