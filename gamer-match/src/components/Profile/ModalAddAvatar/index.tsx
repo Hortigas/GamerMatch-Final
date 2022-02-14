@@ -12,7 +12,7 @@ interface ModalAddGameProps {
 }
 
 export function ModalAddAvatar({ isOpen, setIsOpen }: ModalAddGameProps) {
-    const { user } = useContext(AuthContext);
+    const { user, setUser } = useContext(AuthContext);
     const [selectedFile, setSelectedFile] = useState();
     const [isFilePicked, setIsFilePicked] = useState(false);
     const [zoom, setZoom] = useState(1);
@@ -39,7 +39,13 @@ export function ModalAddAvatar({ isOpen, setIsOpen }: ModalAddGameProps) {
     };
 
     const onClickSave = () => {
-        console.log(EditorRef.current);
+        const base64 = EditorRef.current.getImageScaledToCanvas().toDataURL();
+        const newUser = user;
+        newUser.avatar = base64;
+        setUser(newUser);
+        setIsFilePicked(false);
+        setSelectedFile(undefined);
+        setIsOpen(false);
     };
 
     return isOpen ? (

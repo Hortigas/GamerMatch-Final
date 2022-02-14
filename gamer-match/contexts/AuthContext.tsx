@@ -49,6 +49,7 @@ type AuthContextData = {
     signIn(credentials: SignIncredentials): Promise<void>;
     signInWithGoogle(tokenId: string): Promise<void>;
     user: User;
+    setUser(value: User): void;
     matches: Match[];
     setMatches(value: Match[]): void;
     gameList: GameType[];
@@ -56,6 +57,7 @@ type AuthContextData = {
     categories: CategoryType[];
     signOut(): void;
     signUp(credentials: SignUpcredentials): Promise<void>;
+    updateProfile(): Promise<boolean>;
 };
 
 type AuthProviderProps = {
@@ -193,17 +195,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
         }
     }, [user]);
 
-    async function updateProfile(aboutMe: string) {
-        const response = await api.post('user/update', { aboutMe, gameList }).catch(function (error) {
+    async function updateProfile() {
+        const response = await api.post('user/update', { user, gameList }).catch(function (error) {
             if (error.response) {
                 toast.error(error.response.data.message);
             } else if (error.request) {
                 toast.error('Error', error.message);
             }
         });
-        if (!response) return;
-        toast.success('Cadastro realizado com sucesso!');
-        Router.push('/login');
+        if (!response) return true;
+        toast.success('Mudanças realizadas com sucesso!');
     }
 
     async function fetchMatches() {
@@ -295,8 +296,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
         Router.push('/login');
     }
 
-    return <AuthContext.Provider value={{ signIn, signInWithGoogle, signOut, signUp, user, matches, setMatches, gameList, setGameList, categories }}>{children}</AuthContext.Provider>;
-}
-function tostify(err: any) {
-    throw new Error('Function not implemented.');
+    return (
+        <AuthContext.Provider value={{ signIn, signInWithGoogle, signOut, signUp, user, setUser, matches, setMatches, gameList, setGameList, categories, updateProfile }}>
+            {children}
+        </AuthContext.Provider>
+    );
 }

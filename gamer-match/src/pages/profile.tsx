@@ -8,7 +8,7 @@ import { IoIosAddCircle } from 'react-icons/io';
 import Image from 'next/image';
 import { LoginButton } from './../components/Profile/LoginButton/index';
 import { AuthContext } from '../../contexts/AuthContext';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 
 import { ModalAddGame } from '../components/Profile/ModalAddGame';
 import { ModalAddAvatar } from '../components/Profile/ModalAddAvatar';
@@ -26,10 +26,12 @@ type GameListProps = {
 };
 
 export default function Profile() {
-    const { user, gameList, setGameList } = useContext(AuthContext);
+    const { user, setUser, gameList, setGameList, updateProfile } = useContext(AuthContext);
     const [editMode, setEditMode] = useState(false);
     const [modalAddGameIsOpen, setModalAddGameIsOpen] = useState(false);
     const [modalAddAvatarIsOpen, setModalAddAvatarIsOpen] = useState(false);
+
+    const aboutmeRef = useRef(null);
 
     function handleOpenModalAddAvatar() {
         setModalAddAvatarIsOpen(true);
@@ -41,6 +43,10 @@ export default function Profile() {
 
     function handleEditPerfil() {
         if (editMode) {
+            const newUser = user;
+            newUser.aboutme = aboutmeRef.current.value;
+            setUser(newUser);
+            updateProfile();
         } else {
         }
 
@@ -84,7 +90,9 @@ export default function Profile() {
             </div>
             <div className="aboutme wrapper">
                 sobre mim:
-                <textarea maxLength={255} disabled={!editMode} placeholder={editMode ? 'escreva algo sobre você' : ''} style={editMode ? { background: '#14171E90' } : {}} />
+                <textarea maxLength={255} ref={aboutmeRef} disabled={!editMode} placeholder={editMode ? 'escreva algo sobre você' : ''} style={editMode ? { background: '#14171E90' } : {}}>
+                    {user.aboutme}
+                </textarea>
             </div>
         </Container>
     );
