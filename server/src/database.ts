@@ -64,7 +64,6 @@ export async function updateMessages(req: any) {
 export async function updateProfile(user_id: number, aboutMe: string, games: any, photo: string) {
     try {
         const arrayGames = { user_id, games };
-        console.log('hello');
         await addGames(arrayGames);
         return prisma.public_user.update({
             where: { id: user_id },
@@ -110,12 +109,15 @@ export async function getUsersById(req: number[]) {
     }
 }
 
-export async function getUsersByNotId(req: number) {
+export async function getUsersByNotId(req: number[]) {
     try {
         const users = await prisma.public_user.findMany({
+            take: 5,
             where: {
-                id: {
-                    not: req,
+                NOT: {
+                    id: {
+                        in: req,
+                    },
                 },
             },
         });

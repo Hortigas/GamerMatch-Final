@@ -6,7 +6,22 @@ import { OAuth2Client } from 'google-auth-library';
 
 import { generateJwtAndRefreshToken } from './auth';
 import { auth } from './config';
-import { checkRefreshTokenIsValid, invalidateRefreshToken, getUser, setUser, setMatch, getMatches, getUsersById, updateProfile, getGames, setGames, addGames, getUsers, getAllMatch, getUsersByNotId } from './database';
+import {
+    checkRefreshTokenIsValid,
+    invalidateRefreshToken,
+    getUser,
+    setUser,
+    setMatch,
+    getMatches,
+    getUsersById,
+    updateProfile,
+    getGames,
+    setGames,
+    addGames,
+    getUsers,
+    getAllMatch,
+    getUsersByNotId,
+} from './database';
 import { CreateSessionDTO, DecodedToken, CreateUser, GoogleProps, Message, UserData, Matches, Games } from './types';
 import { socketIO } from './socketIo';
 
@@ -140,26 +155,39 @@ app.get('/matches/:userId', checkAuthMiddleware, async (request, response) => {
     return response.json(arrData);
 });
 
-app.get('/findMatch/:userId', checkAuthMiddleware, async (request, response) =>{
+app.get('/findMatch/:userId', checkAuthMiddleware, async (request, response) => {
     const userId = Number(request.params.userId);
-    const matches = await getAllMatch();
-    const users = await getUsersByNotId(userId);
-    console.log(users);
-    const arrData = [] as any;
-    /*matches.forEach(async (match) => {
-        const user = matches.find((match) => match.user_id_1 != userId && match.user_id_2 != userId); //pega user q n deu match
-        const data = { user.user}
-        arrData.push(data);
+    const matches = await getMatches(Number(userId)); //retorna conteudo da tabela match
+    if (matches === null) {
+        return response.status(401).json({
+            error: true,
+            message: 'userId not found',
+        });
+    }
+    const usersId = matches.map((match) => {
+        //retorna id dos usuários que dá match com o usuário atual
+        if (match.user_id_1 === userId) {
+            return match.user_id_2;
+        } else if (match.user_id_2 === userId) {
+            return match.user_id_1;
+        }
+    }) as number[];
+    usersId.push(userId);
+    const users = await getUsersByNotId(usersId);
+    const promisses = users.map(async (u) => {
+        return {
+            user: u,
+            games: await getGames(u.id),
+        };
     });
-    //console.log(arrData);*/
-    return response.json(arrData);
+    return response.json(await Promise.all(promisses));
 });
 
 app.post('/matches/create', checkAuthMiddleware, async (request, response) => {
     const { user_id_1, user_id_2 } = request.body as Matches;
     try {
-        await setMatch(user_id_1, user_id_2);
-        return response.json();
+        const match = await setMatch(user_id_1, user_id_2);
+        return response.json(match);
     } catch (error) {
         return response.status(409).json({
             error: true,
@@ -231,7 +259,6 @@ app.post('/sessions/google', async (request, response) => {
             audience: process.env.GOOGLE_CLIENT_ID,
         });
         const teste = ticket.getPayload() as GoogleProps;
-        console.log(teste);
         const { name, email, picture } = teste;
         let user = await getUser(email);
         if (!user) user = (await setUser(name, picture, email, '', true)) as UserData;

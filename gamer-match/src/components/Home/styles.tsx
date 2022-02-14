@@ -11,9 +11,10 @@ export const Container = styled.div`
         width: 100%;
         border-radius: 4px;
         margin-bottom: 40px;
+        padding: 40px;
     }
 
-    li.mainLI {
+    div.mainLI {
         background-color: #23252b;
         display: flex;
         justify-content: space-between;
@@ -25,10 +26,12 @@ export const Container = styled.div`
         margin-bottom: 30px;
 
         .avatar {
+            width: 20%;
             border-radius: 50%;
         }
 
         .perfil {
+            width: 20%;
             h2 {
                 color: white;
                 font-weight: 500;
@@ -37,13 +40,57 @@ export const Container = styled.div`
             h3 {
                 font-weight: 400;
             }
+            span {
+                color: gray;
+            }
         }
 
-        a {
-            background-color: #148dfd;
-            border-radius: 50%;
-            padding: 10px;
-            margin-right: 40px;
+        ul {
+            width: 20%;
+        }
+
+        .match {
+            cursor: pointer;
+            width: 20%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            .matchButton {
+                background-color: #148dfd;
+                border-radius: 50%;
+            }
+        }
+    }
+
+    @media (max-width: 900px) {
+        div.mainLI {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            gap: 30px;
+            text-align: center;
+
+            .avatar {
+                width: 100%;
+            }
+            .perfil {
+                width: 100%;
+                h2 {
+                    margin-bottom: 10px;
+                }
+                h3 {
+                    margin-bottom: 10px;
+                }
+            }
+
+            ul {
+                width: 100%;
+            }
+
+            .match {
+                width: 100%;
+            }
         }
     }
 `;

@@ -5,8 +5,9 @@ import { Container, UL } from '../components/Home/styles';
 import Image from 'next/image';
 import Control from '../assets/control.svg';
 import Logo from '../assets/logoGamerMatchNTNL.png';
-import converter from 'date-and-time';
 import { api } from '../services/apiClient';
+import Avatar from './../assets/UserPics/userpic1.jpg';
+import { toast } from 'react-toastify';
 
 type GameType = {
     gameName: string;
@@ -15,7 +16,7 @@ type GameType = {
 };
 
 type GameListProps = {
-    gameList: GameType[];
+    gameList: { games: GameType[] };
 };
 
 const base_url = 'https://api.rawg.io/api/';
@@ -24,12 +25,12 @@ const query_games = `games?key=${apiKey}&search=`;
 const category_games = `games?key=${apiKey}&genres=`;
 
 export default function Landing() {
-    const { user, gameList, convertToAge, matches } = useContext(AuthContext);
+    const { user, gameList, convertToAge, matches, setMatches } = useContext(AuthContext);
     const [newMatches, setNewMatches] = useState(null);
 
     useEffect(() => {
-        findMatches();
-    }, []);
+        if (!!user) findMatches();
+    }, [matches]);
 
     async function searchGameList() {
         //pesquisa jogo pelo nome
@@ -50,63 +51,89 @@ export default function Landing() {
     }
 
     async function findMatches() {
-        const usersId = matches.map((m) => m.userId);
-        console.log(usersId);
         try {
-            setNewMatches(await api.get(`/findMatch/${user.userId}`, { params: { users: usersId } }));
+            const newM = await api.get(`/findMatch/${user.userId}`);
+            setNewMatches(newM.data);
         } catch (err) {
             console.log(err);
         }
     }
 
-    if (!user || newMatches) return <></>;
+    type Match = {
+        matchId: number;
+        userId: number;
+        username: string;
+        avatar: string | StaticImageData;
+        messages: any[];
+    };
+
+    async function handleMatch(matchUser: any) {
+        try {
+            const response = await api.post(`/matches/create`, { user_id_1: user.userId, user_id_2: matchUser.id });
+            const { id } = response.data;
+            const newMatch = { matchId: id, userId: matchUser.id, username: matchUser.user_name, avatar: matchUser.user_photo ?? Avatar, messages: [] } as Match;
+            console.log(newMatch);
+            setMatches([...matches, newMatch]);
+            toast.success('Match realizado com sucesso!');
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    if (!newMatches) return <></>;
 
     return (
         <Container>
             <div className="wrapper">
-                <ul className="mainUL">
-                    <li className="mainLI">
-                        <Image src={user.avatar} alt="Avatar" width="180px" height="180px" className="avatar" />
-                        <div className="perfil">
-                            <h2>{user.username}</h2>
-                            <h3>{convertToAge(user.birth)} anos</h3>
+                <div className="mainUL">
+                    {newMatches.map((nm) => (
+                        <div className="mainLI" key={nm.id}>
+                            <Image src={nm?.user.user_photo ?? Avatar} alt="Avatar" width="180px" height="180px" className="avatar" />
+                            <div className="perfil">
+                                <h2>{nm.user.user_name}</h2>
+                                <h3>{convertToAge(nm.user.birth_date)} anos</h3>
+                                <span>{nm.user.user_aboutme}</span>
+                            </div>
+                            <GameList gameList={nm.games} />
+                            <div className="match">
+                                <Image
+                                    src={Logo}
+                                    width="120px"
+                                    height="120px"
+                                    className="matchButton"
+                                    onClick={() => {
+                                        handleMatch(nm.user);
+                                    }}
+                                />
+                            </div>
                         </div>
-                        <GameList gameList={gameList} />
-                        <a href="">
-                            <Image src={Logo} width="120px" height="120px" />
-                        </a>
-                    </li>
-                    <li className="mainLI">
-                        <Image src={user.avatar} alt="Avatar" width="180px" height="180px" className="avatar" />
-                        <div className="perfil">
-                            <h2>{user.username}</h2>
-                            <span>{convertToAge(user.birth)} anos</span>
-                        </div>
-                        <GameList gameList={gameList} />
-                        <a>
-                            <Image src={Logo} width="120px" height="120px" />
-                        </a>
-                    </li>
-                </ul>
+                    ))}
+                </div>
             </div>
         </Container>
     );
 }
 
 function GameList({ gameList }: GameListProps) {
+    if (!gameList) return <ul></ul>;
+
     return (
         <UL>
-            {gameList?.map((g, i) => {
-                if (i <= 4)
-                    return (
-                        <li key={g.gameName}>
-                            <div className="gameIcon">
-                                <Image src={Control} width="40px" />
-                            </div>
-                            {g.gameName} <span> ({g.timePlayed} horas)</span>
-                        </li>
-                    );
-            })}
+            {gameList.games
+                ?.sort((a, b) => {
+                    return b.timePlayed - a.timePlayed;
+                })
+                .map((g, i) => {
+                    if (i <= 4)
+                        return (
+                            <li key={i}>
+                                <div className="gameIcon">
+                                    <Image src={Control} width="40px" />
+                                </div>
+                                {g.gameName} <span> ({g.timePlayed} horas)</span>
+                            </li>
+                        );
+                })}
         </UL>
     );
 }

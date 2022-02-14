@@ -73,7 +73,7 @@ export default function Profile() {
                     </div>
                     <div className="name">
                         <h2>{user?.username}</h2>
-                        <h3>{convertToAge(user.birth)}</h3>
+                        <h3>{convertToAge(user.birth)} anos</h3>
                         <button onClick={handleEditPerfil}>{editMode ? 'salvar mudanças' : 'editar perfil'}</button>
                     </div>
                 </div>
