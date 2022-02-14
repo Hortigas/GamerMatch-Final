@@ -229,7 +229,7 @@ app.post('/sessions/google', async (request, response) => {
             refreshToken,
             email: user.user_email,
             username: user.user_name,
-            avatar: user.user_avatar,
+            avatar: user.user_photo,
             userId: user.id,
         });
     } catch (err) {

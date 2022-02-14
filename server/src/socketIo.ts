@@ -6,7 +6,7 @@ const http = require('http');
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin:  `${process.env.SOCKET_ENDPOINT}${process.env.PORT || 3000}`, //process.env.SOCKET_ENDPOINT,
+        origin:  process.env.SOCKET_ENDPOINT,
         methods: ['GET', 'POST'],
         allowedHeaders: ['authorization'],
         credentials: true,

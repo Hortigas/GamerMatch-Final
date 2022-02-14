@@ -41,7 +41,7 @@ export type UserData = {
     providerAuth: boolean;
     user_photo: string;
     user_aboutme: string;
-    birth_date?: string;
+    birth_date?: Date;
 };
 
 export type RefreshTokensStore = Map<string, string[]>;
