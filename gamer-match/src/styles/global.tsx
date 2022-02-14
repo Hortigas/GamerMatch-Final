@@ -72,8 +72,7 @@ a {
    };
 
    .react-modal-content {
-      width:100%;
-      max-width:500px;
+      min-width:500px;
       background:#15171E;
       padding:40px;
       position: relative;

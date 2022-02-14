@@ -1,6 +1,5 @@
 import { Container, ChatItemContainer } from './styles';
 import Image from 'next/image';
-import Avatar from '../../../assets/UserPics/userpic1.jpg';
 import { MatchType, useChatbox } from '../../../hooks/useChatbox';
 import { useState, useContext, useEffect } from 'react';
 import { AuthContext } from '../../../../contexts/AuthContext';
@@ -37,6 +36,10 @@ export function ChatList({ className }: ChatListProps) {
 
     useEffect(() => {}, [onlineChatbox, matches]);
 
+    console.log(matches);
+
+    if (!matches) return <></>;
+
     return (
         <div className={className}>
             <Container>
@@ -52,9 +55,6 @@ function ChatItem({ data, online }: ChatItemProps) {
     const [chatInfo, setChatInfo] = useState(data);
     const { currChat, setCurrentChat } = useChatbox();
     const lastmsg = data.messages.at(-1);
-    let Avt: string | StaticImageData;
-    if (data.avatar == '') Avt = Avatar;
-    else Avt = data.avatar;
 
     function handleClick() {
         setCurrentChat(chatInfo.userId);
@@ -71,7 +71,7 @@ function ChatItem({ data, online }: ChatItemProps) {
     return (
         <ChatItemContainer onClick={handleClick} focus={currChat?.userId === chatInfo.userId}>
             <div className="avatar">
-                <Image className="avatarImg" src={Avt} alt={data.username} width={200} height={200} />
+                <Image className="avatarImg" src={data.avatar} alt={data.username} width={200} height={200} />
                 <div className="status" style={{ background: online ? '#43b581' : '#99aab5' }} />
             </div>
             <h3>{data.username}</h3>

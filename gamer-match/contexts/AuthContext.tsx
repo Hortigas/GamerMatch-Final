@@ -19,7 +19,7 @@ type Match = {
     matchId: number;
     userId: number;
     username: string;
-    avatar: string;
+    avatar: string | StaticImageData;
     messages: MessageType[];
 };
 
@@ -208,6 +208,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
     async function fetchMatches() {
         try {
             const data = (await api.get(`/matches/${user.userId}`)).data as Match[];
+            data.forEach((m) => {
+                if (!m.avatar) m.avatar = Avatar;
+            });
             setMatches(data);
         } catch (err) {
             console.log(err);
