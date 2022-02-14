@@ -104,9 +104,7 @@ export async function getUsersById(req: number[]) {
         });
         return users.map((u) => {
             if (u.user_photo != null) {
-                const buff = Buffer.from(u.user_photo);
-                const user_avatar = buff.toString('base64').replace(/^dataimage\/pngbase64/, 'data:image/png;base64,');
-                return { userId: u.id, username: u.user_name, avatar: user_avatar };
+                return { userId: u.id, username: u.user_name, avatar: u.user_photo };
             } else {
                 return { userId: u.id, username: u.user_name, avatar: '' };
             }
