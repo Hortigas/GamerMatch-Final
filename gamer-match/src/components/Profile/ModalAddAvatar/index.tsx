@@ -1,4 +1,4 @@
-import { Container, FormContainer } from './styles';
+import { Container, ContainerPhoto } from './styles';
 import { useEffect, useState, useContext, useRef } from 'react';
 import Modal from 'react-modal';
 import { AiOutlineClose } from 'react-icons/ai';
@@ -17,6 +17,7 @@ export function ModalAddAvatar({ isOpen, setIsOpen }: ModalAddGameProps) {
     const [isFilePicked, setIsFilePicked] = useState(false);
     const [zoom, setZoom] = useState(1);
 
+    const EditorRef = useRef(null);
     const hiddenFileInput = useRef(null);
 
     function onRequestClose() {
@@ -38,20 +39,18 @@ export function ModalAddAvatar({ isOpen, setIsOpen }: ModalAddGameProps) {
     };
 
     const onClickSave = () => {
-        if (this.editor) {
-            const canvas = this.editor.getImage();
-            console.log(canvas);
-        }
+        console.log(EditorRef.current);
     };
 
     return isOpen ? (
         <Modal ariaHideApp={false} isOpen={isOpen} onRequestClose={onRequestClose} overlayClassName="react-modal-overlay" className="react-modal-content">
             {isFilePicked ? (
-                <FormContainer>
+                <ContainerPhoto>
                     <AiOutlineClose className="IconClose" onClick={onRequestClose} />
                     <h2>AJUSTE A FOTO</h2>
                     <AvatarEditor
                         className="avatarEditor"
+                        ref={EditorRef}
                         image={selectedFile}
                         width={400}
                         height={400}
@@ -63,7 +62,7 @@ export function ModalAddAvatar({ isOpen, setIsOpen }: ModalAddGameProps) {
                     />
                     <input type="range" name="zoom" min="1" max="5" step="0.01" value={zoom} onChange={(event) => setZoom(Number(event.target.value))} />
                     <button onClick={onClickSave}>Salvar</button>
-                </FormContainer>
+                </ContainerPhoto>
             ) : (
                 <Container>
                     <AiOutlineClose className="IconClose" onClick={onRequestClose} />

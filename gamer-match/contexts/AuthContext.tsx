@@ -173,9 +173,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
                 .then((response) => {
                     let { userId, email, username, avatar, birth, aboutme } = response.data as User;
                     if (!avatar) avatar = Avatar;
-                    if (!birth) birth = '';
-                    if (!aboutme) aboutme = '';
-                    console.log({ userId, email, username, avatar, birth, aboutme });
                     setUser({ userId, email, username, avatar, birth, aboutme });
                 })
                 .catch(() => {
@@ -236,7 +233,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     async function signIn({ inputEmail, inputHash }: SignIncredentials) {
         try {
             const response = await api.post('sessions', { email: inputEmail, hash: inputHash });
-            const { token, refreshToken, userId, email, username, avatar, birth, aboutme } = response.data;
+            let { token, refreshToken, userId, email, username, avatar, birth, aboutme } = response.data;
 
             setCookie(undefined, 'GamerMatch.token', token, {
                 maxAge: 60 * 60 * 24 * 30, // 30 days
@@ -246,7 +243,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
                 maxAge: 60 * 60 * 24 * 30, // 30 days
                 path: '/',
             });
-
+            if (!avatar) avatar = Avatar;
             setUser({ userId, email, username, avatar, birth, aboutme });
             api.defaults.headers['Authorization'] = `Bearer ${token}`;
 
@@ -259,7 +256,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     async function signInWithGoogle(tokenId: string) {
         try {
             const response = await api.post('sessions/google', { tokenId });
-            const { token, refreshToken, userId, email, username, avatar, birth, aboutme } = response.data;
+            let { token, refreshToken, userId, email, username, avatar, birth, aboutme } = response.data;
 
             setCookie(undefined, 'GamerMatch.token', token, {
                 maxAge: 60 * 60 * 24 * 30, // 30 days
@@ -269,7 +266,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
                 maxAge: 60 * 60 * 24 * 30, // 30 days
                 path: '/',
             });
-
+            if (!avatar) avatar = Avatar;
             setUser({ userId, email, username, avatar, birth, aboutme });
             api.defaults.headers['Authorization'] = `Bearer ${token}`;
 

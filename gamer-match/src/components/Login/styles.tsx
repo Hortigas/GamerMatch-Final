@@ -94,7 +94,7 @@ export const Main = styled.main`
                 filter: brightness(0.8);
             }
 
-            &:first-child {
+            &:last-child {
                 background: #89878a;
             }
         }

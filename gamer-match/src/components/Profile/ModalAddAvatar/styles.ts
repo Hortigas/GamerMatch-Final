@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { darken, transparentize } from 'polished';
 
-export const FormContainer = styled.form`
+export const ContainerPhoto = styled.div`
     display: flex;
     align-items: center;
     flex-direction: column;

@@ -1,6 +1,5 @@
 import { Container, SelectedUser, Conversations, MessageInput, Balloon, BalloonWrapper } from './styles';
 import Image from 'next/image';
-import Avatar from '../../../assets/UserPics/userpic1.jpg';
 import { useChatbox } from '../../../hooks/useChatbox';
 import convertDate from 'date-and-time';
 import { createRef, useContext, useEffect } from 'react';
@@ -48,7 +47,7 @@ export function ChatBox({ className }: ChatBoxProps) {
             <Container>
                 <SelectedUser>
                     <div className="avatar">
-                        <Image className="avatarImg" src={Avatar} alt={currChat.username} width={200} height={200} />
+                        <Image className="avatarImg" src={currChat.avatar} alt={currChat.username} width={200} height={200} />
                     </div>
                     <h3>{currChat.username}</h3>
                 </SelectedUser>

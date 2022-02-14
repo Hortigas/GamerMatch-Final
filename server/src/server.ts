@@ -76,8 +76,6 @@ app.post('/sessions', async (request, response) => {
         });
     }
 
-    const { user_email, user_password, user_name, id, providerAuth } = user;
-
     const { token, refreshToken } = generateJwtAndRefreshToken(email);
     return response.json({
         token,
