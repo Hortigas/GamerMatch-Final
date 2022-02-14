@@ -64,18 +64,6 @@ type AuthProviderProps = {
     children: ReactNode;
 };
 
-const dataT = [
-    { gameName: 'Overwatch', gameCategory: 'FPS', timePlayed: 1230 },
-    { gameName: 'Minecraft', gameCategory: 'Survival', timePlayed: 402 },
-    { gameName: 'CS-GO', gameCategory: 'FPS', timePlayed: 2311 },
-    { gameName: 'LOL', gameCategory: 'FPS', timePlayed: 1511 },
-    { gameName: 'Heroes of the Storm', gameCategory: 'FPS', timePlayed: 511 },
-    { gameName: 'World of Warcraft', gameCategory: 'FPS', timePlayed: 511 },
-    { gameName: 'Valorant', gameCategory: 'FPS', timePlayed: 211 },
-    { gameName: 'Pinball', gameCategory: 'FPS', timePlayed: 133 },
-    { gameName: 'Animal Crossing', gameCategory: 'FPS', timePlayed: 4031 },
-] as GameType[];
-
 const categoriesData = [
     {
         id: 1,
@@ -203,8 +191,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
                 toast.error('Error', error.message);
             }
         });
-        if (!response) return true;
+        if (!response) return;
         toast.success('Mudanças realizadas com sucesso!');
+        return true;
     }
 
     async function fetchMatches() {
@@ -221,8 +210,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     async function fetchGames() {
         try {
-            //const data = (await api.get(`/gameList/${user.userId}`)) as GameType[];
-            const sortedArray = dataT.sort((a, b) => {
+            const response = await api.get(`/gameList/${user.userId}`);
+            const Array = response.data.games as GameType[];
+            const sortedArray = Array.sort((a, b) => {
                 return b.timePlayed - a.timePlayed;
             });
             setGameList(sortedArray);

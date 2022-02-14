@@ -64,6 +64,7 @@ export async function updateMessages(req: any) {
 export async function updateProfile(user_id: number, aboutMe: string, games: any, photo: string) {
     try {
         const arrayGames = { user_id, games };
+        console.log('hello');
         await addGames(arrayGames);
         return prisma.public_user.update({
             where: { id: user_id },
@@ -160,18 +161,15 @@ export async function getGames(req: number) {
 
 export async function addGames(req: any) {
     try {
-        const { userID, jogo } = req;
-        const user = await prisma.public_games.findMany({
-            where: {
-                user_id: userID,
+        const { user_id, games } = req;
+        return prisma.public_games.upsert({
+            where: { user_id: user_id },
+            update: {
+                games: games,
             },
-        });
-        return prisma.public_games.update({
-            where: { id: user[0].id },
-            data: {
-                games: {
-                    push: jogo,
-                },
+            create: {
+                user_id: user_id,
+                games: games,
             },
         });
     } catch (error) {

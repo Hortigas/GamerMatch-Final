@@ -90,9 +90,14 @@ export default function Profile() {
             </div>
             <div className="aboutme wrapper">
                 sobre mim:
-                <textarea maxLength={255} ref={aboutmeRef} disabled={!editMode} placeholder={editMode ? 'escreva algo sobre você' : ''} style={editMode ? { background: '#14171E90' } : {}}>
-                    {user.aboutme}
-                </textarea>
+                <textarea
+                    maxLength={255}
+                    ref={aboutmeRef}
+                    defaultValue={user.aboutme}
+                    disabled={!editMode}
+                    placeholder={editMode ? 'escreva algo sobre você' : ''}
+                    style={editMode ? { background: '#14171E90' } : {}}
+                />
             </div>
         </Container>
     );

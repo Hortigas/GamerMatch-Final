@@ -12,7 +12,7 @@ import { socketIO } from './socketIo';
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 export const app = express();
-app.use(express.json());
+app.use(express.json({ limit: '1mb' }));
 app.use(cors());
 
 socketIO();
@@ -102,10 +102,10 @@ app.post('/sessions/create', async (request, response) => {
     }
 });
 
-app.post('/updateProfile', checkAuthMiddleware, async (request:any) => {
+app.post('/user/update', checkAuthMiddleware, async (request: any) => {
     const { user, gameList } = request.body;
     try {
-        updateProfile(user.userId, user.aboutme, gameList, user.photo);
+        updateProfile(user.userId, user.aboutme, gameList, user.avatar);
     } catch (error) {
         throw error;
     }
@@ -171,10 +171,7 @@ app.get('/gameList/:userId', checkAuthMiddleware, async (request, response) => {
 
     const games = await getGames(Number(userId)); //retorna conteudo da tabela match
     if (games === null) {
-        return response.status(401).json({
-            error: true,
-            message: 'userId not found',
-        });
+        return response.json([]);
     }
 
     const data = { gameId: games.id, games: games.games, userId: games?.user_id };
