@@ -82,9 +82,12 @@ app.post('/sessions', async (request, response) => {
     return response.json({
         token,
         refreshToken,
-        email: user_email,
-        username: user_name,
-        userId: id,
+        userId: user.id,
+        email: user.user_email,
+        username: user.user_name,
+        avatar: user.user_photo,
+        birth: user.birth_date,
+        aboutme: user.user_aboutme,
     });
 });
 
@@ -102,9 +105,9 @@ app.post('/sessions/create', async (request, response) => {
 });
 
 app.post('/updateProfile', checkAuthMiddleware, async (request, response) => {
-    const {user_id, aboutMe, games, photo } = request.body;
+    const { user_id, aboutMe, games, photo } = request.body;
     try {
-        updateProfile(user_id, aboutMe, games, photo );
+        updateProfile(user_id, aboutMe, games, photo);
     } catch (error) {
         throw error;
     }
@@ -227,10 +230,12 @@ app.post('/sessions/google', async (request, response) => {
         return response.json({
             token,
             refreshToken,
+            userId: user.id,
             email: user.user_email,
             username: user.user_name,
             avatar: user.user_photo,
-            userId: user.id,
+            birth: user.birth_date,
+            aboutme: user.user_aboutme,
         });
     } catch (err) {
         return response.status(401).json({
@@ -276,8 +281,6 @@ app.get('/me', checkAuthMiddleware, async (request, response) => {
     const email = request.user;
 
     const user = await getUser(email);
-
-    console.log(user);
 
     if (!user.user_email) {
         return response.status(400).json({ error: true, message: 'User not found.' });
