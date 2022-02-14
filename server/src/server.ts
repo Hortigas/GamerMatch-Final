@@ -102,10 +102,10 @@ app.post('/sessions/create', async (request, response) => {
     }
 });
 
-app.post('/updateProfile', checkAuthMiddleware, async (request, response) => {
-    const { user_id, aboutMe, games, photo } = request.body;
+app.post('/updateProfile', checkAuthMiddleware, async (request:any) => {
+    const { user, gameList } = request.body;
     try {
-        updateProfile(user_id, aboutMe, games, photo);
+        updateProfile(user.userId, user.aboutme, gameList, user.photo);
     } catch (error) {
         throw error;
     }
