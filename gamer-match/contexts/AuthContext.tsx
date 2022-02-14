@@ -199,6 +199,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     async function fetchMatches() {
         try {
             const data = (await api.get(`/matches/${user.userId}`)).data as Match[];
+            await api.get(`/findMatch/${user.userId}`)
             data.forEach((m) => {
                 if (!m.avatar) m.avatar = Avatar;
             });
