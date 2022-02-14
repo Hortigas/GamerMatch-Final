@@ -63,14 +63,14 @@ export async function updateMessages(req: any) {
 
 export async function updateProfile(user_id: number, aboutMe: string, games: any, photo: string) {
     try {
-        const arrayGames = {user_id, games};
+        const arrayGames = { user_id, games };
         await addGames(arrayGames);
         return prisma.public_user.update({
             where: { id: user_id },
             data: {
-                user_aboutme: aboutMe,                
+                user_aboutme: aboutMe,
                 user_photo: photo,
-            }
+            },
         });
     } catch (error) {
         console.error(error);
@@ -102,13 +102,7 @@ export async function getUsersById(req: number[]) {
                 },
             },
         });
-        return users.map((u) => {
-            if (u.user_photo != null) {
-                return { userId: u.id, username: u.user_name, avatar: u.user_photo };
-            } else {
-                return { userId: u.id, username: u.user_name, avatar: '' };
-            }
-        });
+        return users as UserData[];
     } catch (error) {
         console.error(error);
         throw error;

@@ -133,11 +133,10 @@ app.get('/matches/:userId', checkAuthMiddleware, async (request, response) => {
         }
     }) as number[];
     const users = await getUsersById(usersId);
-    //console.log(users);
     const arrData = [] as any;
     matches.forEach((match) => {
-        const user = users.find((user) => user.userId === match.user_id_1 || user.userId === match.user_id_2);
-        const data = { matchId: match.id, messages: match.messages, userId: user?.userId, avatar: user?.avatar, username: user?.username };
+        const user = users.find((user) => user.id === match.user_id_1 || user.id === match.user_id_2);
+        const data = { matchId: match.id, messages: match.messages, userId: user?.id, avatar: user?.user_photo, username: user?.user_name };
         arrData.push(data);
     });
     return response.json(arrData);

@@ -37,6 +37,13 @@ export function ModalAddAvatar({ isOpen, setIsOpen }: ModalAddGameProps) {
         hiddenFileInput.current.click();
     };
 
+    const onClickSave = () => {
+        if (this.editor) {
+            const canvas = this.editor.getImage();
+            console.log(canvas);
+        }
+    };
+
     return isOpen ? (
         <Modal ariaHideApp={false} isOpen={isOpen} onRequestClose={onRequestClose} overlayClassName="react-modal-overlay" className="react-modal-content">
             {isFilePicked ? (
@@ -55,7 +62,7 @@ export function ModalAddAvatar({ isOpen, setIsOpen }: ModalAddGameProps) {
                         borderRadius={300}
                     />
                     <input type="range" name="zoom" min="1" max="5" step="0.01" value={zoom} onChange={(event) => setZoom(Number(event.target.value))} />
-                    <button onClick={handleClick}>Salvar</button>
+                    <button onClick={onClickSave}>Salvar</button>
                 </FormContainer>
             ) : (
                 <Container>

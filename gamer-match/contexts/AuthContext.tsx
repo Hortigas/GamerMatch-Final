@@ -12,7 +12,7 @@ type User = {
     username: string;
     avatar?: string | StaticImageData;
     birth?: string;
-    aboutme: string;
+    aboutme?: string;
 };
 
 type Match = {
@@ -171,7 +171,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
         if (token) {
             api.get('/me')
                 .then((response) => {
-                    const { userId, email, username, avatar, birth, aboutme } = response.data as User;
+                    let { userId, email, username, avatar, birth, aboutme } = response.data as User;
+                    if (!avatar) avatar = Avatar;
+                    if (!birth) birth = '';
+                    if (!aboutme) aboutme = '';
+                    console.log({ userId, email, username, avatar, birth, aboutme });
                     setUser({ userId, email, username, avatar, birth, aboutme });
                 })
                 .catch(() => {
