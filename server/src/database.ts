@@ -1,4 +1,4 @@
-import { RefreshTokensStore } from './types';
+import { Matches, RefreshTokensStore } from './types';
 import { v4 as uuid } from 'uuid';
 import { UserData } from './types';
 import { PrismaClient } from '@prisma/client';
@@ -104,6 +104,42 @@ export async function getUsersById(req: number[]) {
             },
         });
         return users as UserData[];
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
+export async function getUsersByNotId(req: number) {
+    try {
+        const users = await prisma.public_user.findMany({
+            where: {
+                id: {
+                    not: req,
+                },
+            },
+        });
+        return users as UserData[];
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
+export async function getUsers() {
+    try {
+        const users = await prisma.public_user.findMany();
+        return users as UserData[];
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
+export async function getAllMatch() {
+    try {
+        const matches = await prisma.public_match.findMany();
+        return matches as Matches[];
     } catch (error) {
         console.error(error);
         throw error;

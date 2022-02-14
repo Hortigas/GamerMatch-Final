@@ -6,7 +6,7 @@ import { OAuth2Client } from 'google-auth-library';
 
 import { generateJwtAndRefreshToken } from './auth';
 import { auth } from './config';
-import { checkRefreshTokenIsValid, invalidateRefreshToken, getUser, setUser, setMatch, getMatches, getUsersById, updateProfile, getGames, setGames, addGames } from './database';
+import { checkRefreshTokenIsValid, invalidateRefreshToken, getUser, setUser, setMatch, getMatches, getUsersById, updateProfile, getGames, setGames, addGames, getUsers, getAllMatch, getUsersByNotId } from './database';
 import { CreateSessionDTO, DecodedToken, CreateUser, GoogleProps, Message, UserData, Matches, Games } from './types';
 import { socketIO } from './socketIo';
 
@@ -137,6 +137,21 @@ app.get('/matches/:userId', checkAuthMiddleware, async (request, response) => {
         const data = { matchId: match.id, messages: match.messages, userId: user?.id, avatar: user?.user_photo, username: user?.user_name };
         arrData.push(data);
     });
+    return response.json(arrData);
+});
+
+app.get('/findMatch/:userId', checkAuthMiddleware, async (request, response) =>{
+    const userId = Number(request.params.userId);
+    const matches = await getAllMatch();
+    const users = await getUsersByNotId(userId);
+    console.log(users);
+    const arrData = [] as any;
+    /*matches.forEach(async (match) => {
+        const user = matches.find((match) => match.user_id_1 != userId && match.user_id_2 != userId); //pega user q n deu match
+        const data = { user.user}
+        arrData.push(data);
+    });
+    //console.log(arrData);*/
     return response.json(arrData);
 });
 
