@@ -58,6 +58,7 @@ type AuthContextData = {
     signOut(): void;
     signUp(credentials: SignUpcredentials): Promise<void>;
     updateProfile(): Promise<boolean>;
+    convertToAge(date: string): number;
 };
 
 type AuthProviderProps = {
@@ -153,7 +154,7 @@ export function signOutFunc() {
 export function AuthProvider({ children }: AuthProviderProps) {
     const [user, setUser] = useState<User>();
     const [matches, setMatches] = useState([] as Match[]);
-    const [gameList, setGameList] = useState<GameType[]>();
+    const [gameList, setGameList] = useState<GameType[]>([]);
     const [categories, setCategories] = useState<CategoryType[]>(categoriesData);
 
     useEffect(() => {
@@ -194,6 +195,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
         if (!response) return;
         toast.success('Mudanças realizadas com sucesso!');
         return true;
+    }
+
+    function convertToAge(date: string) {
+        const today = new Date();
+        const birthDate = new Date(date);
+        var age = today.getFullYear() - birthDate.getFullYear();
+        var m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        return age;
     }
 
     async function fetchMatches() {
@@ -287,7 +299,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
 
     return (
-        <AuthContext.Provider value={{ signIn, signInWithGoogle, signOut, signUp, user, setUser, matches, setMatches, gameList, setGameList, categories, updateProfile }}>
+        <AuthContext.Provider value={{ signIn, signInWithGoogle, signOut, signUp, user, setUser, matches, setMatches, gameList, setGameList, categories, updateProfile, convertToAge }}>
             {children}
         </AuthContext.Provider>
     );

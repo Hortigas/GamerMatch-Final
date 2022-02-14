@@ -26,7 +26,7 @@ type GameListProps = {
 };
 
 export default function Profile() {
-    const { user, setUser, gameList, setGameList, updateProfile } = useContext(AuthContext);
+    const { user, setUser, gameList, setGameList, updateProfile, convertToAge } = useContext(AuthContext);
     const [editMode, setEditMode] = useState(false);
     const [modalAddGameIsOpen, setModalAddGameIsOpen] = useState(false);
     const [modalAddAvatarIsOpen, setModalAddAvatarIsOpen] = useState(false);
@@ -73,7 +73,7 @@ export default function Profile() {
                     </div>
                     <div className="name">
                         <h2>{user?.username}</h2>
-                        <h3>23 anos</h3>
+                        <h3>{convertToAge(user.birth)}</h3>
                         <button onClick={handleEditPerfil}>{editMode ? 'salvar mudanças' : 'editar perfil'}</button>
                     </div>
                 </div>

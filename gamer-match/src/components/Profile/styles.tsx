@@ -207,4 +207,3 @@ export const UL = styled.div`
         grid-template-columns: 1fr;
     }
 `;
-//#23252b
